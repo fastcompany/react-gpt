@@ -1,5 +1,7 @@
 import EventEmitter from "eventemitter3";
 import debounce from "debounce";
+import throttle from "lodash.throttle";
+import assign from 'lodash.assign';
 import {canUseDOM} from "fbjs/lib/ExecutionEnvironment";
 import Events from "./Events";
 import isInViewport from "./utils/isInViewport";
@@ -46,6 +48,10 @@ export class AdManager extends EventEmitter {
         if (config.test) {
             this.testMode = config.test;
         }
+    }
+
+    configure(conf) {
+        assign(this, conf);
     }
 
     _adCnt = 0
@@ -123,7 +129,7 @@ export class AdManager extends EventEmitter {
         });
     }
 
-    _foldCheck = debounce(event => {
+    _foldCheck = (this.throttle ? throttle : debounce)(event => {
         const instances = this.getMountedInstances();
         instances.forEach(instance => {
             if (instance.getRenderWhenViewable()) {
@@ -299,72 +305,72 @@ export class AdManager extends EventEmitter {
         return true;
     }
 
-    render = debounce(() => {
-        if (!this._initialRender) {
-            return;
-        }
-
-        const checkPubadsReady = cb => {
-            if (this.pubadsReady) {
-                cb();
-            } else {
-                setTimeout(checkPubadsReady, 50, cb);
+    render = (this.throttle ? throttle : debounce)(() => {
+            if (!this._initialRender) {
+                return;
             }
-        };
 
-        const instances = this.getMountedInstances();
-        let hasPubAdsService = false;
-        let dummyAdSlot;
-
-        // Define all the slots
-        instances.forEach((instance) => {
-            if (!instance.notInViewport()) {
-                instance.defineSlot();
-                const adSlot = instance.adSlot;
-                const services = adSlot.getServices();
-                if (!hasPubAdsService) {
-                    hasPubAdsService = services.filter(service => !!service.enableAsyncRendering).length > 0;
+            const checkPubadsReady = cb => {
+                if (this.pubadsReady) {
+                    cb();
+                } else {
+                    setTimeout(checkPubadsReady, 50, cb);
                 }
-            }
-        });
-        // if none of the ad slots uses pubads service, create dummy slot to use pubads service.
-        if (!hasPubAdsService) {
-            dummyAdSlot = this.googletag.defineSlot("/", []);
-            dummyAdSlot.addService(this.googletag.pubads());
-        }
+            };
 
-        // Call pubads API which needs to be called before service is enabled.
-        this._processPubadsQueue();
+            const instances = this.getMountedInstances();
+            let hasPubAdsService = false;
+            let dummyAdSlot;
 
-        // Enable service
-        this.googletag.enableServices();
-
-        // After the service is enabled, check periodically until `pubadsReady` flag returns true before proceeding the rest.
-        checkPubadsReady(() => {
-            // destroy dummy ad slot if exists.
-            if (dummyAdSlot) {
-                this.googletag.destroySlots([dummyAdSlot]);
-            }
-            // Call the rest of the pubads API that's in the queue.
-            this._processPubadsQueue();
-            // listen for GPT events
-            this._listen();
-            // client should be able to set any page-level setting within the event handler.
-            this._isReady = true;
-            this.emit(Events.READY, this.googletag);
-
-            // Call display
+            // Define all the slots
             instances.forEach((instance) => {
                 if (!instance.notInViewport()) {
-                    instance.display();
+                    instance.defineSlot();
+                    const adSlot = instance.adSlot;
+                    const services = adSlot.getServices();
+                    if (!hasPubAdsService) {
+                        hasPubAdsService = services.filter(service => !!service.enableAsyncRendering).length > 0;
+                    }
                 }
             });
+            // if none of the ad slots uses pubads service, create dummy slot to use pubads service.
+            if (!hasPubAdsService) {
+                dummyAdSlot = this.googletag.defineSlot("/", []);
+                dummyAdSlot.addService(this.googletag.pubads());
+            }
 
-            this.emit(Events.RENDER, this.googletag);
+            // Call pubads API which needs to be called before service is enabled.
+            this._processPubadsQueue();
 
-            this._initialRender = false;
-        });
-    }, 4)
+            // Enable service
+            this.googletag.enableServices();
+
+            // After the service is enabled, check periodically until `pubadsReady` flag returns true before proceeding the rest.
+            checkPubadsReady(() => {
+                // destroy dummy ad slot if exists.
+                if (dummyAdSlot) {
+                    this.googletag.destroySlots([dummyAdSlot]);
+                }
+                // Call the rest of the pubads API that's in the queue.
+                this._processPubadsQueue();
+                // listen for GPT events
+                this._listen();
+                // client should be able to set any page-level setting within the event handler.
+                this._isReady = true;
+                this.emit(Events.READY, this.googletag);
+
+                // Call display
+                instances.forEach((instance) => {
+                    if (!instance.notInViewport()) {
+                        instance.display();
+                    }
+                });
+
+                this.emit(Events.RENDER, this.googletag);
+
+                this._initialRender = false;
+            });
+        },4)
 
     /**
      * Re-render(not refresh) all the ads in the page and the first ad will update the correlator value.
@@ -373,7 +379,7 @@ export class AdManager extends EventEmitter {
      * @method renderAll
      * @static
      */
-    renderAll = debounce(() => {
+    renderAll = throttle(() => {
         if (!this.apiReady) {
             return false;
         }

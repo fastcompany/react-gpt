@@ -6,6 +6,12 @@ import styles from "./styles";
 
 Gpt.configure({viewableThreshold: 0});
 
+Gpt.configureAdManager({
+    delayTime: 10,
+    throttle: true
+});
+
+
 @Radium
 class App extends Component {
     onClick = () => {

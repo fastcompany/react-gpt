@@ -1,13 +1,18 @@
-export default function isInViewport(el, [width, height] = [0, 0], offset = 0) {
+export default function isInViewport(el, [width, height] = [0, 0], offset = 0, overrides = {
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0
+}) {
     if (!el || el.nodeType !== 1) {
         return false;
     }
     const clientRect = el.getBoundingClientRect();
     const rect = {
-        top: clientRect.top,
-        left: clientRect.left,
-        bottom: clientRect.bottom,
-        right: clientRect.right
+        top: clientRect.top + overrides.top,
+        left: clientRect.left + overrides.left,
+        bottom: clientRect.bottom + overrides.bottom,
+        right: clientRect.right + overrides.right
     };
     const viewport = {
         top: 0,

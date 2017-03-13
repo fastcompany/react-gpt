@@ -251,7 +251,24 @@ class Bling extends Component {
         /**
          * An optional function for the filtered props and the next props to perform equality check.
          */
-        propsEqual: deepEqual
+        propsEqual: deepEqual,
+        /**
+         * TODO: document
+         */
+        throttle: false,
+        /**
+         * TODO: document
+         */
+        scrollDelay: 66,
+        /**
+         * TODO: document
+         */
+        inViewOverrides: {
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0
+        }
     }
 
     static on(eventType, cb) {
@@ -279,6 +296,10 @@ class Bling extends Component {
         } else {
             Bling._adManager[fn](eventType, cb);
         }
+    }
+
+    static configureAdManager(conf = {}) {
+        Bling._adManager.configure(conf);
     }
 
     static configure(config = {}) {
@@ -371,6 +392,18 @@ class Bling extends Component {
 
     get viewableThreshold() {
         return this.props.viewableThreshold >= 0 ? this.props.viewableThreshold : Bling._config.viewableThreshold;
+    }
+
+    get throttle() {
+        return this.props.throttle || Bling._config.throttle;
+    }
+
+    get scrollDelay() {
+        return this.props.scrollDelay || Bling._config.scrollDelay;
+    }
+
+    get inViewOverrides() {
+        return this.props.inViewOverrides || Bling._config.inViewOverrides;
     }
 
     componentDidMount() {
@@ -484,7 +517,7 @@ class Bling extends Component {
             slotSize = [0, 0];
         }
 
-        const inViewport = Bling._adManager.isInViewport(ReactDOM.findDOMNode(this), slotSize, this.viewableThreshold);
+        const inViewport = Bling._adManager.isInViewport(ReactDOM.findDOMNode(this), slotSize, this.viewableThreshold, this.inViewOverrides);
         if (inViewport) {
             this.setState({inViewport: true});
         }
