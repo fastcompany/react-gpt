@@ -1,7 +1,6 @@
 import EventEmitter from "eventemitter3";
-import debounce from "debounce";
 import throttle from "lodash.throttle";
-import assign from 'lodash.assign';
+import assign from "lodash.assign";
 import {canUseDOM} from "fbjs/lib/ExecutionEnvironment";
 import Events from "./Events";
 import isInViewport from "./utils/isInViewport";
@@ -129,7 +128,7 @@ export class AdManager extends EventEmitter {
         });
     }
 
-    _foldCheck = (this.throttle ? throttle : debounce)(event => {
+    _foldCheck = throttle(event => {
         const instances = this.getMountedInstances();
         instances.forEach(instance => {
             if (instance.getRenderWhenViewable()) {
@@ -305,7 +304,7 @@ export class AdManager extends EventEmitter {
         return true;
     }
 
-    render = (this.throttle ? throttle : debounce)(() => {
+    render = throttle(() => {
             if (!this._initialRender) {
                 return;
             }
