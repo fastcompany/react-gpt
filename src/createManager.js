@@ -1,4 +1,5 @@
 import EventEmitter from "eventemitter3";
+import debounce from "debounce";
 import throttle from "lodash.throttle";
 import assign from "lodash.assign";
 import {canUseDOM} from "fbjs/lib/ExecutionEnvironment";
@@ -304,7 +305,7 @@ export class AdManager extends EventEmitter {
         return true;
     }
 
-    render = throttle(() => {
+    render = debounce(() => {
             if (!this._initialRender) {
                 return;
             }
@@ -369,7 +370,7 @@ export class AdManager extends EventEmitter {
 
                 this._initialRender = false;
             });
-        },4)
+        }, 4)
 
     /**
      * Re-render(not refresh) all the ads in the page and the first ad will update the correlator value.
@@ -378,7 +379,7 @@ export class AdManager extends EventEmitter {
      * @method renderAll
      * @static
      */
-    renderAll = throttle(() => {
+    renderAll = debounce(() => {
         if (!this.apiReady) {
             return false;
         }
