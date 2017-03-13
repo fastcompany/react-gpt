@@ -264,7 +264,7 @@ class Bling extends Component {
          * TODO: document
          */
         inViewOverrides: {
-            top: 0,
+            top: 100,
             left: 0,
             bottom: 0,
             right: 0
