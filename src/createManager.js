@@ -144,7 +144,7 @@ export class AdManager extends EventEmitter {
         });
     }
 
-    _foldCheck = throttle(20, event => {
+    _foldCheck = throttle(50, event => {
         const instances = this.getMountedInstances();
         instances.forEach(instance => {
             if (instance.getRenderWhenViewable()) {

@@ -505,11 +505,12 @@ class Bling extends Component {
         if (slotSize === "fluid") {
             slotSize = [0, 0];
         }
-
+        const viewableThresholdValues = this.getUserViewableThresholdValues();
         const inViewport = Bling._adManager.isInViewport(
             ReactDOM.findDOMNode(this),
             slotSize,
-            this.viewableThreshold
+            this.viewableThreshold,
+            viewableThresholdValues
         );
         if (inViewport) {
             this.setState({inViewport: true});
@@ -564,7 +565,9 @@ class Bling extends Component {
             }
         }
     }
-
+    getUserViewableThresholdValues() {
+        return this.props.viewableThresholdValues;
+    }
     getSlotSize() {
         const {
             slotSize: origSlotSize,
