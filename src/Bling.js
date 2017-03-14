@@ -184,7 +184,13 @@ class Bling extends Component {
          *
          * @property style
          */
-        style: PropTypes.object
+        style: PropTypes.object,
+        /**
+         * An optional boolean that will use throttle over debounce
+         *
+         * @property style
+         */
+        throttle: PropTypes.bool
     }
 
 	/**
@@ -251,7 +257,11 @@ class Bling extends Component {
         /**
          * An optional function for the filtered props and the next props to perform equality check.
          */
-        propsEqual: deepEqual
+        propsEqual: deepEqual,
+        /**
+         * An optional boolean that will use throttle over debounce
+         */
+        throttle: false
     }
 
     static on(eventType, cb) {
@@ -371,6 +381,10 @@ class Bling extends Component {
 
     get viewableThreshold() {
         return this.props.viewableThreshold >= 0 ? this.props.viewableThreshold : Bling._config.viewableThreshold;
+    }
+
+    get throttle() {
+        return this.props.throttle || Bling._config.throttle;
     }
 
     componentDidMount() {
