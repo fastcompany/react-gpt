@@ -1019,7 +1019,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    instance.foldCheck(event);
 	                }
 	            });
-	        }, 200);
+	        }, 50);
 
 	        _this._handleMediaQueryChange = function (event) {
 	            if (_this._syncCorrelator) {
