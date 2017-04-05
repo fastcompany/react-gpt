@@ -1581,7 +1581,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    var clientRect = el.getBoundingClientRect();
 	    var preLoadOffset = userViewport && userViewport === 'mobile' ? 400 : 500;
-	    console.log('sz', preLoadOffset);
+
 	    var rect = {
 	        top: clientRect.top - preLoadOffset,
 	        left: clientRect.left,
