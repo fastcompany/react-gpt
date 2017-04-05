@@ -343,8 +343,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (slotSize === "fluid") {
 	                slotSize = [0, 0];
 	            }
-
-	            var inViewport = Bling._adManager.isInViewport(_reactDom2.default.findDOMNode(this), slotSize, this.viewableThreshold);
+	            var userViewport = this.getUserViewport();
+	            var inViewport = Bling._adManager.isInViewport(_reactDom2.default.findDOMNode(this), slotSize, this.viewableThreshold, userViewport);
 	            if (inViewport) {
 	                this.setState({ inViewport: true });
 	            }
@@ -397,6 +397,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    companionAdsService.setRefreshUnfilledSlots(serviceConfig.refreshUnfilledSlots);
 	                }
 	            }
+	        }
+	    }, {
+	        key: "getUserViewport",
+	        value: function getUserViewport() {
+	            return this.props.userViewport || 'mobile';
 	        }
 	    }, {
 	        key: "getSlotSize",
@@ -1569,13 +1574,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        height = _ref2[1];
 
 	    var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+	    var userViewport = arguments[3];
 
 	    if (!el || el.nodeType !== 1) {
 	        return false;
 	    }
 	    var clientRect = el.getBoundingClientRect();
+	    var preLoadOffset = userViewport && userViewport === 'mobile' ? 400 : 500;
+	    console.log('sz', preLoadOffset);
 	    var rect = {
-	        top: clientRect.top - 500,
+	        top: clientRect.top - preLoadOffset,
 	        left: clientRect.left,
 	        bottom: clientRect.bottom,
 	        right: clientRect.right

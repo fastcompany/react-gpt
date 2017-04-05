@@ -1,10 +1,12 @@
-export default function isInViewport(el, [width, height] = [0, 0], offset = 0) {
+export default function isInViewport(el, [width, height] = [0, 0], offset = 0, userViewport) {
     if (!el || el.nodeType !== 1) {
         return false;
     }
     const clientRect = el.getBoundingClientRect();
+    const preLoadOffset = (userViewport && userViewport === 'mobile') ? 400 : 500;
+console.log('sz', preLoadOffset);
     const rect = {
-        top: clientRect.top - 500,
+        top: clientRect.top - preLoadOffset,
         left: clientRect.left,
         bottom: clientRect.bottom,
         right: clientRect.right
