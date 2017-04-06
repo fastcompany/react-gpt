@@ -483,8 +483,8 @@ class Bling extends Component {
         if (slotSize === "fluid") {
             slotSize = [0, 0];
         }
-        const userViewport = this.getUserViewport();
-        const inViewport = Bling._adManager.isInViewport(ReactDOM.findDOMNode(this), slotSize, this.viewableThreshold, userViewport);
+        const viewableThresholdValues = this.getUserViewableThresholdValues();
+        const inViewport = Bling._adManager.isInViewport(ReactDOM.findDOMNode(this), slotSize, viewableThresholdValues);
         if (inViewport) {
             this.setState({inViewport: true});
         }
@@ -534,8 +534,12 @@ class Bling extends Component {
             }
         }
     }
-    getUserViewport() {
-        return this.props.userViewport || 'desktop';
+    getUserViewableThresholdValues() {
+        return this.props.viewableThresholdValues || {
+            userViewport: 'desktop',
+            mobileValue: 500,
+            desktopValue: 500
+        };
     }
     getSlotSize() {
         const {

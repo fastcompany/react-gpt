@@ -343,8 +343,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (slotSize === "fluid") {
 	                slotSize = [0, 0];
 	            }
-	            var userViewport = this.getUserViewport();
-	            var inViewport = Bling._adManager.isInViewport(_reactDom2.default.findDOMNode(this), slotSize, this.viewableThreshold, userViewport);
+	            var viewableThresholdValues = this.getUserViewableThresholdValues();
+	            var inViewport = Bling._adManager.isInViewport(_reactDom2.default.findDOMNode(this), slotSize, viewableThresholdValues);
 	            if (inViewport) {
 	                this.setState({ inViewport: true });
 	            }
@@ -399,9 +399,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        }
 	    }, {
-	        key: "getUserViewport",
-	        value: function getUserViewport() {
-	            return this.props.userViewport || 'desktop';
+	        key: "getUserViewableThresholdValues",
+	        value: function getUserViewableThresholdValues() {
+	            return this.props.viewableThresholdValues || {
+	                userViewport: 'desktop',
+	                mobileValue: 500,
+	                desktopValue: 500
+	            };
 	        }
 	    }, {
 	        key: "getSlotSize",
@@ -1574,12 +1578,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        height = _ref2[1];
 
 	    var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-	    var userViewport = arguments[3];
+	    var viewableThresholdValues = arguments[3];
 
 	    if (!el || el.nodeType !== 1) {
 	        return false;
 	    }
 	    var clientRect = el.getBoundingClientRect();
+	    var userViewport = viewableThresholdValues.userViewport,
+	        mobileValue = viewableThresholdValues.mobileValue,
+	        desktopValue = viewableThresholdValues.desktopValue;
+
 	    var preLoadOffset = userViewport && userViewport === 'mobile' ? 400 : 500;
 	    console.log('viewport', userViewport, preLoadOffset);
 	    var rect = {
