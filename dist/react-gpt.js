@@ -1593,6 +1593,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        desktopValue = _viewableThresholdVal.desktopValue;
 
 	    var preLoadOffset = userViewport && userViewport === 'mobile' ? mobileValue : desktopValue;
+	    console.log(userViewport, preLoadOffset);
 	    var rect = {
 	        top: clientRect.top - preLoadOffset,
 	        left: clientRect.left,
