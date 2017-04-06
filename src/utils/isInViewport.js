@@ -12,7 +12,6 @@ export default function isInViewport(el, [width, height] = [0, 0], offset = 0, v
     }
     const { userViewport, mobileValue, desktopValue } = viewableThresholdValues;
     const preLoadOffset = (userViewport && userViewport === 'mobile') ? mobileValue : desktopValue;
-    console.log(userViewport, preLoadOffset);
     const rect = {
         top: clientRect.top - preLoadOffset,
         left: clientRect.left,
