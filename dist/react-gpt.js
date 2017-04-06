@@ -344,7 +344,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                slotSize = [0, 0];
 	            }
 	            var viewableThresholdValues = this.getUserViewableThresholdValues();
-	            var inViewport = Bling._adManager.isInViewport(_reactDom2.default.findDOMNode(this), slotSize, viewableThresholdValues);
+	            var inViewport = Bling._adManager.isInViewport(_reactDom2.default.findDOMNode(this), slotSize, this.viewableThreshold, viewableThresholdValues);
 	            if (inViewport) {
 	                this.setState({ inViewport: true });
 	            }

@@ -484,7 +484,7 @@ class Bling extends Component {
             slotSize = [0, 0];
         }
         const viewableThresholdValues = this.getUserViewableThresholdValues();
-        const inViewport = Bling._adManager.isInViewport(ReactDOM.findDOMNode(this), slotSize, viewableThresholdValues);
+        const inViewport = Bling._adManager.isInViewport(ReactDOM.findDOMNode(this), slotSize,this.viewableThreshold, viewableThresholdValues);
         if (inViewport) {
             this.setState({inViewport: true});
         }
