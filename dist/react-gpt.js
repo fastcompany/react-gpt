@@ -401,11 +401,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "getUserViewableThresholdValues",
 	        value: function getUserViewableThresholdValues() {
-	            return this.props.viewableThresholdValues || {
-	                userViewport: 'desktop',
-	                mobileValue: 500,
-	                desktopValue: 500
-	            };
+	            return this.props.viewableThresholdValues;
 	        }
 	    }, {
 	        key: "getSlotSize",
@@ -1584,9 +1580,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return false;
 	    }
 	    var clientRect = el.getBoundingClientRect();
-	    var userViewport = viewableThresholdValues.userViewport,
-	        mobileValue = viewableThresholdValues.mobileValue,
-	        desktopValue = viewableThresholdValues.desktopValue;
+	    if (!viewableThresholdValues) {
+	        viewableThresholdValues = {
+	            userViewport: 'desktop',
+	            mobileValue: 500,
+	            desktopValue: 500
+	        };
+	    }
+	    var _viewableThresholdVal = viewableThresholdValues,
+	        userViewport = _viewableThresholdVal.userViewport,
+	        mobileValue = _viewableThresholdVal.mobileValue,
+	        desktopValue = _viewableThresholdVal.desktopValue;
 
 	    var preLoadOffset = userViewport && userViewport === 'mobile' ? 400 : 500;
 	    console.log('viewport', userViewport, preLoadOffset);

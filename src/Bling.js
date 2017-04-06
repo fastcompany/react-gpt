@@ -535,11 +535,7 @@ class Bling extends Component {
         }
     }
     getUserViewableThresholdValues() {
-        return this.props.viewableThresholdValues || {
-            userViewport: 'desktop',
-            mobileValue: 500,
-            desktopValue: 500
-        };
+        return this.props.viewableThresholdValues;
     }
     getSlotSize() {
         const {
