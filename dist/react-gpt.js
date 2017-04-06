@@ -401,7 +401,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "getUserViewport",
 	        value: function getUserViewport() {
-	            return this.props.userViewport || 'mobile';
+	            return this.props.userViewport || 'desktop';
 	        }
 	    }, {
 	        key: "getSlotSize",

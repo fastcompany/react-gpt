@@ -535,7 +535,7 @@ class Bling extends Component {
         }
     }
     getUserViewport() {
-        return this.props.userViewport || 'mobile';
+        return this.props.userViewport || 'desktop';
     }
     getSlotSize() {
         const {
