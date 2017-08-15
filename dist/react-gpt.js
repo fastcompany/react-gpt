@@ -7,45 +7,45 @@
 		exports["ReactGPT"] = factory(require("react"), require("react-dom"));
 	else
 		root["ReactGPT"] = factory(root["React"], root["ReactDOM"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_17__, __WEBPACK_EXTERNAL_MODULE_18__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_18__, __WEBPACK_EXTERNAL_MODULE_19__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
+
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/
+
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
-/******/
+
+
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/
+
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
-/******/
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -80,7 +80,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -112,23 +112,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _class, _temp2; /* eslint-disable react/sort-comp */
 
 
-	var _react = __webpack_require__(17);
+	var _react = __webpack_require__(18);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactDom = __webpack_require__(18);
+	var _reactDom = __webpack_require__(19);
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _invariant = __webpack_require__(14);
+	var _invariant = __webpack_require__(15);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _deepEqual = __webpack_require__(9);
+	var _deepEqual = __webpack_require__(10);
 
 	var _deepEqual2 = _interopRequireDefault(_deepEqual);
 
-	var _hoistNonReactStatics = __webpack_require__(15);
+	var _hoistNonReactStatics = __webpack_require__(16);
 
 	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
 
@@ -267,7 +267,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (shouldRefresh) {
 	                    Bling._adManager.refresh();
 	                } else if (shouldRender || isScriptLoaded) {
-	                    return true;
+	                    Bling._adManager.renderAll();
 	                }
 	            } else {
 	                if (shouldRefresh) {
@@ -913,7 +913,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @property style
 	     */
-	    style: _react.PropTypes.object }, _class.refreshableProps = ["targeting", "sizeMapping", "clickUrl", "categoryExclusion", "attributes", "collapseEmptyDiv", "companionAdService", "forceSafeFrame", "safeFrameConfig"], _class.reRenderProps = ["adUnitPath", "slotSize", "outOfPage", "content"], _class._adManager = (0, _createManager.createManager)(), _class._config = {
+	    style: _react.PropTypes.object
+	}, _class.refreshableProps = ["targeting", "sizeMapping", "clickUrl", "categoryExclusion", "attributes", "collapseEmptyDiv", "companionAdService", "forceSafeFrame", "safeFrameConfig"], _class.reRenderProps = ["adUnitPath", "slotSize", "outOfPage", "content"], _class._adManager = (0, _createManager.createManager)(), _class._config = {
 	    /**
 	     * An optional string for GPT seed file url to override.
 	     */
@@ -963,19 +964,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.createManager = createManager;
 
-	var _eventemitter = __webpack_require__(12);
+	var _eventemitter = __webpack_require__(13);
 
 	var _eventemitter2 = _interopRequireDefault(_eventemitter);
 
-	var _lodash = __webpack_require__(16);
+	var _lodash = __webpack_require__(17);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
-	var _debounce = __webpack_require__(8);
+	var _debounce = __webpack_require__(9);
 
 	var _debounce2 = _interopRequireDefault(_debounce);
 
-	var _ExecutionEnvironment = __webpack_require__(13);
+	var _ExecutionEnvironment = __webpack_require__(14);
 
 	var _Events = __webpack_require__(1);
 
@@ -1521,7 +1522,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
@@ -1538,7 +1539,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -1557,7 +1558,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -2082,14 +2083,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 8 */
+/***/ function(module, exports) {
+
+	module.exports = Date.now || now
+
+	function now() {
+	    return new Date().getTime()
+	}
+
+
+/***/ },
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * Module dependencies.
+	 */
+
+	var now = __webpack_require__(8);
 
 	/**
 	 * Returns a function, that, as long as it continues to be invoked, will not
 	 * be triggered. The function will be called after it stops being called for
 	 * N milliseconds. If `immediate` is passed, trigger the function on the
-	 * leading edge, instead of the trailing. The function also has a property 'clear' 
-	 * that is a function which will clear the timer to prevent previously scheduled executions. 
+	 * leading edge, instead of the trailing.
 	 *
 	 * @source underscore.js
 	 * @see http://unscriptable.com/2009/03/20/debouncing-javascript-methods/
@@ -2104,23 +2122,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (null == wait) wait = 100;
 
 	  function later() {
-	    var last = Date.now() - timestamp;
+	    var last = now() - timestamp;
 
-	    if (last < wait && last >= 0) {
+	    if (last < wait && last > 0) {
 	      timeout = setTimeout(later, wait - last);
 	    } else {
 	      timeout = null;
 	      if (!immediate) {
 	        result = func.apply(context, args);
-	        context = args = null;
+	        if (!timeout) context = args = null;
 	      }
 	    }
 	  };
 
-	  var debounced = function(){
+	  return function debounced() {
 	    context = this;
 	    args = arguments;
-	    timestamp = Date.now();
+	    timestamp = now();
 	    var callNow = immediate && !timeout;
 	    if (!timeout) timeout = setTimeout(later, wait);
 	    if (callNow) {
@@ -2130,25 +2148,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return result;
 	  };
-
-	  debounced.clear = function() {
-	    if (timeout) {
-	      clearTimeout(timeout);
-	      timeout = null;
-	    }
-	  };
-
-	  return debounced;
 	};
 
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var pSlice = Array.prototype.slice;
-	var objectKeys = __webpack_require__(11);
-	var isArguments = __webpack_require__(10);
+	var objectKeys = __webpack_require__(12);
+	var isArguments = __webpack_require__(11);
 
 	var deepEqual = module.exports = function (actual, expected, opts) {
 	  if (!opts) opts = {};
@@ -2243,8 +2252,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
+/* 11 */
+/***/ function(module, exports) {
 
 	var supportsArgumentsClass = (function(){
 	  return Object.prototype.toString.call(arguments)
@@ -2269,8 +2278,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
+/* 12 */
+/***/ function(module, exports) {
 
 	exports = module.exports = typeof Object.keys === 'function'
 	  ? Object.keys : shim;
@@ -2284,7 +2293,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2601,8 +2610,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
+/* 14 */
+/***/ function(module, exports) {
 
 	/**
 	 * Copyright (c) 2013-present, Facebook, Inc.
@@ -2641,7 +2650,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ExecutionEnvironment;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2701,8 +2710,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = invariant;
 
 /***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
+/* 16 */
+/***/ function(module, exports) {
 
 	/**
 	 * Copyright 2015, Yahoo! Inc.
@@ -2757,8 +2766,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
+/* 17 */
+/***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * lodash (Custom Build) <https://lodash.com/>
@@ -3199,21 +3208,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	module.exports = throttle;
-	
+
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_17__;
-
-/***/ },
 /* 18 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_18__;
+
+/***/ },
+/* 19 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_19__;
 
 /***/ }
 /******/ ])
 });
+;
