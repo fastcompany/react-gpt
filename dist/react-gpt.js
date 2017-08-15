@@ -7,7 +7,7 @@
 		exports["ReactGPT"] = factory(require("react"), require("react-dom"));
 	else
 		root["ReactGPT"] = factory(root["React"], root["ReactDOM"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_18__, __WEBPACK_EXTERNAL_MODULE_19__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_27__, __WEBPACK_EXTERNAL_MODULE_28__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -52,13 +52,13 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 
-	var _Bling = __webpack_require__(2);
+	var _Bling = __webpack_require__(9);
 
 	Object.defineProperty(exports, "Bling", {
 	  enumerable: true,
@@ -76,11 +76,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 
+	var _createManagerTest = __webpack_require__(11);
+
+	Object.defineProperty(exports, "createManagerTest", {
+	  enumerable: true,
+	  get: function get() {
+	    return _createManagerTest.createManagerTest;
+	  }
+	});
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -95,9 +104,937 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.default = Events;
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.AdManager = exports.APIToCallBeforeServiceEnabled = exports.pubadsAPI = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	exports.createManager = createManager;
+
+	var _eventemitter = __webpack_require__(18);
+
+	var _eventemitter2 = _interopRequireDefault(_eventemitter);
+
+	var _throttleDebounce = __webpack_require__(26);
+
+	var _invariant = __webpack_require__(6);
+
+	var _invariant2 = _interopRequireDefault(_invariant);
+
+	var _exenv = __webpack_require__(19);
+
+	var _Events = __webpack_require__(1);
+
+	var _Events2 = _interopRequireDefault(_Events);
+
+	var _isInViewport2 = __webpack_require__(13);
+
+	var _isInViewport3 = _interopRequireDefault(_isInViewport2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// based on https://developers.google.com/doubleclick-gpt/reference?hl=en
+	var pubadsAPI = exports.pubadsAPI = ["enableAsyncRendering", "enableSingleRequest", "enableSyncRendering", "disableInitialLoad", "collapseEmptyDivs", "enableVideoAds", "set", "get", "getAttributeKeys", "setTargeting", "clearTargeting", "setCategoryExclusion", "clearCategoryExclusions", "setCentering", "setCookieOptions", "setLocation", "setPublisherProvidedId", "setTagForChildDirectedTreatment", "clearTagForChildDirectedTreatment", "setVideoContent", "setForceSafeFrame"];
+
+	var APIToCallBeforeServiceEnabled = exports.APIToCallBeforeServiceEnabled = ["enableAsyncRendering", "enableSingleRequest", "enableSyncRendering", "disableInitialLoad", "collapseEmptyDivs", "setCentering"];
+
+	var AdManager = exports.AdManager = function (_EventEmitter) {
+	    _inherits(AdManager, _EventEmitter);
+
+	    function AdManager() {
+	        var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+	        _classCallCheck(this, AdManager);
+
+	        var _this = _possibleConstructorReturn(this, (AdManager.__proto__ || Object.getPrototypeOf(AdManager)).call(this, config));
+
+	        _this._adCnt = 0;
+	        _this._initialRender = true;
+	        _this._syncCorrelator = false;
+	        _this._testMode = false;
+	        _this._foldCheck = (0, _throttleDebounce.throttle)(50, function (event) {
+	            var instances = _this.getMountedInstances();
+	            instances.forEach(function (instance) {
+	                if (instance.getRenderWhenViewable()) {
+	                    instance.foldCheck(event);
+	                }
+	            });
+
+	            if (_this.testMode) {
+	                _this._getTimer();
+	            }
+	        });
+
+	        _this._handleMediaQueryChange = function (event) {
+	            if (_this._syncCorrelator) {
+	                _this.refresh();
+	                return;
+	            }
+	            // IE returns `event.media` value differently, need to use regex to evaluate.
+	            // eslint-disable-next-line wrap-regex
+	            var res = /min-width:\s?(\d+)px/.exec(event.media);
+	            var viewportWidth = res && res[1];
+
+	            if (viewportWidth && _this._mqls[viewportWidth]) {
+	                _this._mqls[viewportWidth].listeners.forEach(function (instance) {
+	                    instance.refresh();
+	                    if (instance.props.onMediaQueryChange) {
+	                        instance.props.onMediaQueryChange(event);
+	                    }
+	                });
+	            }
+	        };
+
+	        _this.render = (0, _throttleDebounce.debounce)(4, function () {
+	            if (!_this._initialRender) {
+	                return;
+	            }
+
+	            var checkPubadsReady = function checkPubadsReady(cb) {
+	                if (_this.pubadsReady) {
+	                    cb();
+	                } else {
+	                    setTimeout(checkPubadsReady, 50, cb);
+	                }
+	            };
+
+	            var instances = _this.getMountedInstances();
+	            var hasPubAdsService = false;
+	            var dummyAdSlot = void 0;
+
+	            // Define all the slots
+	            instances.forEach(function (instance) {
+	                if (!instance.notInViewport()) {
+	                    instance.defineSlot();
+	                    var adSlot = instance.adSlot;
+
+	                    if (adSlot && adSlot.hasOwnProperty("getServices")) {
+	                        var services = adSlot.getServices();
+	                        if (!hasPubAdsService) {
+	                            hasPubAdsService = services.filter(function (service) {
+	                                return !!service.enableAsyncRendering;
+	                            }).length > 0;
+	                        }
+	                    }
+	                }
+	            });
+	            // if none of the ad slots uses pubads service, create dummy slot to use pubads service.
+	            if (!hasPubAdsService) {
+	                dummyAdSlot = _this.googletag.defineSlot("/", []);
+	                dummyAdSlot.addService(_this.googletag.pubads());
+	            }
+
+	            // Call pubads API which needs to be called before service is enabled.
+	            _this._processPubadsQueue();
+
+	            // Enable service
+	            _this.googletag.enableServices();
+
+	            // After the service is enabled, check periodically until `pubadsReady` flag returns true before proceeding the rest.
+	            checkPubadsReady(function () {
+	                // destroy dummy ad slot if exists.
+	                if (dummyAdSlot) {
+	                    _this.googletag.destroySlots([dummyAdSlot]);
+	                }
+	                // Call the rest of the pubads API that's in the queue.
+	                _this._processPubadsQueue();
+	                // listen for GPT events
+	                _this._listen();
+	                // client should be able to set any page-level setting within the event handler.
+	                _this._isReady = true;
+	                _this.emit(_Events2.default.READY, _this.googletag);
+
+	                // Call display
+	                instances.forEach(function (instance) {
+	                    if (!instance.notInViewport()) {
+	                        instance.display();
+	                    }
+	                });
+
+	                _this.emit(_Events2.default.RENDER, _this.googletag);
+
+	                _this._initialRender = false;
+	            });
+	        });
+	        _this.renderAll = (0, _throttleDebounce.debounce)(4, function () {
+	            if (!_this.apiReady) {
+	                return false;
+	            }
+
+	            // first instance updates correlator value and re-render each ad
+	            var instances = _this.getMountedInstances();
+	            instances.forEach(function (instance, i) {
+	                if (i === 0) {
+	                    _this.updateCorrelator();
+	                }
+	                instance.forceUpdate();
+	            });
+
+	            return true;
+	        });
+
+
+	        if (config.test) {
+	            _this.testMode = config;
+	        }
+	        return _this;
+	    }
+
+	    _createClass(AdManager, [{
+	        key: "_processPubadsQueue",
+	        value: function _processPubadsQueue() {
+	            var _this2 = this;
+
+	            if (this._pubadsProxyQueue) {
+	                Object.keys(this._pubadsProxyQueue).forEach(function (method) {
+	                    if (_this2.googletag && !_this2.googletag.pubadsReady && APIToCallBeforeServiceEnabled.indexOf(method) > -1 || _this2.pubadsReady) {
+	                        _this2._pubadsProxyQueue[method].forEach(function (params) {
+	                            return _this2.pubadsProxy(params);
+	                        });
+	                        delete _this2._pubadsProxyQueue[method];
+	                    }
+	                });
+	                if (!Object.keys(this._pubadsProxyQueue).length) {
+	                    this._pubadsProxyQueue = null;
+	                }
+	            }
+	        }
+	    }, {
+	        key: "_callPubads",
+	        value: function _callPubads(_ref) {
+	            var method = _ref.method,
+	                args = _ref.args,
+	                resolve = _ref.resolve,
+	                reject = _ref.reject;
+
+	            if (typeof this.googletag.pubads()[method] !== "function") {
+	                reject(new Error("googletag.pubads does not support " + method + ", please update pubadsAPI"));
+	            } else {
+	                try {
+	                    var _googletag$pubads;
+
+	                    var result = (_googletag$pubads = this.googletag.pubads())[method].apply(_googletag$pubads, _toConsumableArray(args));
+	                    resolve(result);
+	                } catch (err) {
+	                    reject(err);
+	                }
+	            }
+	        }
+	    }, {
+	        key: "_toggleListener",
+	        value: function _toggleListener(add) {
+	            var _this3 = this;
+
+	            ["scroll", "resize"].forEach(function (eventName) {
+	                window[add ? "addEventListener" : "removeEventListener"](eventName, _this3._foldCheck);
+	            });
+	        }
+	    }, {
+	        key: "_getTimer",
+	        value: function _getTimer() {
+	            return Date.now();
+	        }
+	    }, {
+	        key: "_listen",
+	        value: function _listen() {
+	            var _this4 = this;
+
+	            if (!this._listening) {
+	                [_Events2.default.SLOT_RENDER_ENDED, _Events2.default.IMPRESSION_VIEWABLE, _Events2.default.SLOT_VISIBILITY_CHANGED].forEach(function (eventType) {
+	                    ["pubads", "content", "companionAds"].forEach(function (service) {
+	                        // there is no API to remove listeners.
+	                        _this4.googletag[service]().addEventListener(eventType, _this4._onEvent.bind(_this4, eventType));
+	                    });
+	                });
+	                this._listening = true;
+	            }
+	        }
+	    }, {
+	        key: "_onEvent",
+	        value: function _onEvent(eventType, event) {
+	            // fire to the global listeners
+	            if (this.listeners(eventType, true)) {
+	                this.emit(eventType, event);
+	            }
+	            // call event handler props
+	            var instances = this.getMountedInstances();
+	            var slot = event.slot;
+
+	            var funcName = "on" + eventType.charAt(0).toUpperCase() + eventType.substr(1);
+	            var instance = instances.filter(function (inst) {
+	                return slot === inst.adSlot;
+	            })[0];
+	            if (instance && instance.props[funcName]) {
+	                instance.props[funcName](event);
+	            }
+	        }
+	    }, {
+	        key: "syncCorrelator",
+	        value: function syncCorrelator() {
+	            var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+	            this._syncCorrelator = value;
+	        }
+	    }, {
+	        key: "generateDivId",
+	        value: function generateDivId() {
+	            return "bling-" + ++this._adCnt;
+	        }
+	    }, {
+	        key: "getMountedInstances",
+	        value: function getMountedInstances() {
+	            if (!this.mountedInstances) {
+	                this.mountedInstances = [];
+	            }
+	            return this.mountedInstances;
+	        }
+	    }, {
+	        key: "addInstance",
+	        value: function addInstance(instance) {
+	            var instances = this.getMountedInstances();
+	            var index = instances.indexOf(instance);
+	            if (index === -1) {
+	                // The first instance starts listening for the event.
+	                if (instances.length === 0) {
+	                    this._toggleListener(true);
+	                }
+	                this.addMQListener(instance, instance.props);
+	                instances.push(instance);
+	            }
+	        }
+	    }, {
+	        key: "removeInstance",
+	        value: function removeInstance(instance) {
+	            var instances = this.getMountedInstances();
+	            var index = instances.indexOf(instance);
+	            if (index >= 0) {
+	                instances.splice(index, 1);
+	                // The last instance removes listening for the event.
+	                if (instances.length === 0) {
+	                    this._toggleListener(false);
+	                }
+	                this.removeMQListener(instance, instance.props);
+	            }
+	        }
+	    }, {
+	        key: "addMQListener",
+	        value: function addMQListener(instance, _ref2) {
+	            var _this5 = this;
+
+	            var sizeMapping = _ref2.sizeMapping;
+
+	            if (!sizeMapping || !Array.isArray(sizeMapping)) {
+	                return;
+	            }
+
+	            sizeMapping.forEach(function (size) {
+	                var viewportWidth = size.viewport && size.viewport[0];
+	                if (viewportWidth !== undefined) {
+	                    if (!_this5._mqls) {
+	                        _this5._mqls = {};
+	                    }
+	                    if (!_this5._mqls[viewportWidth]) {
+	                        var mql = window.matchMedia("(min-width: " + viewportWidth + "px)");
+	                        mql.addListener(_this5._handleMediaQueryChange);
+	                        _this5._mqls[viewportWidth] = {
+	                            mql: mql,
+	                            listeners: []
+	                        };
+	                    }
+	                    if (_this5._mqls[viewportWidth].listeners.indexOf(instance) === -1) {
+	                        _this5._mqls[viewportWidth].listeners.push(instance);
+	                    }
+	                }
+	            });
+	        }
+	    }, {
+	        key: "removeMQListener",
+	        value: function removeMQListener(instance) {
+	            var _this6 = this;
+
+	            if (!this._mqls) {
+	                return;
+	            }
+
+	            Object.keys(this._mqls).forEach(function (key) {
+	                var index = _this6._mqls[key].listeners.indexOf(instance);
+	                if (index > -1) {
+	                    _this6._mqls[key].listeners.splice(index, 1);
+	                }
+	                if (_this6._mqls[key].listeners.length === 0) {
+	                    _this6._mqls[key].mql.removeListener(_this6._handleMediaQueryChange);
+	                    delete _this6._mqls[key];
+	                }
+	            });
+	        }
+	    }, {
+	        key: "isInViewport",
+	        value: function isInViewport() {
+	            return _isInViewport3.default.apply(undefined, arguments);
+	        }
+
+	        /**
+	         * Refreshes all the ads in the page with a new correlator value.
+	         *
+	         * @param {Array} slots An array of ad slots.
+	         * @param {Object} options You can pass `changeCorrelator` flag.
+	         * @static
+	         */
+
+	    }, {
+	        key: "refresh",
+	        value: function refresh(slots, options) {
+	            if (!this.pubadsReady) {
+	                return false;
+	            }
+
+	            // gpt already debounces refresh
+	            this.googletag.pubads().refresh(slots, options);
+
+	            return true;
+	        }
+	    }, {
+	        key: "clear",
+	        value: function clear(slots) {
+	            if (!this.pubadsReady) {
+	                return false;
+	            }
+
+	            this.googletag.pubads().clear(slots);
+
+	            return true;
+	        }
+
+	        /**
+	         * Re-render(not refresh) all the ads in the page and the first ad will update the correlator value.
+	         * Updating correlator value ensures competitive exclusion.
+	         *
+	         * @method renderAll
+	         * @static
+	         */
+
+	    }, {
+	        key: "getGPTVersion",
+	        value: function getGPTVersion() {
+	            if (!this.apiReady) {
+	                return false;
+	            }
+	            return this.googletag.getVersion();
+	        }
+	    }, {
+	        key: "getPubadsVersion",
+	        value: function getPubadsVersion() {
+	            if (!this.pubadsReady) {
+	                return false;
+	            }
+	            return this.googletag.pubads().getVersion();
+	        }
+	    }, {
+	        key: "updateCorrelator",
+	        value: function updateCorrelator() {
+	            if (!this.pubadsReady) {
+	                return false;
+	            }
+	            this.googletag.pubads().updateCorrelator();
+
+	            return true;
+	        }
+	    }, {
+	        key: "load",
+	        value: function load(url) {
+	            var _this7 = this;
+
+	            return this._loadPromise || (this._loadPromise = new Promise(function (resolve, reject) {
+	                // test mode can't be enabled in production mode
+	                if (_this7.testMode) {
+	                    resolve(_this7.googletag);
+	                    return;
+	                }
+	                if (!_exenv.canUseDOM) {
+	                    reject(new Error("DOM not available"));
+	                    return;
+	                }
+	                if (!url) {
+	                    reject(new Error("url is missing"));
+	                    return;
+	                }
+	                var onLoad = function onLoad() {
+	                    if (window.googletag) {
+	                        _this7._googletag = window.googletag;
+	                        // make sure API is ready for use.
+	                        _this7.googletag.cmd.push(function () {
+	                            _this7._isLoaded = true;
+	                            resolve(_this7.googletag);
+	                        });
+	                    } else {
+	                        reject(new Error("window.googletag is not available"));
+	                    }
+	                };
+	                if (window.googletag && window.googletag.apiReady) {
+	                    onLoad();
+	                } else {
+	                    var script = document.createElement("script");
+	                    script.async = true;
+	                    script.onload = onLoad;
+	                    script.onerror = function () {
+	                        reject(new Error("failed to load script"));
+	                    };
+	                    script.src = url;
+	                    document.head.appendChild(script);
+	                }
+	            }));
+	        }
+	    }, {
+	        key: "pubadsProxy",
+	        value: function pubadsProxy(_ref3) {
+	            var _this8 = this;
+
+	            var method = _ref3.method,
+	                _ref3$args = _ref3.args,
+	                args = _ref3$args === undefined ? [] : _ref3$args,
+	                resolve = _ref3.resolve,
+	                reject = _ref3.reject;
+
+	            if (!resolve) {
+	                // there are couple pubads API which doesn't provide getter methods for later use,
+	                // so remember them here.
+	                if (APIToCallBeforeServiceEnabled.indexOf(method) > -1) {
+	                    this["_" + method] = args && args.length && args[0] || true;
+	                }
+	                return new Promise(function (resolve2, reject2) {
+	                    var params = {
+	                        method: method,
+	                        args: args,
+	                        resolve: resolve2,
+	                        reject: reject2
+	                    };
+	                    if (!_this8.pubadsReady) {
+	                        if (!_this8._pubadsProxyQueue) {
+	                            _this8._pubadsProxyQueue = {};
+	                        }
+	                        if (!_this8._pubadsProxyQueue[method]) {
+	                            _this8._pubadsProxyQueue[method] = [];
+	                        }
+	                        _this8._pubadsProxyQueue[method].push(params);
+	                    } else {
+	                        _this8._callPubads(params);
+	                    }
+	                });
+	            }
+
+	            this._callPubads({ method: method, args: args, resolve: resolve, reject: reject });
+
+	            return Promise.resolve();
+	        }
+	    }, {
+	        key: "googletag",
+	        get: function get() {
+	            return this._googletag;
+	        }
+	    }, {
+	        key: "isLoaded",
+	        get: function get() {
+	            return !!this._isLoaded;
+	        }
+	    }, {
+	        key: "isReady",
+	        get: function get() {
+	            return !!this._isReady;
+	        }
+	    }, {
+	        key: "apiReady",
+	        get: function get() {
+	            return this.googletag && this.googletag.apiReady;
+	        }
+	    }, {
+	        key: "pubadsReady",
+	        get: function get() {
+	            return this.googletag && this.googletag.pubadsReady;
+	        }
+	    }, {
+	        key: "testMode",
+	        get: function get() {
+	            return this._testMode;
+	        },
+	        set: function set(config) {
+	            if (false) {
+	                return;
+	            }
+	            var test = config.test,
+	                GPTMock = config.GPTMock;
+
+	            this._isLoaded = true;
+	            this._testMode = !!test;
+
+	            if (test) {
+	                (0, _invariant2.default)(test && GPTMock, "Must provide GPTMock to enable testMode. config{GPTMock}");
+	                this._googletag = new GPTMock(config);
+	            }
+	        }
+	    }]);
+
+	    return AdManager;
+	}(_eventemitter2.default);
+
+	function createManager(config) {
+	    return new AdManager(config);
+	}
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 *
+	 * This source code is licensed under the MIT license found in the
+	 * LICENSE file in the root directory of this source tree.
+	 *
+	 * 
+	 */
+
+	function makeEmptyFunction(arg) {
+	  return function () {
+	    return arg;
+	  };
+	}
+
+	/**
+	 * This function accepts and discards inputs; it has no side effects. This is
+	 * primarily useful idiomatically for overridable function endpoints which
+	 * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
+	 */
+	var emptyFunction = function emptyFunction() {};
+
+	emptyFunction.thatReturns = makeEmptyFunction;
+	emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
+	emptyFunction.thatReturnsTrue = makeEmptyFunction(true);
+	emptyFunction.thatReturnsNull = makeEmptyFunction(null);
+	emptyFunction.thatReturnsThis = function () {
+	  return this;
+	};
+	emptyFunction.thatReturnsArgument = function (arg) {
+	  return arg;
+	};
+
+	module.exports = emptyFunction;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 *
+	 * This source code is licensed under the MIT license found in the
+	 * LICENSE file in the root directory of this source tree.
+	 *
+	 */
+
+	'use strict';
+
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+
+	var validateFormat = function validateFormat(format) {};
+
+	if (true) {
+	  validateFormat = function validateFormat(format) {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  };
+	}
+
+	function invariant(condition, format, a, b, c, d, e, f) {
+	  validateFormat(format);
+
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error(format.replace(/%s/g, function () {
+	        return args[argIndex++];
+	      }));
+	      error.name = 'Invariant Violation';
+	    }
+
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	}
+
+	module.exports = invariant;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright (c) 2014-present, Facebook, Inc.
+	 *
+	 * This source code is licensed under the MIT license found in the
+	 * LICENSE file in the root directory of this source tree.
+	 *
+	 */
+
+	'use strict';
+
+	var emptyFunction = __webpack_require__(3);
+
+	/**
+	 * Similar to invariant but only logs a warning if the condition is not met.
+	 * This can be used to log issues in development environments in critical
+	 * paths. Removing the logging code for production environments will keep the
+	 * same logic and follow the same code paths.
+	 */
+
+	var warning = emptyFunction;
+
+	if (true) {
+	  var printWarning = function printWarning(format) {
+	    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	      args[_key - 1] = arguments[_key];
+	    }
+
+	    var argIndex = 0;
+	    var message = 'Warning: ' + format.replace(/%s/g, function () {
+	      return args[argIndex++];
+	    });
+	    if (typeof console !== 'undefined') {
+	      console.error(message);
+	    }
+	    try {
+	      // --- Welcome to debugging React ---
+	      // This error was thrown as a convenience so that you can use this stack
+	      // to find the callsite that caused this warning to fire.
+	      throw new Error(message);
+	    } catch (x) {}
+	  };
+
+	  warning = function warning(condition, format) {
+	    if (format === undefined) {
+	      throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
+	    }
+
+	    if (format.indexOf('Failed Composite propType: ') === 0) {
+	      return; // Ignore CompositeComponent proptype check.
+	    }
+
+	    if (!condition) {
+	      for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+	        args[_key2 - 2] = arguments[_key2];
+	      }
+
+	      printWarning.apply(undefined, [format].concat(args));
+	    }
+	  };
+	}
+
+	module.exports = warning;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+
+	'use strict';
+
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+
+	var invariant = function(condition, format, a, b, c, d, e, f) {
+	  if (true) {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  }
+
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error(
+	        'Minified exception occurred; use the non-minified dev environment ' +
+	        'for the full error message and additional helpful warnings.'
+	      );
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error(
+	        format.replace(/%s/g, function() { return args[argIndex++]; })
+	      );
+	      error.name = 'Invariant Violation';
+	    }
+
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	};
+
+	module.exports = invariant;
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 *
+	 * This source code is licensed under the MIT license found in the
+	 * LICENSE file in the root directory of this source tree.
+	 */
+
+	'use strict';
+
+	var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
+
+	module.exports = ReactPropTypesSecret;
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+	/* eslint-disable no-undefined,no-param-reassign,no-shadow */
+
+	/**
+	 * Throttle execution of a function. Especially useful for rate limiting
+	 * execution of handlers on events like resize and scroll.
+	 *
+	 * @param  {Number}    delay          A zero-or-greater delay in milliseconds. For event callbacks, values around 100 or 250 (or even higher) are most useful.
+	 * @param  {Boolean}   noTrailing     Optional, defaults to false. If noTrailing is true, callback will only execute every `delay` milliseconds while the
+	 *                                    throttled-function is being called. If noTrailing is false or unspecified, callback will be executed one final time
+	 *                                    after the last throttled-function call. (After the throttled-function has not been called for `delay` milliseconds,
+	 *                                    the internal counter is reset)
+	 * @param  {Function}  callback       A function to be executed after delay milliseconds. The `this` context and all arguments are passed through, as-is,
+	 *                                    to `callback` when the throttled-function is executed.
+	 * @param  {Boolean}   debounceMode   If `debounceMode` is true (at begin), schedule `clear` to execute after `delay` ms. If `debounceMode` is false (at end),
+	 *                                    schedule `callback` to execute after `delay` ms.
+	 *
+	 * @return {Function}  A new, throttled, function.
+	 */
+	module.exports = function ( delay, noTrailing, callback, debounceMode ) {
+
+		// After wrapper has stopped being called, this timeout ensures that
+		// `callback` is executed at the proper times in `throttle` and `end`
+		// debounce modes.
+		var timeoutID;
+
+		// Keep track of the last time `callback` was executed.
+		var lastExec = 0;
+
+		// `noTrailing` defaults to falsy.
+		if ( typeof noTrailing !== 'boolean' ) {
+			debounceMode = callback;
+			callback = noTrailing;
+			noTrailing = undefined;
+		}
+
+		// The `wrapper` function encapsulates all of the throttling / debouncing
+		// functionality and when executed will limit the rate at which `callback`
+		// is executed.
+		function wrapper () {
+
+			var self = this;
+			var elapsed = Number(new Date()) - lastExec;
+			var args = arguments;
+
+			// Execute `callback` and update the `lastExec` timestamp.
+			function exec () {
+				lastExec = Number(new Date());
+				callback.apply(self, args);
+			}
+
+			// If `debounceMode` is true (at begin) this is used to clear the flag
+			// to allow future `callback` executions.
+			function clear () {
+				timeoutID = undefined;
+			}
+
+			if ( debounceMode && !timeoutID ) {
+				// Since `wrapper` is being called for the first time and
+				// `debounceMode` is true (at begin), execute `callback`.
+				exec();
+			}
+
+			// Clear any existing timeout.
+			if ( timeoutID ) {
+				clearTimeout(timeoutID);
+			}
+
+			if ( debounceMode === undefined && elapsed > delay ) {
+				// In throttle mode, if `delay` time has been exceeded, execute
+				// `callback`.
+				exec();
+
+			} else if ( noTrailing !== true ) {
+				// In trailing throttle mode, since `delay` time has not been
+				// exceeded, schedule `callback` to execute `delay` ms after most
+				// recent execution.
+				//
+				// If `debounceMode` is true (at begin), schedule `clear` to execute
+				// after `delay` ms.
+				//
+				// If `debounceMode` is false (at end), schedule `callback` to
+				// execute after `delay` ms.
+				timeoutID = setTimeout(debounceMode ? clear : exec, debounceMode === undefined ? delay - elapsed : delay);
+			}
+
+		}
+
+		// Return the wrapper function.
+		return wrapper;
+
+	};
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -112,23 +1049,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _class, _temp2; /* eslint-disable react/sort-comp */
 
 
-	var _react = __webpack_require__(18);
+	var _react = __webpack_require__(27);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactDom = __webpack_require__(19);
+	var _propTypes = __webpack_require__(24);
+
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+
+	var _reactDom = __webpack_require__(28);
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _invariant = __webpack_require__(15);
+	var _invariant = __webpack_require__(6);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _deepEqual = __webpack_require__(10);
+	var _deepEqual = __webpack_require__(15);
 
 	var _deepEqual2 = _interopRequireDefault(_deepEqual);
 
-	var _hoistNonReactStatics = __webpack_require__(16);
+	var _hoistNonReactStatics = __webpack_require__(20);
 
 	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
 
@@ -136,11 +1077,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Events2 = _interopRequireDefault(_Events);
 
-	var _filterProps = __webpack_require__(5);
+	var _filterProps = __webpack_require__(12);
 
 	var _filterProps2 = _interopRequireDefault(_filterProps);
 
-	var _createManager = __webpack_require__(3);
+	var _createManager = __webpack_require__(2);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -185,11 +1126,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    /**
-	        * An array of prop names which can reflect to the ad by calling `refresh`.
-	        *
-	        * @property refreshableProps
-	        * @static
-	        */
+	     * An array of prop names which can reflect to the ad by calling `refresh`.
+	     *
+	     * @property refreshableProps
+	     * @static
+	     */
 
 	    /**
 	     * An array of prop names which requires to create a new ad slot and render as a new ad.
@@ -207,11 +1148,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 
 	    /**
-	        *
-	        * @property
-	        * @private
-	        * @static
-	        */
+	     *
+	     * @property
+	     * @private
+	     * @static
+	     */
 
 
 	    _createClass(Bling, [{
@@ -267,7 +1208,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (shouldRefresh) {
 	                    Bling._adManager.refresh();
 	                } else if (shouldRender || isScriptLoaded) {
-	                    Bling._adManager.renderAll();
+	                    return true;
 	                }
 	            } else {
 	                if (shouldRefresh) {
@@ -550,7 +1491,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "clear",
 	        value: function clear() {
 	            var adSlot = this._adSlot;
-	            if (adSlot) {
+	            if (adSlot && adSlot.hasOwnProperty("getServices")) {
 	                // googletag.ContentService doesn't clear content
 	                var services = adSlot.getServices();
 	                if (this._divId && services.some(function (s) {
@@ -596,7 +1537,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (slotSize === "fluid") {
 	                    slotSize = ["auto", "auto"];
 	                }
-	                var emptyStyle = slotSize && { width: slotSize[0], height: slotSize[1] };
+	                var emptyStyle = slotSize && {
+	                    width: slotSize[0],
+	                    height: slotSize[1]
+	                };
 	                // render node element instead of script element so that `inViewport` check works.
 	                return _react2.default.createElement("div", { style: emptyStyle });
 	            }
@@ -665,12 +1609,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            Bling._config = _extends({}, Bling._config, config);
 	        }
 	        /**
-	            * Returns the GPT version.
-	            *
-	            * @method getGPTVersion
-	            * @returns {Number|boolean} a version or false if GPT is not yet ready.
-	            * @static
-	            */
+	         * Returns the GPT version.
+	         *
+	         * @method getGPTVersion
+	         * @returns {Number|boolean} a version or false if GPT is not yet ready.
+	         * @static
+	         */
 
 	    }, {
 	        key: "getGPTVersion",
@@ -691,12 +1635,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return Bling._adManager.getPubadsVersion();
 	        }
 	        /**
-	            * Sets a flag to indicate whether the correlator value should always be same across the ads in the page or not.
-	            *
-	            * @method syncCorrelator
-	            * @param {boolean} value
-	            * @static
-	            */
+	         * Sets a flag to indicate whether the correlator value should always be same across the ads in the page or not.
+	         *
+	         * @method syncCorrelator
+	         * @param {boolean} value
+	         * @static
+	         */
 
 	    }, {
 	        key: "syncCorrelator",
@@ -729,12 +1673,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            Bling._adManager.refresh(slots, options);
 	        }
 	        /**
-	            * Clears the ads for the specified ad slots, if no slots are provided, all the ads will be cleared.
-	            *
-	            * @method clear
-	            * @param {Array} slots An optional array of slots to clear.
-	            * @static
-	            */
+	         * Clears the ads for the specified ad slots, if no slots are provided, all the ads will be cleared.
+	         *
+	         * @method clear
+	         * @param {Array} slots An optional array of slots to clear.
+	         * @static
+	         */
 
 	    }, {
 	        key: "clear",
@@ -754,9 +1698,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            Bling._adManager.updateCorrelator();
 	        }
 	    }, {
-	        key: "createTestManager",
-	        value: function createTestManager() {
-	            Bling._adManager = (0, _createManager.createManager)({ test: true });
+	        key: "testManager",
+	        set: function set(testManager) {
+	            (0, _invariant2.default)(testManager, "Pass in createManagerTest to mock GPT");
+	            Bling._adManager = testManager;
 	        }
 	    }]);
 
@@ -767,27 +1712,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @property id
 	     */
-	    id: _react.PropTypes.string,
+	    id: _propTypes2.default.string,
 	    /**
 	     * An optional string indicating ad unit path which will be used
 	     * to create an ad slot.
 	     *
 	     * @property adUnitPath
 	     */
-	    adUnitPath: _react.PropTypes.string.isRequired,
+	    adUnitPath: _propTypes2.default.string.isRequired,
 	    /**
 	     * An optional object which includes ad targeting key-value pairs.
 	     *
 	     * @property targeting
 	     */
-	    targeting: _react.PropTypes.object,
+	    targeting: _propTypes2.default.object,
 	    /**
 	     * An optional prop to specify the ad slot size which accepts [googletag.GeneralSize](https://developers.google.com/doubleclick-gpt/reference#googletag.GeneralSize) as a type.
 	     * This will be preceded by the sizeMapping if specified.
 	     *
 	     * @property slotSize
 	     */
-	    slotSize: _react.PropTypes.oneOfType([_react.PropTypes.array, _react.PropTypes.string]),
+	    slotSize: _propTypes2.default.oneOfType([_propTypes2.default.array, _propTypes2.default.string]),
 	    /**
 	     * An optional array of object which contains an array of viewport size and slot size.
 	     * This needs to be set if the ad needs to serve different ad sizes per different viewport sizes (responsive ad).
@@ -805,115 +1750,115 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @property sizeMapping
 	     */
-	    sizeMapping: _react.PropTypes.arrayOf(_react.PropTypes.shape({
-	        viewport: _react.PropTypes.array,
-	        slot: _react.PropTypes.array
+	    sizeMapping: _propTypes2.default.arrayOf(_propTypes2.default.shape({
+	        viewport: _propTypes2.default.array,
+	        slot: _propTypes2.default.array
 	    })),
 	    /**
 	     * An optional flag to indicate whether an ad slot should be out-of-page slot.
 	     *
 	     * @property outOfPage
 	     */
-	    outOfPage: _react.PropTypes.bool,
+	    outOfPage: _propTypes2.default.bool,
 	    /**
 	     * An optional flag to indicate whether companion ad service should be enabled for the ad.
 	     * If an object is passed, it takes as a configuration expecting `enableSyncLoading` or `refreshUnfilledSlots`.
 	     *
 	     * @property companionAdService
 	     */
-	    companionAdService: _react.PropTypes.oneOfType([_react.PropTypes.bool, _react.PropTypes.object]),
+	    companionAdService: _propTypes2.default.oneOfType([_propTypes2.default.bool, _propTypes2.default.object]),
 	    /**
 	     * An optional HTML content for the slot. If specified, the ad will render with the HTML content using content service.
 	     *
 	     * @property content
 	     */
-	    content: _react.PropTypes.string,
+	    content: _propTypes2.default.string,
 	    /**
 	     * An optional click through URL. If specified, any landing page URL associated with the creative that is served is overridden.
 	     *
 	     * @property clickUrl
 	     */
-	    clickUrl: _react.PropTypes.string,
+	    clickUrl: _propTypes2.default.string,
 	    /**
 	     * An optional string or an array of string which specifies a page-level ad category exclusion for the given label name.
 	     *
 	     * @property categoryExclusion
 	     */
-	    categoryExclusion: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.array]),
+	    categoryExclusion: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.array]),
 	    /**
 	     * An optional map of key-value pairs for an AdSense attribute on a particular ad slot.
 	     * see the list of supported key value: https://developers.google.com/doubleclick-gpt/adsense_attributes#adsense_parameters.googletag.Slot
 	     *
 	     * @property attributes
 	     */
-	    attributes: _react.PropTypes.object,
+	    attributes: _propTypes2.default.object,
 	    /**
 	     * An optional flag to indicate whether an empty ad should be collapsed or not.
 	     *
 	     * @property collapseEmptyDiv
 	     */
-	    collapseEmptyDiv: _react.PropTypes.oneOfType([_react.PropTypes.bool, _react.PropTypes.array]),
+	    collapseEmptyDiv: _propTypes2.default.oneOfType([_propTypes2.default.bool, _propTypes2.default.array]),
 	    /**
 	     * An optional flag to indicate whether ads in this slot should be forced to be rendered using a SafeFrame container.
 	     *
 	     * @property forceSafeFrame
 	     */
-	    forceSafeFrame: _react.PropTypes.bool,
+	    forceSafeFrame: _propTypes2.default.bool,
 	    /**
 	     * An optional object to set the slot-level preferences for SafeFrame configuration.
 	     *
 	     * @property safeFrameConfig
 	     */
-	    safeFrameConfig: _react.PropTypes.object,
+	    safeFrameConfig: _propTypes2.default.object,
 	    /**
 	     * An optional event handler function for `googletag.events.SlotRenderEndedEvent`.
 	     *
 	     * @property onSlotRenderEnded
 	     */
-	    onSlotRenderEnded: _react.PropTypes.func,
+	    onSlotRenderEnded: _propTypes2.default.func,
 	    /**
 	     * An optional event handler function for `googletag.events.ImpressionViewableEvent`.
 	     *
 	     * @property onImpressionViewable
 	     */
-	    onImpressionViewable: _react.PropTypes.func,
+	    onImpressionViewable: _propTypes2.default.func,
 	    /**
 	     * An optional event handler function for `googletag.events.slotVisibilityChangedEvent`.
 	     *
 	     * @property onSlotVisibilityChanged
 	     */
-	    onSlotVisibilityChanged: _react.PropTypes.func,
+	    onSlotVisibilityChanged: _propTypes2.default.func,
 	    /**
 	     * An optional flag to indicate whether an ad should only render when it's fully in the viewport area.
 	     *
 	     * @property renderWhenViewable
 	     */
-	    renderWhenViewable: _react.PropTypes.bool,
+	    renderWhenViewable: _propTypes2.default.bool,
 	    /**
 	     * An optional number to indicate how much percentage of an ad area needs to be in a viewable area before rendering.
 	     * Acceptable range is between 0 and 1.
 	     *
 	     * @property viewableThreshold
 	     */
-	    viewableThreshold: _react.PropTypes.number,
+	    viewableThreshold: _propTypes2.default.number,
 	    /**
 	     * An optional call back function to notify when the script is loaded.
 	     *
 	     * @property onScriptLoaded
 	     */
-	    onScriptLoaded: _react.PropTypes.func,
+	    onScriptLoaded: _propTypes2.default.func,
 	    /**
 	     * An optional call back function to notify when the media queries on the document change.
 	     *
 	     * @property onMediaQueryChange
 	     */
-	    onMediaQueryChange: _react.PropTypes.func,
+	    onMediaQueryChange: _propTypes2.default.func,
 	    /**
 	     * An optional object to be applied as `style` props to the container div.
 	     *
 	     * @property style
 	     */
-	    style: _react.PropTypes.object
+	    style: _propTypes2.default.object
 	}, _class.refreshableProps = ["targeting", "sizeMapping", "clickUrl", "categoryExclusion", "attributes", "collapseEmptyDiv", "companionAdService", "forceSafeFrame", "safeFrameConfig"], _class.reRenderProps = ["adUnitPath", "slotSize", "outOfPage", "content"], _class._adManager = (0, _createManager.createManager)(), _class._config = {
 	    /**
 	     * An optional string for GPT seed file url to override.
@@ -951,581 +1896,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return api;
 	}, {}));
 
-/***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 10 */
+/***/ (function(module, exports) {
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
-	});
-	exports.AdManager = exports.APIToCallBeforeServiceEnabled = exports.pubadsAPI = undefined;
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	exports.createManager = createManager;
-
-	var _eventemitter = __webpack_require__(13);
-
-	var _eventemitter2 = _interopRequireDefault(_eventemitter);
-
-	var _lodash = __webpack_require__(17);
-
-	var _lodash2 = _interopRequireDefault(_lodash);
-
-	var _debounce = __webpack_require__(9);
-
-	var _debounce2 = _interopRequireDefault(_debounce);
-
-	var _ExecutionEnvironment = __webpack_require__(14);
-
-	var _Events = __webpack_require__(1);
-
-	var _Events2 = _interopRequireDefault(_Events);
-
-	var _isInViewport2 = __webpack_require__(6);
-
-	var _isInViewport3 = _interopRequireDefault(_isInViewport2);
-
-	var _mockGPT = __webpack_require__(7);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	// based on https://developers.google.com/doubleclick-gpt/reference?hl=en
-	var pubadsAPI = exports.pubadsAPI = ["enableAsyncRendering", "enableSingleRequest", "enableSyncRendering", "disableInitialLoad", "collapseEmptyDivs", "enableVideoAds", "set", "get", "getAttributeKeys", "setTargeting", "clearTargeting", "setCategoryExclusion", "clearCategoryExclusions", "setCentering", "setCookieOptions", "setLocation", "setPublisherProvidedId", "setTagForChildDirectedTreatment", "clearTagForChildDirectedTreatment", "setVideoContent", "setForceSafeFrame"];
-
-	var APIToCallBeforeServiceEnabled = exports.APIToCallBeforeServiceEnabled = ["enableAsyncRendering", "enableSingleRequest", "enableSyncRendering", "disableInitialLoad", "collapseEmptyDivs", "setCentering"];
-
-	var AdManager = exports.AdManager = function (_EventEmitter) {
-	    _inherits(AdManager, _EventEmitter);
-
-	    function AdManager() {
-	        var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-	        _classCallCheck(this, AdManager);
-
-	        var _this = _possibleConstructorReturn(this, (AdManager.__proto__ || Object.getPrototypeOf(AdManager)).call(this, config));
-
-	        _this._adCnt = 0;
-	        _this._initialRender = true;
-	        _this._syncCorrelator = false;
-	        _this._testMode = false;
-	        _this._foldCheck = (0, _lodash2.default)(function (event) {
-	            var instances = _this.getMountedInstances();
-	            instances.forEach(function (instance) {
-	                if (instance.getRenderWhenViewable()) {
-	                    instance.foldCheck(event);
-	                }
-	            });
-	        }, 50);
-
-	        _this._handleMediaQueryChange = function (event) {
-	            if (_this._syncCorrelator) {
-	                _this.refresh();
-	                return;
-	            }
-	            // IE returns `event.media` value differently, need to use regex to evaluate.
-	            var res = /min-width:\s?(\d+)px/.exec(event.media);
-	            var viewportWidth = res && res[1];
-
-	            if (viewportWidth && _this._mqls[viewportWidth]) {
-	                _this._mqls[viewportWidth].listeners.forEach(function (instance) {
-	                    instance.refresh();
-	                    if (instance.props.onMediaQueryChange) {
-	                        instance.props.onMediaQueryChange(event);
-	                    }
-	                });
-	            }
-	        };
-
-	        _this.render = (0, _debounce2.default)(function () {
-	            if (!_this._initialRender) {
-	                return;
-	            }
-
-	            var checkPubadsReady = function checkPubadsReady(cb) {
-	                if (_this.pubadsReady) {
-	                    cb();
-	                } else {
-	                    setTimeout(checkPubadsReady, 50, cb);
-	                }
-	            };
-
-	            var instances = _this.getMountedInstances();
-	            var hasPubAdsService = false;
-	            var dummyAdSlot = void 0;
-
-	            // Define all the slots
-	            instances.forEach(function (instance) {
-	                if (!instance.notInViewport()) {
-	                    instance.defineSlot();
-	                    var adSlot = instance.adSlot;
-	                    var services = adSlot.getServices();
-	                    if (!hasPubAdsService) {
-	                        hasPubAdsService = services.filter(function (service) {
-	                            return !!service.enableAsyncRendering;
-	                        }).length > 0;
-	                    }
-	                }
-	            });
-	            // if none of the ad slots uses pubads service, create dummy slot to use pubads service.
-	            if (!hasPubAdsService) {
-	                dummyAdSlot = _this.googletag.defineSlot("/", []);
-	                dummyAdSlot.addService(_this.googletag.pubads());
-	            }
-
-	            // Call pubads API which needs to be called before service is enabled.
-	            _this._processPubadsQueue();
-
-	            // Enable service
-	            _this.googletag.enableServices();
-
-	            // After the service is enabled, check periodically until `pubadsReady` flag returns true before proceeding the rest.
-	            checkPubadsReady(function () {
-	                // destroy dummy ad slot if exists.
-	                if (dummyAdSlot) {
-	                    _this.googletag.destroySlots([dummyAdSlot]);
-	                }
-	                // Call the rest of the pubads API that's in the queue.
-	                _this._processPubadsQueue();
-	                // listen for GPT events
-	                _this._listen();
-	                // client should be able to set any page-level setting within the event handler.
-	                _this._isReady = true;
-	                _this.emit(_Events2.default.READY, _this.googletag);
-
-	                // Call display
-	                instances.forEach(function (instance) {
-	                    if (!instance.notInViewport()) {
-	                        instance.display();
-	                    }
-	                });
-
-	                _this.emit(_Events2.default.RENDER, _this.googletag);
-
-	                _this._initialRender = false;
-	            });
-	        }, 4);
-	        _this.renderAll = (0, _debounce2.default)(function () {
-	            if (!_this.apiReady) {
-	                return false;
-	            }
-
-	            // first instance updates correlator value and re-render each ad
-	            var instances = _this.getMountedInstances();
-	            instances.forEach(function (instance, i) {
-	                if (i === 0) {
-	                    _this.updateCorrelator();
-	                }
-	                instance.forceUpdate();
-	            });
-
-	            return true;
-	        }, 4);
-
-
-	        if (config.test) {
-	            _this.testMode = config.test;
-	        }
-	        return _this;
-	    }
-
-	    _createClass(AdManager, [{
-	        key: "_processPubadsQueue",
-	        value: function _processPubadsQueue() {
-	            var _this2 = this;
-
-	            if (this._pubadsProxyQueue) {
-	                Object.keys(this._pubadsProxyQueue).forEach(function (method) {
-	                    if (_this2.googletag && !_this2.googletag.pubadsReady && APIToCallBeforeServiceEnabled.indexOf(method) > -1 || _this2.pubadsReady) {
-	                        _this2._pubadsProxyQueue[method].forEach(function (params) {
-	                            return _this2.pubadsProxy(params);
-	                        });
-	                        delete _this2._pubadsProxyQueue[method];
-	                    }
-	                });
-	                if (!Object.keys(this._pubadsProxyQueue).length) {
-	                    this._pubadsProxyQueue = null;
-	                }
-	            }
-	        }
-	    }, {
-	        key: "_callPubads",
-	        value: function _callPubads(_ref) {
-	            var method = _ref.method,
-	                args = _ref.args,
-	                resolve = _ref.resolve,
-	                reject = _ref.reject;
-
-	            if (typeof this.googletag.pubads()[method] !== "function") {
-	                reject(new Error("googletag.pubads does not support " + method + ", please update pubadsAPI"));
-	            } else {
-	                try {
-	                    var _googletag$pubads;
-
-	                    var result = (_googletag$pubads = this.googletag.pubads())[method].apply(_googletag$pubads, _toConsumableArray(args));
-	                    resolve(result);
-	                } catch (err) {
-	                    reject(err);
-	                }
-	            }
-	        }
-	    }, {
-	        key: "_toggleListener",
-	        value: function _toggleListener(add) {
-	            var _this3 = this;
-
-	            ["scroll", "resize"].forEach(function (eventName) {
-	                window[add ? "addEventListener" : "removeEventListener"](eventName, _this3._foldCheck);
-	            });
-	        }
-	    }, {
-	        key: "_listen",
-	        value: function _listen() {
-	            var _this4 = this;
-
-	            if (!this._listening) {
-	                [_Events2.default.SLOT_RENDER_ENDED, _Events2.default.IMPRESSION_VIEWABLE, _Events2.default.SLOT_VISIBILITY_CHANGED].forEach(function (eventType) {
-	                    ["pubads", "content", "companionAds"].forEach(function (service) {
-	                        // there is no API to remove listeners.
-	                        _this4.googletag[service]().addEventListener(eventType, _this4._onEvent.bind(_this4, eventType));
-	                    });
-	                });
-	                this._listening = true;
-	            }
-	        }
-	    }, {
-	        key: "_onEvent",
-	        value: function _onEvent(eventType, event) {
-	            // fire to the global listeners
-	            if (this.listeners(eventType, true)) {
-	                this.emit(eventType, event);
-	            }
-	            // call event handler props
-	            var instances = this.getMountedInstances();
-	            var slot = event.slot;
-
-	            var funcName = "on" + eventType.charAt(0).toUpperCase() + eventType.substr(1);
-	            var instance = instances.filter(function (inst) {
-	                return slot === inst.adSlot;
-	            })[0];
-	            if (instance && instance.props[funcName]) {
-	                instance.props[funcName](event);
-	            }
-	        }
-	    }, {
-	        key: "syncCorrelator",
-	        value: function syncCorrelator() {
-	            var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-
-	            this._syncCorrelator = value;
-	        }
-	    }, {
-	        key: "generateDivId",
-	        value: function generateDivId() {
-	            return "bling-" + ++this._adCnt;
-	        }
-	    }, {
-	        key: "getMountedInstances",
-	        value: function getMountedInstances() {
-	            if (!this.mountedInstances) {
-	                this.mountedInstances = [];
-	            }
-	            return this.mountedInstances;
-	        }
-	    }, {
-	        key: "addInstance",
-	        value: function addInstance(instance) {
-	            var instances = this.getMountedInstances();
-	            var index = instances.indexOf(instance);
-	            if (index === -1) {
-	                // The first instance starts listening for the event.
-	                if (instances.length === 0) {
-	                    this._toggleListener(true);
-	                }
-	                this.addMQListener(instance, instance.props);
-	                instances.push(instance);
-	            }
-	        }
-	    }, {
-	        key: "removeInstance",
-	        value: function removeInstance(instance) {
-	            var instances = this.getMountedInstances();
-	            var index = instances.indexOf(instance);
-	            if (index >= 0) {
-	                instances.splice(index, 1);
-	                // The last instance removes listening for the event.
-	                if (instances.length === 0) {
-	                    this._toggleListener(false);
-	                }
-	                this.removeMQListener(instance, instance.props);
-	            }
-	        }
-	    }, {
-	        key: "addMQListener",
-	        value: function addMQListener(instance, _ref2) {
-	            var _this5 = this;
-
-	            var sizeMapping = _ref2.sizeMapping;
-
-	            if (!sizeMapping || !Array.isArray(sizeMapping)) {
-	                return;
-	            }
-
-	            sizeMapping.forEach(function (size) {
-	                var viewportWidth = size.viewport && size.viewport[0];
-	                if (viewportWidth !== undefined) {
-	                    if (!_this5._mqls) {
-	                        _this5._mqls = {};
-	                    }
-	                    if (!_this5._mqls[viewportWidth]) {
-	                        var mql = window.matchMedia("(min-width: " + viewportWidth + "px)");
-	                        mql.addListener(_this5._handleMediaQueryChange);
-	                        _this5._mqls[viewportWidth] = {
-	                            mql: mql,
-	                            listeners: []
-	                        };
-	                    }
-	                    if (_this5._mqls[viewportWidth].listeners.indexOf(instance) === -1) {
-	                        _this5._mqls[viewportWidth].listeners.push(instance);
-	                    }
-	                }
-	            });
-	        }
-	    }, {
-	        key: "removeMQListener",
-	        value: function removeMQListener(instance) {
-	            var _this6 = this;
-
-	            if (!this._mqls) {
-	                return;
-	            }
-
-	            Object.keys(this._mqls).forEach(function (key) {
-	                var index = _this6._mqls[key].listeners.indexOf(instance);
-	                if (index > -1) {
-	                    _this6._mqls[key].listeners.splice(index, 1);
-	                }
-	                if (_this6._mqls[key].listeners.length === 0) {
-	                    _this6._mqls[key].mql.removeListener(_this6._handleMediaQueryChange);
-	                    delete _this6._mqls[key];
-	                }
-	            });
-	        }
-	    }, {
-	        key: "isInViewport",
-	        value: function isInViewport() {
-	            return _isInViewport3.default.apply(undefined, arguments);
-	        }
-
-	        /**
-	         * Refreshes all the ads in the page with a new correlator value.
-	         *
-	         * @param {Array} slots An array of ad slots.
-	         * @param {Object} options You can pass `changeCorrelator` flag.
-	         * @static
-	         */
-
-	    }, {
-	        key: "refresh",
-	        value: function refresh(slots, options) {
-	            if (!this.pubadsReady) {
-	                return false;
-	            }
-
-	            // gpt already debounces refresh
-	            this.googletag.pubads().refresh(slots, options);
-
-	            return true;
-	        }
-	    }, {
-	        key: "clear",
-	        value: function clear(slots) {
-	            if (!this.pubadsReady) {
-	                return false;
-	            }
-
-	            this.googletag.pubads().clear(slots);
-
-	            return true;
-	        }
-
-	        /**
-	         * Re-render(not refresh) all the ads in the page and the first ad will update the correlator value.
-	         * Updating correlator value ensures competitive exclusion.
-	         *
-	         * @method renderAll
-	         * @static
-	         */
-
-	    }, {
-	        key: "getGPTVersion",
-	        value: function getGPTVersion() {
-	            if (!this.apiReady) {
-	                return false;
-	            }
-	            return this.googletag.getVersion();
-	        }
-	    }, {
-	        key: "getPubadsVersion",
-	        value: function getPubadsVersion() {
-	            if (!this.pubadsReady) {
-	                return false;
-	            }
-	            return this.googletag.pubads().getVersion();
-	        }
-	    }, {
-	        key: "updateCorrelator",
-	        value: function updateCorrelator() {
-	            if (!this.pubadsReady) {
-	                return false;
-	            }
-	            this.googletag.pubads().updateCorrelator();
-
-	            return true;
-	        }
-	    }, {
-	        key: "load",
-	        value: function load(url) {
-	            var _this7 = this;
-
-	            return this._loadPromise || (this._loadPromise = new Promise(function (resolve, reject) {
-	                // test mode can't be enabled in production mode
-	                if (_this7.testMode) {
-	                    resolve(_this7.googletag);
-	                    return;
-	                }
-	                if (!_ExecutionEnvironment.canUseDOM) {
-	                    reject(new Error("DOM not available"));
-	                    return;
-	                }
-	                if (!url) {
-	                    reject(new Error("url is missing"));
-	                    return;
-	                }
-	                var onLoad = function onLoad() {
-	                    if (window.googletag) {
-	                        _this7._googletag = window.googletag;
-	                        // make sure API is ready for use.
-	                        _this7.googletag.cmd.push(function () {
-	                            _this7._isLoaded = true;
-	                            resolve(_this7.googletag);
-	                        });
-	                    } else {
-	                        reject(new Error("window.googletag is not available"));
-	                    }
-	                };
-	                if (window.googletag) {
-	                    onLoad();
-	                } else {
-	                    var script = document.createElement("script");
-	                    script.async = true;
-	                    script.onload = onLoad;
-	                    script.onerror = function () {
-	                        reject(new Error("failed to load script"));
-	                    };
-	                    script.src = url;
-	                    document.head.appendChild(script);
-	                }
-	            }));
-	        }
-	    }, {
-	        key: "pubadsProxy",
-	        value: function pubadsProxy(_ref3) {
-	            var _this8 = this;
-
-	            var method = _ref3.method,
-	                _ref3$args = _ref3.args,
-	                args = _ref3$args === undefined ? [] : _ref3$args,
-	                resolve = _ref3.resolve,
-	                reject = _ref3.reject;
-
-	            if (!resolve) {
-	                // there are couple pubads API which doesn't provide getter methods for later use,
-	                // so remember them here.
-	                if (APIToCallBeforeServiceEnabled.indexOf(method) > -1) {
-	                    this["_" + method] = args && args.length && args[0] || true;
-	                }
-	                return new Promise(function (resolve2, reject2) {
-	                    var params = { method: method, args: args, resolve: resolve2, reject: reject2 };
-	                    if (!_this8.pubadsReady) {
-	                        if (!_this8._pubadsProxyQueue) {
-	                            _this8._pubadsProxyQueue = {};
-	                        }
-	                        if (!_this8._pubadsProxyQueue[method]) {
-	                            _this8._pubadsProxyQueue[method] = [];
-	                        }
-	                        _this8._pubadsProxyQueue[method].push(params);
-	                    } else {
-	                        _this8._callPubads(params);
-	                    }
-	                });
-	            }
-
-	            this._callPubads({ method: method, args: args, resolve: resolve, reject: reject });
-
-	            return Promise.resolve();
-	        }
-	    }, {
-	        key: "googletag",
-	        get: function get() {
-	            return this._googletag;
-	        }
-	    }, {
-	        key: "isLoaded",
-	        get: function get() {
-	            return !!this._isLoaded;
-	        }
-	    }, {
-	        key: "isReady",
-	        get: function get() {
-	            return !!this._isReady;
-	        }
-	    }, {
-	        key: "apiReady",
-	        get: function get() {
-	            return this.googletag && this.googletag.apiReady;
-	        }
-	    }, {
-	        key: "pubadsReady",
-	        get: function get() {
-	            return this.googletag && this.googletag.pubadsReady;
-	        }
-	    }, {
-	        key: "testMode",
-	        get: function get() {
-	            return this._testMode;
-	        },
-	        set: function set(config) {
-	            if (false) {
-	                return;
-	            }
-	            this._googletag = new _mockGPT.GPTMock(config);
-	            this._isLoaded = true;
-	            this._testMode = !!config;
-	        }
-	    }]);
-
-	    return AdManager;
-	}(_eventemitter2.default);
-
-	function createManager(config) {
-	    return new AdManager(config);
-	}
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
 	});
 	// DO NOT MODIFY THIS FILE MANUALLY.
 	// This file is generated by `npm run update-apilist`.
@@ -1537,9 +1913,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	var pubadsAPI = exports.pubadsAPI = [["set", "function"], ["get", "function"], ["getAttributeKeys", "function"], ["display", "function"], ["getName", "function"], ["setCookieOptions", "function"], ["setTagForChildDirectedTreatment", "function"], ["clearTagForChildDirectedTreatment", "function"], ["setKidsFriendlyAds", "function"], ["setTargeting", "function"], ["clearTargeting", "function"], ["getTargeting", "function"], ["getTargetingKeys", "function"], ["setCategoryExclusion", "function"], ["clearCategoryExclusions", "function"], ["disableInitialLoad", "function"], ["enableSingleRequest", "function"], ["enableAsyncRendering", "function"], ["enableSyncRendering", "function"], ["setCentering", "function"], ["setPublisherProvidedId", "function"], ["definePassback", "function"], ["defineOutOfPagePassback", "function"], ["refresh", "function"], ["enableVideoAds", "function"], ["setVideoContent", "function"], ["getVideoContent", "function"], ["getCorrelator", "function"], ["setCorrelator", "function"], ["updateCorrelator", "function"], ["isAdRequestFinished", "function"], ["collapseEmptyDivs", "function"], ["clear", "function"], ["setLocation", "function"], ["getVersion", "function"], ["forceExperiment", "function"], ["markAsAmp", "function"], ["setSafeFrameConfig", "function"], ["setForceSafeFrame", "function"], ["enableChromeInterventionSignals", "function"], ["markAsGladeControl", "function"], ["markAsGladeOptOut", "function"], ["getName", "function"], ["getVersion", "function"], ["getSlots", "function"], ["getSlotIdMap", "function"], ["enable", "function"], ["addEventListener", "function"]];
 	var slotAPI = exports.slotAPI = [["getPassbackPageUrl", "function"], ["set", "function"], ["get", "function"], ["getAttributeKeys", "function"], ["addService", "function"], ["getName", "function"], ["getAdUnitPath", "function"], ["getInstance", "function"], ["getSlotElementId", "function"], ["getSlotId", "function"], ["getServices", "function"], ["getSizes", "function"], ["defineSizeMapping", "function"], ["hasWrapperDiv", "function"], ["setClickUrl", "function"], ["getClickUrl", "function"], ["setForceSafeFrame", "function"], ["setCategoryExclusion", "function"], ["clearCategoryExclusions", "function"], ["getCategoryExclusions", "function"], ["setTargeting", "function"], ["clearTargeting", "function"], ["getTargetingMap", "function"], ["getTargeting", "function"], ["getTargetingKeys", "function"], ["getOutOfPage", "function"], ["getAudExtId", "function"], ["gtfcd", "function"], ["setCollapseEmptyDiv", "function"], ["getCollapseEmptyDiv", "function"], ["getDivStartsCollapsed", "function"], ["fetchStarted", "function"], ["getContentUrl", "function"], ["fetchEnded", "function"], ["renderStarted", "function"], ["getResponseInformation", "function"], ["renderEnded", "function"], ["loaded", "function"], ["impressionViewable", "function"], ["visibilityChanged", "function"], ["setFirstLook", "function"], ["getFirstLook", "function"], ["getEscapedQemQueryId", "function"], ["setSafeFrameConfig", "function"], ["getCsiId", "function"]];
 
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports.createManagerTest = createManagerTest;
+
+	var _createManager = __webpack_require__(2);
+
+	var _mockGPT = __webpack_require__(14);
+
+	function createManagerTest(config) {
+	    return (0, _createManager.createManager)(_extends({}, config, {
+	        test: true,
+	        GPTMock: _mockGPT.GPTMock
+	    }));
+	}
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports) {
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -1556,9 +1955,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	}
 
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -1609,9 +2008,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return inViewport;
 	}
 
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -1622,7 +2021,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-	var _apiList = __webpack_require__(4);
+	var _apiList = __webpack_require__(10);
 
 	var _Events = __webpack_require__(1);
 
@@ -2081,83 +2480,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.CompanionAdsServiceMock = CompanionAdsServiceMock;
 	exports.ContentServiceMock = ContentServiceMock;
 
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	module.exports = Date.now || now
-
-	function now() {
-	    return new Date().getTime()
-	}
-
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * Module dependencies.
-	 */
-
-	var now = __webpack_require__(8);
-
-	/**
-	 * Returns a function, that, as long as it continues to be invoked, will not
-	 * be triggered. The function will be called after it stops being called for
-	 * N milliseconds. If `immediate` is passed, trigger the function on the
-	 * leading edge, instead of the trailing.
-	 *
-	 * @source underscore.js
-	 * @see http://unscriptable.com/2009/03/20/debouncing-javascript-methods/
-	 * @param {Function} function to wrap
-	 * @param {Number} timeout in ms (`100`)
-	 * @param {Boolean} whether to execute at the beginning (`false`)
-	 * @api public
-	 */
-
-	module.exports = function debounce(func, wait, immediate){
-	  var timeout, args, context, timestamp, result;
-	  if (null == wait) wait = 100;
-
-	  function later() {
-	    var last = now() - timestamp;
-
-	    if (last < wait && last > 0) {
-	      timeout = setTimeout(later, wait - last);
-	    } else {
-	      timeout = null;
-	      if (!immediate) {
-	        result = func.apply(context, args);
-	        if (!timeout) context = args = null;
-	      }
-	    }
-	  };
-
-	  return function debounced() {
-	    context = this;
-	    args = arguments;
-	    timestamp = now();
-	    var callNow = immediate && !timeout;
-	    if (!timeout) timeout = setTimeout(later, wait);
-	    if (callNow) {
-	      result = func.apply(context, args);
-	      context = args = null;
-	    }
-
-	    return result;
-	  };
-	};
-
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var pSlice = Array.prototype.slice;
-	var objectKeys = __webpack_require__(12);
-	var isArguments = __webpack_require__(11);
+	var objectKeys = __webpack_require__(17);
+	var isArguments = __webpack_require__(16);
 
 	var deepEqual = module.exports = function (actual, expected, opts) {
 	  if (!opts) opts = {};
@@ -2251,9 +2580,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 
-/***/ },
-/* 11 */
-/***/ function(module, exports) {
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
 
 	var supportsArgumentsClass = (function(){
 	  return Object.prototype.toString.call(arguments)
@@ -2277,9 +2606,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
-/* 12 */
-/***/ function(module, exports) {
+/***/ }),
+/* 17 */
+/***/ (function(module, exports) {
 
 	exports = module.exports = typeof Object.keys === 'function'
 	  ? Object.keys : shim;
@@ -2292,9 +2621,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 
-/***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -2609,109 +2938,55 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 
-/***/ },
-/* 14 */
-/***/ function(module, exports) {
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
 
-	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 */
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2015 Jed Watson.
+	  Based on code that is Copyright 2013-2015, Facebook, Inc.
+	  All rights reserved.
+	*/
+	/* global define */
 
-	'use strict';
+	(function () {
+		'use strict';
 
-	var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+		var canUseDOM = !!(
+			typeof window !== 'undefined' &&
+			window.document &&
+			window.document.createElement
+		);
 
-	/**
-	 * Simple, lightweight module assisting with the detection and context of
-	 * Worker. Helps avoid circular dependencies and allows code to reason about
-	 * whether or not they are in a Worker, even if they never include the main
-	 * `ReactWorker` dependency.
-	 */
-	var ExecutionEnvironment = {
+		var ExecutionEnvironment = {
 
-	  canUseDOM: canUseDOM,
+			canUseDOM: canUseDOM,
 
-	  canUseWorkers: typeof Worker !== 'undefined',
+			canUseWorkers: typeof Worker !== 'undefined',
 
-	  canUseEventListeners: canUseDOM && !!(window.addEventListener || window.attachEvent),
+			canUseEventListeners:
+				canUseDOM && !!(window.addEventListener || window.attachEvent),
 
-	  canUseViewport: canUseDOM && !!window.screen,
+			canUseViewport: canUseDOM && !!window.screen
 
-	  isInWorker: !canUseDOM // For now, this is true - might change in the future.
+		};
 
-	};
+		if (true) {
+			!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return ExecutionEnvironment;
+			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else if (typeof module !== 'undefined' && module.exports) {
+			module.exports = ExecutionEnvironment;
+		} else {
+			window.ExecutionEnvironment = ExecutionEnvironment;
+		}
 
-	module.exports = ExecutionEnvironment;
+	}());
 
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 */
-
-	'use strict';
-
-	/**
-	 * Use invariant() to assert state which your program assumes to be true.
-	 *
-	 * Provide sprintf-style format (only %s is supported) and arguments
-	 * to provide information about what broke and what you were
-	 * expecting.
-	 *
-	 * The invariant message will be stripped in production, but the invariant
-	 * will remain to ensure logic does not differ in production.
-	 */
-
-	var validateFormat = function validateFormat(format) {};
-
-	if (true) {
-	  validateFormat = function validateFormat(format) {
-	    if (format === undefined) {
-	      throw new Error('invariant requires an error message argument');
-	    }
-	  };
-	}
-
-	function invariant(condition, format, a, b, c, d, e, f) {
-	  validateFormat(format);
-
-	  if (!condition) {
-	    var error;
-	    if (format === undefined) {
-	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
-	    } else {
-	      var args = [a, b, c, d, e, f];
-	      var argIndex = 0;
-	      error = new Error(format.replace(/%s/g, function () {
-	        return args[argIndex++];
-	      }));
-	      error.name = 'Invariant Violation';
-	    }
-
-	    error.framesToPop = 1; // we don't care about invariant's own frame
-	    throw error;
-	  }
-	}
-
-	module.exports = invariant;
-
-/***/ },
-/* 16 */
-/***/ function(module, exports) {
+/***/ }),
+/* 20 */
+/***/ (function(module, exports) {
 
 	/**
 	 * Copyright 2015, Yahoo! Inc.
@@ -2765,465 +3040,802 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
-/* 17 */
-/***/ function(module, exports) {
+/***/ }),
+/* 21 */
+/***/ (function(module, exports) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
-	 * lodash (Custom Build) <https://lodash.com/>
-	 * Build: `lodash modularize exports="npm" -o ./`
-	 * Copyright jQuery Foundation and other contributors <https://jquery.org/>
-	 * Released under MIT license <https://lodash.com/license>
-	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
-	 * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-	 */
+	/*
+	object-assign
+	(c) Sindre Sorhus
+	@license MIT
+	*/
 
-	/** Used as the `TypeError` message for "Functions" methods. */
-	var FUNC_ERROR_TEXT = 'Expected a function';
+	'use strict';
+	/* eslint-disable no-unused-vars */
+	var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
 
-	/** Used as references for various `Number` constants. */
-	var NAN = 0 / 0;
+	function toObject(val) {
+		if (val === null || val === undefined) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
 
-	/** `Object#toString` result references. */
-	var symbolTag = '[object Symbol]';
+		return Object(val);
+	}
 
-	/** Used to match leading and trailing whitespace. */
-	var reTrim = /^\s+|\s+$/g;
+	function shouldUseNative() {
+		try {
+			if (!Object.assign) {
+				return false;
+			}
 
-	/** Used to detect bad signed hexadecimal string values. */
-	var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+			// Detect buggy property enumeration order in older V8 versions.
 
-	/** Used to detect binary string values. */
-	var reIsBinary = /^0b[01]+$/i;
+			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+			var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
+			test1[5] = 'de';
+			if (Object.getOwnPropertyNames(test1)[0] === '5') {
+				return false;
+			}
 
-	/** Used to detect octal string values. */
-	var reIsOctal = /^0o[0-7]+$/i;
+			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+			var test2 = {};
+			for (var i = 0; i < 10; i++) {
+				test2['_' + String.fromCharCode(i)] = i;
+			}
+			var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+				return test2[n];
+			});
+			if (order2.join('') !== '0123456789') {
+				return false;
+			}
 
-	/** Built-in method references without a dependency on `root`. */
-	var freeParseInt = parseInt;
+			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+			var test3 = {};
+			'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+				test3[letter] = letter;
+			});
+			if (Object.keys(Object.assign({}, test3)).join('') !==
+					'abcdefghijklmnopqrst') {
+				return false;
+			}
 
-	/** Detect free variable `global` from Node.js. */
-	var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
+			return true;
+		} catch (err) {
+			// We don't expect any of the above to throw, but better to be safe.
+			return false;
+		}
+	}
 
-	/** Detect free variable `self`. */
-	var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
+	module.exports = shouldUseNative() ? Object.assign : function (target, source) {
+		var from;
+		var to = toObject(target);
+		var symbols;
 
-	/** Used as a reference to the global object. */
-	var root = freeGlobal || freeSelf || Function('return this')();
+		for (var s = 1; s < arguments.length; s++) {
+			from = Object(arguments[s]);
 
-	/** Used for built-in method references. */
-	var objectProto = Object.prototype;
+			for (var key in from) {
+				if (hasOwnProperty.call(from, key)) {
+					to[key] = from[key];
+				}
+			}
 
-	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString = objectProto.toString;
+			if (getOwnPropertySymbols) {
+				symbols = getOwnPropertySymbols(from);
+				for (var i = 0; i < symbols.length; i++) {
+					if (propIsEnumerable.call(from, symbols[i])) {
+						to[symbols[i]] = from[symbols[i]];
+					}
+				}
+			}
+		}
 
-	/* Built-in method references for those with the same name as other `lodash` methods. */
-	var nativeMax = Math.max,
-	    nativeMin = Math.min;
-
-	/**
-	 * Gets the timestamp of the number of milliseconds that have elapsed since
-	 * the Unix epoch (1 January 1970 00:00:00 UTC).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 2.4.0
-	 * @category Date
-	 * @returns {number} Returns the timestamp.
-	 * @example
-	 *
-	 * _.defer(function(stamp) {
-	 *   console.log(_.now() - stamp);
-	 * }, _.now());
-	 * // => Logs the number of milliseconds it took for the deferred invocation.
-	 */
-	var now = function() {
-	  return root.Date.now();
+		return to;
 	};
 
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	/**
-	 * Creates a debounced function that delays invoking `func` until after `wait`
-	 * milliseconds have elapsed since the last time the debounced function was
-	 * invoked. The debounced function comes with a `cancel` method to cancel
-	 * delayed `func` invocations and a `flush` method to immediately invoke them.
-	 * Provide `options` to indicate whether `func` should be invoked on the
-	 * leading and/or trailing edge of the `wait` timeout. The `func` is invoked
-	 * with the last arguments provided to the debounced function. Subsequent
-	 * calls to the debounced function return the result of the last `func`
-	 * invocation.
+	 * Copyright (c) 2013-present, Facebook, Inc.
 	 *
-	 * **Note:** If `leading` and `trailing` options are `true`, `func` is
-	 * invoked on the trailing edge of the timeout only if the debounced function
-	 * is invoked more than once during the `wait` timeout.
-	 *
-	 * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
-	 * until to the next tick, similar to `setTimeout` with a timeout of `0`.
-	 *
-	 * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
-	 * for details over the differences between `_.debounce` and `_.throttle`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 0.1.0
-	 * @category Function
-	 * @param {Function} func The function to debounce.
-	 * @param {number} [wait=0] The number of milliseconds to delay.
-	 * @param {Object} [options={}] The options object.
-	 * @param {boolean} [options.leading=false]
-	 *  Specify invoking on the leading edge of the timeout.
-	 * @param {number} [options.maxWait]
-	 *  The maximum time `func` is allowed to be delayed before it's invoked.
-	 * @param {boolean} [options.trailing=true]
-	 *  Specify invoking on the trailing edge of the timeout.
-	 * @returns {Function} Returns the new debounced function.
-	 * @example
-	 *
-	 * // Avoid costly calculations while the window size is in flux.
-	 * jQuery(window).on('resize', _.debounce(calculateLayout, 150));
-	 *
-	 * // Invoke `sendMail` when clicked, debouncing subsequent calls.
-	 * jQuery(element).on('click', _.debounce(sendMail, 300, {
-	 *   'leading': true,
-	 *   'trailing': false
-	 * }));
-	 *
-	 * // Ensure `batchLog` is invoked once after 1 second of debounced calls.
-	 * var debounced = _.debounce(batchLog, 250, { 'maxWait': 1000 });
-	 * var source = new EventSource('/stream');
-	 * jQuery(source).on('message', debounced);
-	 *
-	 * // Cancel the trailing debounced invocation.
-	 * jQuery(window).on('popstate', debounced.cancel);
+	 * This source code is licensed under the MIT license found in the
+	 * LICENSE file in the root directory of this source tree.
 	 */
-	function debounce(func, wait, options) {
-	  var lastArgs,
-	      lastThis,
-	      maxWait,
-	      result,
-	      timerId,
-	      lastCallTime,
-	      lastInvokeTime = 0,
-	      leading = false,
-	      maxing = false,
-	      trailing = true;
 
-	  if (typeof func != 'function') {
-	    throw new TypeError(FUNC_ERROR_TEXT);
-	  }
-	  wait = toNumber(wait) || 0;
-	  if (isObject(options)) {
-	    leading = !!options.leading;
-	    maxing = 'maxWait' in options;
-	    maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait) : maxWait;
-	    trailing = 'trailing' in options ? !!options.trailing : trailing;
-	  }
+	'use strict';
 
-	  function invokeFunc(time) {
-	    var args = lastArgs,
-	        thisArg = lastThis;
+	if (true) {
+	  var invariant = __webpack_require__(4);
+	  var warning = __webpack_require__(5);
+	  var ReactPropTypesSecret = __webpack_require__(7);
+	  var loggedTypeFailures = {};
+	}
 
-	    lastArgs = lastThis = undefined;
-	    lastInvokeTime = time;
-	    result = func.apply(thisArg, args);
-	    return result;
-	  }
+	/**
+	 * Assert that the values match with the type specs.
+	 * Error messages are memorized and will only be shown once.
+	 *
+	 * @param {object} typeSpecs Map of name to a ReactPropType
+	 * @param {object} values Runtime values that need to be type-checked
+	 * @param {string} location e.g. "prop", "context", "child context"
+	 * @param {string} componentName Name of the component for error messages.
+	 * @param {?Function} getStack Returns the component stack.
+	 * @private
+	 */
+	function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
+	  if (true) {
+	    for (var typeSpecName in typeSpecs) {
+	      if (typeSpecs.hasOwnProperty(typeSpecName)) {
+	        var error;
+	        // Prop type validation may throw. In case they do, we don't want to
+	        // fail the render phase where it didn't fail before. So we log it.
+	        // After these have been cleaned up, we'll let them throw.
+	        try {
+	          // This is intentionally an invariant that gets caught. It's the same
+	          // behavior as without this statement except with a better message.
+	          invariant(typeof typeSpecs[typeSpecName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'the `prop-types` package, but received `%s`.', componentName || 'React class', location, typeSpecName, typeof typeSpecs[typeSpecName]);
+	          error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
+	        } catch (ex) {
+	          error = ex;
+	        }
+	        warning(!error || error instanceof Error, '%s: type specification of %s `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', location, typeSpecName, typeof error);
+	        if (error instanceof Error && !(error.message in loggedTypeFailures)) {
+	          // Only monitor this failure once because there tends to be a lot of the
+	          // same error.
+	          loggedTypeFailures[error.message] = true;
 
-	  function leadingEdge(time) {
-	    // Reset any `maxWait` timer.
-	    lastInvokeTime = time;
-	    // Start the timer for the trailing edge.
-	    timerId = setTimeout(timerExpired, wait);
-	    // Invoke the leading edge.
-	    return leading ? invokeFunc(time) : result;
-	  }
+	          var stack = getStack ? getStack() : '';
 
-	  function remainingWait(time) {
-	    var timeSinceLastCall = time - lastCallTime,
-	        timeSinceLastInvoke = time - lastInvokeTime,
-	        result = wait - timeSinceLastCall;
-
-	    return maxing ? nativeMin(result, maxWait - timeSinceLastInvoke) : result;
-	  }
-
-	  function shouldInvoke(time) {
-	    var timeSinceLastCall = time - lastCallTime,
-	        timeSinceLastInvoke = time - lastInvokeTime;
-
-	    // Either this is the first call, activity has stopped and we're at the
-	    // trailing edge, the system time has gone backwards and we're treating
-	    // it as the trailing edge, or we've hit the `maxWait` limit.
-	    return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
-	      (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
-	  }
-
-	  function timerExpired() {
-	    var time = now();
-	    if (shouldInvoke(time)) {
-	      return trailingEdge(time);
-	    }
-	    // Restart the timer.
-	    timerId = setTimeout(timerExpired, remainingWait(time));
-	  }
-
-	  function trailingEdge(time) {
-	    timerId = undefined;
-
-	    // Only invoke if we have `lastArgs` which means `func` has been
-	    // debounced at least once.
-	    if (trailing && lastArgs) {
-	      return invokeFunc(time);
-	    }
-	    lastArgs = lastThis = undefined;
-	    return result;
-	  }
-
-	  function cancel() {
-	    if (timerId !== undefined) {
-	      clearTimeout(timerId);
-	    }
-	    lastInvokeTime = 0;
-	    lastArgs = lastCallTime = lastThis = timerId = undefined;
-	  }
-
-	  function flush() {
-	    return timerId === undefined ? result : trailingEdge(now());
-	  }
-
-	  function debounced() {
-	    var time = now(),
-	        isInvoking = shouldInvoke(time);
-
-	    lastArgs = arguments;
-	    lastThis = this;
-	    lastCallTime = time;
-
-	    if (isInvoking) {
-	      if (timerId === undefined) {
-	        return leadingEdge(lastCallTime);
-	      }
-	      if (maxing) {
-	        // Handle invocations in a tight loop.
-	        timerId = setTimeout(timerExpired, wait);
-	        return invokeFunc(lastCallTime);
+	          warning(false, 'Failed %s type: %s%s', location, error.message, stack != null ? stack : '');
+	        }
 	      }
 	    }
-	    if (timerId === undefined) {
-	      timerId = setTimeout(timerExpired, wait);
+	  }
+	}
+
+	module.exports = checkPropTypes;
+
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 *
+	 * This source code is licensed under the MIT license found in the
+	 * LICENSE file in the root directory of this source tree.
+	 */
+
+	'use strict';
+
+	var emptyFunction = __webpack_require__(3);
+	var invariant = __webpack_require__(4);
+	var warning = __webpack_require__(5);
+	var assign = __webpack_require__(21);
+
+	var ReactPropTypesSecret = __webpack_require__(7);
+	var checkPropTypes = __webpack_require__(22);
+
+	module.exports = function(isValidElement, throwOnDirectAccess) {
+	  /* global Symbol */
+	  var ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
+	  var FAUX_ITERATOR_SYMBOL = '@@iterator'; // Before Symbol spec.
+
+	  /**
+	   * Returns the iterator method function contained on the iterable object.
+	   *
+	   * Be sure to invoke the function with the iterable as context:
+	   *
+	   *     var iteratorFn = getIteratorFn(myIterable);
+	   *     if (iteratorFn) {
+	   *       var iterator = iteratorFn.call(myIterable);
+	   *       ...
+	   *     }
+	   *
+	   * @param {?object} maybeIterable
+	   * @return {?function}
+	   */
+	  function getIteratorFn(maybeIterable) {
+	    var iteratorFn = maybeIterable && (ITERATOR_SYMBOL && maybeIterable[ITERATOR_SYMBOL] || maybeIterable[FAUX_ITERATOR_SYMBOL]);
+	    if (typeof iteratorFn === 'function') {
+	      return iteratorFn;
 	    }
-	    return result;
 	  }
-	  debounced.cancel = cancel;
-	  debounced.flush = flush;
-	  return debounced;
-	}
+
+	  /**
+	   * Collection of methods that allow declaration and validation of props that are
+	   * supplied to React components. Example usage:
+	   *
+	   *   var Props = require('ReactPropTypes');
+	   *   var MyArticle = React.createClass({
+	   *     propTypes: {
+	   *       // An optional string prop named "description".
+	   *       description: Props.string,
+	   *
+	   *       // A required enum prop named "category".
+	   *       category: Props.oneOf(['News','Photos']).isRequired,
+	   *
+	   *       // A prop named "dialog" that requires an instance of Dialog.
+	   *       dialog: Props.instanceOf(Dialog).isRequired
+	   *     },
+	   *     render: function() { ... }
+	   *   });
+	   *
+	   * A more formal specification of how these methods are used:
+	   *
+	   *   type := array|bool|func|object|number|string|oneOf([...])|instanceOf(...)
+	   *   decl := ReactPropTypes.{type}(.isRequired)?
+	   *
+	   * Each and every declaration produces a function with the same signature. This
+	   * allows the creation of custom validation functions. For example:
+	   *
+	   *  var MyLink = React.createClass({
+	   *    propTypes: {
+	   *      // An optional string or URI prop named "href".
+	   *      href: function(props, propName, componentName) {
+	   *        var propValue = props[propName];
+	   *        if (propValue != null && typeof propValue !== 'string' &&
+	   *            !(propValue instanceof URI)) {
+	   *          return new Error(
+	   *            'Expected a string or an URI for ' + propName + ' in ' +
+	   *            componentName
+	   *          );
+	   *        }
+	   *      }
+	   *    },
+	   *    render: function() {...}
+	   *  });
+	   *
+	   * @internal
+	   */
+
+	  var ANONYMOUS = '<<anonymous>>';
+
+	  // Important!
+	  // Keep this list in sync with production version in `./factoryWithThrowingShims.js`.
+	  var ReactPropTypes = {
+	    array: createPrimitiveTypeChecker('array'),
+	    bool: createPrimitiveTypeChecker('boolean'),
+	    func: createPrimitiveTypeChecker('function'),
+	    number: createPrimitiveTypeChecker('number'),
+	    object: createPrimitiveTypeChecker('object'),
+	    string: createPrimitiveTypeChecker('string'),
+	    symbol: createPrimitiveTypeChecker('symbol'),
+
+	    any: createAnyTypeChecker(),
+	    arrayOf: createArrayOfTypeChecker,
+	    element: createElementTypeChecker(),
+	    instanceOf: createInstanceTypeChecker,
+	    node: createNodeChecker(),
+	    objectOf: createObjectOfTypeChecker,
+	    oneOf: createEnumTypeChecker,
+	    oneOfType: createUnionTypeChecker,
+	    shape: createShapeTypeChecker,
+	    exact: createStrictShapeTypeChecker,
+	  };
+
+	  /**
+	   * inlined Object.is polyfill to avoid requiring consumers ship their own
+	   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+	   */
+	  /*eslint-disable no-self-compare*/
+	  function is(x, y) {
+	    // SameValue algorithm
+	    if (x === y) {
+	      // Steps 1-5, 7-10
+	      // Steps 6.b-6.e: +0 != -0
+	      return x !== 0 || 1 / x === 1 / y;
+	    } else {
+	      // Step 6.a: NaN == NaN
+	      return x !== x && y !== y;
+	    }
+	  }
+	  /*eslint-enable no-self-compare*/
+
+	  /**
+	   * We use an Error-like object for backward compatibility as people may call
+	   * PropTypes directly and inspect their output. However, we don't use real
+	   * Errors anymore. We don't inspect their stack anyway, and creating them
+	   * is prohibitively expensive if they are created too often, such as what
+	   * happens in oneOfType() for any type before the one that matched.
+	   */
+	  function PropTypeError(message) {
+	    this.message = message;
+	    this.stack = '';
+	  }
+	  // Make `instanceof Error` still work for returned errors.
+	  PropTypeError.prototype = Error.prototype;
+
+	  function createChainableTypeChecker(validate) {
+	    if (true) {
+	      var manualPropTypeCallCache = {};
+	      var manualPropTypeWarningCount = 0;
+	    }
+	    function checkType(isRequired, props, propName, componentName, location, propFullName, secret) {
+	      componentName = componentName || ANONYMOUS;
+	      propFullName = propFullName || propName;
+
+	      if (secret !== ReactPropTypesSecret) {
+	        if (throwOnDirectAccess) {
+	          // New behavior only for users of `prop-types` package
+	          invariant(
+	            false,
+	            'Calling PropTypes validators directly is not supported by the `prop-types` package. ' +
+	            'Use `PropTypes.checkPropTypes()` to call them. ' +
+	            'Read more at http://fb.me/use-check-prop-types'
+	          );
+	        } else if (("development") !== 'production' && typeof console !== 'undefined') {
+	          // Old behavior for people using React.PropTypes
+	          var cacheKey = componentName + ':' + propName;
+	          if (
+	            !manualPropTypeCallCache[cacheKey] &&
+	            // Avoid spamming the console because they are often not actionable except for lib authors
+	            manualPropTypeWarningCount < 3
+	          ) {
+	            warning(
+	              false,
+	              'You are manually calling a React.PropTypes validation ' +
+	              'function for the `%s` prop on `%s`. This is deprecated ' +
+	              'and will throw in the standalone `prop-types` package. ' +
+	              'You may be seeing this warning due to a third-party PropTypes ' +
+	              'library. See https://fb.me/react-warning-dont-call-proptypes ' + 'for details.',
+	              propFullName,
+	              componentName
+	            );
+	            manualPropTypeCallCache[cacheKey] = true;
+	            manualPropTypeWarningCount++;
+	          }
+	        }
+	      }
+	      if (props[propName] == null) {
+	        if (isRequired) {
+	          if (props[propName] === null) {
+	            return new PropTypeError('The ' + location + ' `' + propFullName + '` is marked as required ' + ('in `' + componentName + '`, but its value is `null`.'));
+	          }
+	          return new PropTypeError('The ' + location + ' `' + propFullName + '` is marked as required in ' + ('`' + componentName + '`, but its value is `undefined`.'));
+	        }
+	        return null;
+	      } else {
+	        return validate(props, propName, componentName, location, propFullName);
+	      }
+	    }
+
+	    var chainedCheckType = checkType.bind(null, false);
+	    chainedCheckType.isRequired = checkType.bind(null, true);
+
+	    return chainedCheckType;
+	  }
+
+	  function createPrimitiveTypeChecker(expectedType) {
+	    function validate(props, propName, componentName, location, propFullName, secret) {
+	      var propValue = props[propName];
+	      var propType = getPropType(propValue);
+	      if (propType !== expectedType) {
+	        // `propValue` being instance of, say, date/regexp, pass the 'object'
+	        // check, but we can offer a more precise error message here rather than
+	        // 'of type `object`'.
+	        var preciseType = getPreciseType(propValue);
+
+	        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + preciseType + '` supplied to `' + componentName + '`, expected ') + ('`' + expectedType + '`.'));
+	      }
+	      return null;
+	    }
+	    return createChainableTypeChecker(validate);
+	  }
+
+	  function createAnyTypeChecker() {
+	    return createChainableTypeChecker(emptyFunction.thatReturnsNull);
+	  }
+
+	  function createArrayOfTypeChecker(typeChecker) {
+	    function validate(props, propName, componentName, location, propFullName) {
+	      if (typeof typeChecker !== 'function') {
+	        return new PropTypeError('Property `' + propFullName + '` of component `' + componentName + '` has invalid PropType notation inside arrayOf.');
+	      }
+	      var propValue = props[propName];
+	      if (!Array.isArray(propValue)) {
+	        var propType = getPropType(propValue);
+	        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected an array.'));
+	      }
+	      for (var i = 0; i < propValue.length; i++) {
+	        var error = typeChecker(propValue, i, componentName, location, propFullName + '[' + i + ']', ReactPropTypesSecret);
+	        if (error instanceof Error) {
+	          return error;
+	        }
+	      }
+	      return null;
+	    }
+	    return createChainableTypeChecker(validate);
+	  }
+
+	  function createElementTypeChecker() {
+	    function validate(props, propName, componentName, location, propFullName) {
+	      var propValue = props[propName];
+	      if (!isValidElement(propValue)) {
+	        var propType = getPropType(propValue);
+	        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected a single ReactElement.'));
+	      }
+	      return null;
+	    }
+	    return createChainableTypeChecker(validate);
+	  }
+
+	  function createInstanceTypeChecker(expectedClass) {
+	    function validate(props, propName, componentName, location, propFullName) {
+	      if (!(props[propName] instanceof expectedClass)) {
+	        var expectedClassName = expectedClass.name || ANONYMOUS;
+	        var actualClassName = getClassName(props[propName]);
+	        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + actualClassName + '` supplied to `' + componentName + '`, expected ') + ('instance of `' + expectedClassName + '`.'));
+	      }
+	      return null;
+	    }
+	    return createChainableTypeChecker(validate);
+	  }
+
+	  function createEnumTypeChecker(expectedValues) {
+	    if (!Array.isArray(expectedValues)) {
+	       true ? warning(false, 'Invalid argument supplied to oneOf, expected an instance of array.') : void 0;
+	      return emptyFunction.thatReturnsNull;
+	    }
+
+	    function validate(props, propName, componentName, location, propFullName) {
+	      var propValue = props[propName];
+	      for (var i = 0; i < expectedValues.length; i++) {
+	        if (is(propValue, expectedValues[i])) {
+	          return null;
+	        }
+	      }
+
+	      var valuesString = JSON.stringify(expectedValues);
+	      return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of value `' + propValue + '` ' + ('supplied to `' + componentName + '`, expected one of ' + valuesString + '.'));
+	    }
+	    return createChainableTypeChecker(validate);
+	  }
+
+	  function createObjectOfTypeChecker(typeChecker) {
+	    function validate(props, propName, componentName, location, propFullName) {
+	      if (typeof typeChecker !== 'function') {
+	        return new PropTypeError('Property `' + propFullName + '` of component `' + componentName + '` has invalid PropType notation inside objectOf.');
+	      }
+	      var propValue = props[propName];
+	      var propType = getPropType(propValue);
+	      if (propType !== 'object') {
+	        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected an object.'));
+	      }
+	      for (var key in propValue) {
+	        if (propValue.hasOwnProperty(key)) {
+	          var error = typeChecker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
+	          if (error instanceof Error) {
+	            return error;
+	          }
+	        }
+	      }
+	      return null;
+	    }
+	    return createChainableTypeChecker(validate);
+	  }
+
+	  function createUnionTypeChecker(arrayOfTypeCheckers) {
+	    if (!Array.isArray(arrayOfTypeCheckers)) {
+	       true ? warning(false, 'Invalid argument supplied to oneOfType, expected an instance of array.') : void 0;
+	      return emptyFunction.thatReturnsNull;
+	    }
+
+	    for (var i = 0; i < arrayOfTypeCheckers.length; i++) {
+	      var checker = arrayOfTypeCheckers[i];
+	      if (typeof checker !== 'function') {
+	        warning(
+	          false,
+	          'Invalid argument supplied to oneOfType. Expected an array of check functions, but ' +
+	          'received %s at index %s.',
+	          getPostfixForTypeWarning(checker),
+	          i
+	        );
+	        return emptyFunction.thatReturnsNull;
+	      }
+	    }
+
+	    function validate(props, propName, componentName, location, propFullName) {
+	      for (var i = 0; i < arrayOfTypeCheckers.length; i++) {
+	        var checker = arrayOfTypeCheckers[i];
+	        if (checker(props, propName, componentName, location, propFullName, ReactPropTypesSecret) == null) {
+	          return null;
+	        }
+	      }
+
+	      return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`.'));
+	    }
+	    return createChainableTypeChecker(validate);
+	  }
+
+	  function createNodeChecker() {
+	    function validate(props, propName, componentName, location, propFullName) {
+	      if (!isNode(props[propName])) {
+	        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`, expected a ReactNode.'));
+	      }
+	      return null;
+	    }
+	    return createChainableTypeChecker(validate);
+	  }
+
+	  function createShapeTypeChecker(shapeTypes) {
+	    function validate(props, propName, componentName, location, propFullName) {
+	      var propValue = props[propName];
+	      var propType = getPropType(propValue);
+	      if (propType !== 'object') {
+	        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
+	      }
+	      for (var key in shapeTypes) {
+	        var checker = shapeTypes[key];
+	        if (!checker) {
+	          continue;
+	        }
+	        var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
+	        if (error) {
+	          return error;
+	        }
+	      }
+	      return null;
+	    }
+	    return createChainableTypeChecker(validate);
+	  }
+
+	  function createStrictShapeTypeChecker(shapeTypes) {
+	    function validate(props, propName, componentName, location, propFullName) {
+	      var propValue = props[propName];
+	      var propType = getPropType(propValue);
+	      if (propType !== 'object') {
+	        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
+	      }
+	      // We need to check all keys in case some are required but missing from
+	      // props.
+	      var allKeys = assign({}, props[propName], shapeTypes);
+	      for (var key in allKeys) {
+	        var checker = shapeTypes[key];
+	        if (!checker) {
+	          return new PropTypeError(
+	            'Invalid ' + location + ' `' + propFullName + '` key `' + key + '` supplied to `' + componentName + '`.' +
+	            '\nBad object: ' + JSON.stringify(props[propName], null, '  ') +
+	            '\nValid keys: ' +  JSON.stringify(Object.keys(shapeTypes), null, '  ')
+	          );
+	        }
+	        var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
+	        if (error) {
+	          return error;
+	        }
+	      }
+	      return null;
+	    }
+
+	    return createChainableTypeChecker(validate);
+	  }
+
+	  function isNode(propValue) {
+	    switch (typeof propValue) {
+	      case 'number':
+	      case 'string':
+	      case 'undefined':
+	        return true;
+	      case 'boolean':
+	        return !propValue;
+	      case 'object':
+	        if (Array.isArray(propValue)) {
+	          return propValue.every(isNode);
+	        }
+	        if (propValue === null || isValidElement(propValue)) {
+	          return true;
+	        }
+
+	        var iteratorFn = getIteratorFn(propValue);
+	        if (iteratorFn) {
+	          var iterator = iteratorFn.call(propValue);
+	          var step;
+	          if (iteratorFn !== propValue.entries) {
+	            while (!(step = iterator.next()).done) {
+	              if (!isNode(step.value)) {
+	                return false;
+	              }
+	            }
+	          } else {
+	            // Iterator will provide entry [k,v] tuples rather than values.
+	            while (!(step = iterator.next()).done) {
+	              var entry = step.value;
+	              if (entry) {
+	                if (!isNode(entry[1])) {
+	                  return false;
+	                }
+	              }
+	            }
+	          }
+	        } else {
+	          return false;
+	        }
+
+	        return true;
+	      default:
+	        return false;
+	    }
+	  }
+
+	  function isSymbol(propType, propValue) {
+	    // Native Symbol.
+	    if (propType === 'symbol') {
+	      return true;
+	    }
+
+	    // 19.4.3.5 Symbol.prototype[@@toStringTag] === 'Symbol'
+	    if (propValue['@@toStringTag'] === 'Symbol') {
+	      return true;
+	    }
+
+	    // Fallback for non-spec compliant Symbols which are polyfilled.
+	    if (typeof Symbol === 'function' && propValue instanceof Symbol) {
+	      return true;
+	    }
+
+	    return false;
+	  }
+
+	  // Equivalent of `typeof` but with special handling for array and regexp.
+	  function getPropType(propValue) {
+	    var propType = typeof propValue;
+	    if (Array.isArray(propValue)) {
+	      return 'array';
+	    }
+	    if (propValue instanceof RegExp) {
+	      // Old webkits (at least until Android 4.0) return 'function' rather than
+	      // 'object' for typeof a RegExp. We'll normalize this here so that /bla/
+	      // passes PropTypes.object.
+	      return 'object';
+	    }
+	    if (isSymbol(propType, propValue)) {
+	      return 'symbol';
+	    }
+	    return propType;
+	  }
+
+	  // This handles more types than `getPropType`. Only used for error messages.
+	  // See `createPrimitiveTypeChecker`.
+	  function getPreciseType(propValue) {
+	    if (typeof propValue === 'undefined' || propValue === null) {
+	      return '' + propValue;
+	    }
+	    var propType = getPropType(propValue);
+	    if (propType === 'object') {
+	      if (propValue instanceof Date) {
+	        return 'date';
+	      } else if (propValue instanceof RegExp) {
+	        return 'regexp';
+	      }
+	    }
+	    return propType;
+	  }
+
+	  // Returns a string that is postfixed to a warning about an invalid type.
+	  // For example, "undefined" or "of type array"
+	  function getPostfixForTypeWarning(value) {
+	    var type = getPreciseType(value);
+	    switch (type) {
+	      case 'array':
+	      case 'object':
+	        return 'an ' + type;
+	      case 'boolean':
+	      case 'date':
+	      case 'regexp':
+	        return 'a ' + type;
+	      default:
+	        return type;
+	    }
+	  }
+
+	  // Returns class name of the object, if any.
+	  function getClassName(propValue) {
+	    if (!propValue.constructor || !propValue.constructor.name) {
+	      return ANONYMOUS;
+	    }
+	    return propValue.constructor.name;
+	  }
+
+	  ReactPropTypes.checkPropTypes = checkPropTypes;
+	  ReactPropTypes.PropTypes = ReactPropTypes;
+
+	  return ReactPropTypes;
+	};
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	/**
-	 * Creates a throttled function that only invokes `func` at most once per
-	 * every `wait` milliseconds. The throttled function comes with a `cancel`
-	 * method to cancel delayed `func` invocations and a `flush` method to
-	 * immediately invoke them. Provide `options` to indicate whether `func`
-	 * should be invoked on the leading and/or trailing edge of the `wait`
-	 * timeout. The `func` is invoked with the last arguments provided to the
-	 * throttled function. Subsequent calls to the throttled function return the
-	 * result of the last `func` invocation.
+	 * Copyright (c) 2013-present, Facebook, Inc.
 	 *
-	 * **Note:** If `leading` and `trailing` options are `true`, `func` is
-	 * invoked on the trailing edge of the timeout only if the throttled function
-	 * is invoked more than once during the `wait` timeout.
-	 *
-	 * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
-	 * until to the next tick, similar to `setTimeout` with a timeout of `0`.
-	 *
-	 * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
-	 * for details over the differences between `_.throttle` and `_.debounce`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 0.1.0
-	 * @category Function
-	 * @param {Function} func The function to throttle.
-	 * @param {number} [wait=0] The number of milliseconds to throttle invocations to.
-	 * @param {Object} [options={}] The options object.
-	 * @param {boolean} [options.leading=true]
-	 *  Specify invoking on the leading edge of the timeout.
-	 * @param {boolean} [options.trailing=true]
-	 *  Specify invoking on the trailing edge of the timeout.
-	 * @returns {Function} Returns the new throttled function.
-	 * @example
-	 *
-	 * // Avoid excessively updating the position while scrolling.
-	 * jQuery(window).on('scroll', _.throttle(updatePosition, 100));
-	 *
-	 * // Invoke `renewToken` when the click event is fired, but not more than once every 5 minutes.
-	 * var throttled = _.throttle(renewToken, 300000, { 'trailing': false });
-	 * jQuery(element).on('click', throttled);
-	 *
-	 * // Cancel the trailing throttled invocation.
-	 * jQuery(window).on('popstate', throttled.cancel);
+	 * This source code is licensed under the MIT license found in the
+	 * LICENSE file in the root directory of this source tree.
 	 */
-	function throttle(func, wait, options) {
-	  var leading = true,
-	      trailing = true;
 
-	  if (typeof func != 'function') {
-	    throw new TypeError(FUNC_ERROR_TEXT);
-	  }
-	  if (isObject(options)) {
-	    leading = 'leading' in options ? !!options.leading : leading;
-	    trailing = 'trailing' in options ? !!options.trailing : trailing;
-	  }
-	  return debounce(func, wait, {
-	    'leading': leading,
-	    'maxWait': wait,
-	    'trailing': trailing
-	  });
+	if (true) {
+	  var REACT_ELEMENT_TYPE = (typeof Symbol === 'function' &&
+	    Symbol.for &&
+	    Symbol.for('react.element')) ||
+	    0xeac7;
+
+	  var isValidElement = function(object) {
+	    return typeof object === 'object' &&
+	      object !== null &&
+	      object.$$typeof === REACT_ELEMENT_TYPE;
+	  };
+
+	  // By explicitly using `prop-types` you are opting into new development behavior.
+	  // http://fb.me/prop-types-in-prod
+	  var throwOnDirectAccess = true;
+	  module.exports = __webpack_require__(23)(isValidElement, throwOnDirectAccess);
+	} else {
+	  // By explicitly using `prop-types` you are opting into new production behavior.
+	  // http://fb.me/prop-types-in-prod
+	  module.exports = require('./factoryWithThrowingShims')();
 	}
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/* eslint-disable no-undefined */
+
+	var throttle = __webpack_require__(8);
 
 	/**
-	 * Checks if `value` is the
-	 * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
-	 * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 * Debounce execution of a function. Debouncing, unlike throttling,
+	 * guarantees that a function is only executed a single time, either at the
+	 * very beginning of a series of calls, or at the very end.
 	 *
-	 * @static
-	 * @memberOf _
-	 * @since 0.1.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
-	 * @example
+	 * @param  {Number}   delay         A zero-or-greater delay in milliseconds. For event callbacks, values around 100 or 250 (or even higher) are most useful.
+	 * @param  {Boolean}  atBegin       Optional, defaults to false. If atBegin is false or unspecified, callback will only be executed `delay` milliseconds
+	 *                                  after the last debounced-function call. If atBegin is true, callback will be executed only at the first debounced-function call.
+	 *                                  (After the throttled-function has not been called for `delay` milliseconds, the internal counter is reset).
+	 * @param  {Function} callback      A function to be executed after delay milliseconds. The `this` context and all arguments are passed through, as-is,
+	 *                                  to `callback` when the debounced-function is executed.
 	 *
-	 * _.isObject({});
-	 * // => true
-	 *
-	 * _.isObject([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isObject(_.noop);
-	 * // => true
-	 *
-	 * _.isObject(null);
-	 * // => false
+	 * @return {Function} A new, debounced function.
 	 */
-	function isObject(value) {
-	  var type = typeof value;
-	  return !!value && (type == 'object' || type == 'function');
-	}
+	module.exports = function ( delay, atBegin, callback ) {
+		return callback === undefined ? throttle(delay, atBegin, false) : throttle(delay, callback, atBegin !== false);
+	};
 
-	/**
-	 * Checks if `value` is object-like. A value is object-like if it's not `null`
-	 * and has a `typeof` result of "object".
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
-	 * @example
-	 *
-	 * _.isObjectLike({});
-	 * // => true
-	 *
-	 * _.isObjectLike([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isObjectLike(_.noop);
-	 * // => false
-	 *
-	 * _.isObjectLike(null);
-	 * // => false
-	 */
-	function isObjectLike(value) {
-	  return !!value && typeof value == 'object';
-	}
 
-	/**
-	 * Checks if `value` is classified as a `Symbol` primitive or object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
-	 * @example
-	 *
-	 * _.isSymbol(Symbol.iterator);
-	 * // => true
-	 *
-	 * _.isSymbol('abc');
-	 * // => false
-	 */
-	function isSymbol(value) {
-	  return typeof value == 'symbol' ||
-	    (isObjectLike(value) && objectToString.call(value) == symbolTag);
-	}
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
 
-	/**
-	 * Converts `value` to a number.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to process.
-	 * @returns {number} Returns the number.
-	 * @example
-	 *
-	 * _.toNumber(3.2);
-	 * // => 3.2
-	 *
-	 * _.toNumber(Number.MIN_VALUE);
-	 * // => 5e-324
-	 *
-	 * _.toNumber(Infinity);
-	 * // => Infinity
-	 *
-	 * _.toNumber('3.2');
-	 * // => 3.2
-	 */
-	function toNumber(value) {
-	  if (typeof value == 'number') {
-	    return value;
-	  }
-	  if (isSymbol(value)) {
-	    return NAN;
-	  }
-	  if (isObject(value)) {
-	    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
-	    value = isObject(other) ? (other + '') : other;
-	  }
-	  if (typeof value != 'string') {
-	    return value === 0 ? value : +value;
-	  }
-	  value = value.replace(reTrim, '');
-	  var isBinary = reIsBinary.test(value);
-	  return (isBinary || reIsOctal.test(value))
-	    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
-	    : (reIsBadHex.test(value) ? NAN : +value);
-	}
+	var throttle = __webpack_require__(8);
+	var debounce = __webpack_require__(25);
 
-	module.exports = throttle;
+	module.exports = {
+		throttle: throttle,
+		debounce: debounce
+	};
 
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
-/***/ },
-/* 18 */
-/***/ function(module, exports) {
+/***/ }),
+/* 27 */
+/***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_18__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_27__;
 
-/***/ },
-/* 19 */
-/***/ function(module, exports) {
+/***/ }),
+/* 28 */
+/***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_19__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_28__;
 
-/***/ }
+/***/ })
 /******/ ])
 });
 ;
