@@ -15,10 +15,18 @@ var reactDomExternal = {
     amd: "react-dom"
 };
 
+var propTypes = {
+    root: "PropTypes",
+    commonjs2: "prop-types",
+    commonjs: "prop-types",
+    amd: "prop-types"
+};
+
 var config = {
     externals: {
         "react": reactExternal,
-        "react-dom": reactDomExternal
+        "react-dom": reactDomExternal,
+        "prop-types": propTypes
     },
     module: {
         loaders: [
@@ -30,7 +38,6 @@ var config = {
         libraryTarget: "umd"
     },
     plugins: [
-        new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.DefinePlugin({
             "process.env.NODE_ENV": JSON.stringify(env)
         })
