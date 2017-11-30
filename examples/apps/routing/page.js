@@ -1,5 +1,6 @@
 /* eslint-disable react/no-multi-comp */
-import React, {Component, PropTypes} from "react";
+import React, {Component} from "react";
+import PropTypes from "prop-types";
 import {Bling as Gpt} from "react-gpt"; // eslint-disable-line import/no-unresolved
 import styles from "./styles/page";
 
@@ -7,7 +8,7 @@ class Page extends Component {
     static propTypes = {
         adUnitPath: PropTypes.string,
         params: PropTypes.object
-    }
+    };
 
     render() {
         const {adUnitPath, params} = this.props;

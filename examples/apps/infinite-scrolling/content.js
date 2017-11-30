@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from "react";
+import React, {Component} from "react";
+import PropTypes from "prop-types";
 import Radium from "radium";
 import {Bling as Gpt} from "react-gpt"; // eslint-disable-line import/no-unresolved
 import styles from "./styles/content";
@@ -25,7 +26,7 @@ class Content extends Component {
     static propTypes = {
         index: PropTypes.number,
         targeting: PropTypes.object
-    }
+    };
     render() {
         const {index, targeting} = this.props;
         let ad;
@@ -47,7 +48,10 @@ class Content extends Component {
                     {ad}
                     <p>
                         <span style={styles.title}>Content {index}</span>
-                        <span style={styles.description}>Lorem ipsum dolor sit amet, accusamus complectitur an est</span>
+                        <span style={styles.description}>
+                            Lorem ipsum dolor sit amet, accusamus complectitur
+                            an est
+                        </span>
                         {contents[index]}
                     </p>
                 </div>

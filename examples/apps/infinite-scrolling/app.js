@@ -1,7 +1,7 @@
 /* eslint-disable react/sort-comp */
 import React, {Component} from "react";
 import Radium from "radium";
-import debounce from "debounce";
+import debounce from "throttle-debounce/debounce";
 import {Bling as Gpt, Events} from "react-gpt"; // eslint-disable-line import/no-unresolved
 import "../log";
 import Content from "./content";
@@ -16,8 +16,8 @@ class App extends Component {
     state = {
         page: 1,
         size: [728, 90]
-    }
-    time = 0
+    };
+    time = 0;
     componentDidMount() {
         window.addEventListener("scroll", this.onScroll);
         window.addEventListener("resize", this.onScroll);
@@ -40,14 +40,14 @@ class App extends Component {
         window.removeEventListener("resize", this.onScroll);
         this.stopTimer();
     }
-    onScroll = debounce(() => {
+    onScroll = debounce(66, () => {
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
         if (scrollTop + window.innerHeight >= document.body.clientHeight) {
             this.setState({
                 page: ++this.state.page
             });
         }
-    }, 66)
+    });
     startTimer() {
         this.stopTimer();
         this.timer = setInterval(() => {
@@ -68,7 +68,7 @@ class App extends Component {
         const targeting = {
             test: "infinitescroll"
         };
-        while (contentCnt < page * 3) { // eslint-disable-line no-unmodified-loop-condition
+        while (contentCnt < page * 3) {
             contents.push(
                 <Content
                     index={contentCnt % 3}
@@ -92,9 +92,7 @@ class App extends Component {
                         targeting={targeting}
                     />
                 </div>
-                <div style={styles.main}>
-                    {contents}
-                </div>
+                <div style={styles.main}>{contents}</div>
             </div>
         );
     }

@@ -1,9 +1,12 @@
-<img src="http://static.nfl.com/static/content/public/static/img/logos/nfl-engineering-light.svg" width="300" />
+<img align="right" height="200" src="http://static.nfl.com/static/content/public/static/img/logos/nfl-engineering-light.svg" />
+
 # React GPT
-[![npm package](https://img.shields.io/npm/v/react-gpt.svg?style=flat-square)](https://www.npmjs.org/package/react-gpt)
-[![build status](https://img.shields.io/travis/nfl/react-gpt/master.svg?style=flat-square)](https://travis-ci.org/nfl/react-gpt)
-[![dependency status](https://img.shields.io/david/nfl/react-gpt.svg?style=flat-square)](https://david-dm.org/nfl/react-gpt)
+
+[![npm Version](https://img.shields.io/npm/v/react-gpt.svg?style=flat-square)](https://www.npmjs.org/package/react-gpt)
+[![Build Status](https://img.shields.io/travis/nfl/react-gpt/master.svg?style=flat-square)](https://travis-ci.org/nfl/react-gpt)
+[![Dependency Status](https://img.shields.io/david/nfl/react-gpt.svg?style=flat-square)](https://david-dm.org/nfl/react-gpt)
 [![codecov.io](https://img.shields.io/codecov/c/github/nfl/react-gpt/master.svg?style=flat-square)](https://codecov.io/github/nfl/react-gpt?branch=master)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md#pull-requests)
 
 A [React](https://github.com/facebook/react) component for [Google Publisher Tags](https://developers.google.com/doubleclick-gpt/?hl=en).
 
@@ -27,7 +30,7 @@ A [React](https://github.com/facebook/react) component for [Google Publisher Tag
 ## Installation
 
 ```
-$ npm install --save react-gpt
+$ yarn react-gpt
 ```
 
 React GPT depends on [Promise](https://promisesaplus.com/) to be available in browser. If your application support the browser which doesn't support Promise, please include the polyfill.
@@ -117,7 +120,7 @@ class Application extends React.Component {
 ## To run examples:
 
 1. Clone this repo
-2. Run `npm install`
+2. Run `yarn`
 3. Run `npm run examples` for client side rendering, `npm start` for server side rendering.
 4. Point your browser to http://localhost:8080
 
