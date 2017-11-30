@@ -184,7 +184,14 @@ class Bling extends Component {
          *
          * @property style
          */
-        style: PropTypes.object
+        style: PropTypes.object,
+
+        /**
+         * An optional object to be applied to in viewport.
+         *
+         * @property style
+         */
+        viewableThresholdValues: PropTypes.object
     };
 
     /**
@@ -507,10 +514,10 @@ class Bling extends Component {
         }
         const viewableThresholdValues = this.getUserViewableThresholdValues();
         const inViewport = Bling._adManager.isInViewport(
-          ReactDOM.findDOMNode(this),
-          slotSize,
-          this.viewableThreshold,
-          viewableThresholdValues
+            ReactDOM.findDOMNode(this),
+            slotSize,
+            this.viewableThreshold,
+            viewableThresholdValues
         );
         if (inViewport) {
             this.setState({inViewport: true});
