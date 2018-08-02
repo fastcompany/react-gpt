@@ -1483,7 +1483,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 
 	                var PREBID_TIMEOUT = 700;
-	                var pbjs = pbjs || {};
+	                var pbjs = window.pbjs || {};
 	                pbjs.que = pbjs.que || [];
 
 	                Bling._adManager.googletag.pubads().disableInitialLoad();
