@@ -698,7 +698,7 @@ class Bling extends Component {
             }
 
             const PREBID_TIMEOUT = 700;
-            const pbjs = pbjs || {};
+            const pbjs = window.pbjs || {};
             pbjs.que = pbjs.que || [];
 
             Bling._adManager.googletag.pubads().disableInitialLoad();
