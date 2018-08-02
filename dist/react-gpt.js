@@ -1481,7 +1481,50 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (!Bling._adManager._disableInitialLoad && !Bling._adManager._syncCorrelator) {
 	                    Bling._adManager.updateCorrelator();
 	                }
-	                Bling._adManager.googletag.display(divId);
+
+	                var PREBID_TIMEOUT = 700;
+	                var pbjs = pbjs || {};
+	                pbjs.que = pbjs.que || [];
+
+	                Bling._adManager.googletag.pubads().disableInitialLoad();
+
+	                var adUnits = [{
+	                    code: "bling-1",
+	                    sizes: [[728, 90], [970, 90]],
+	                    bids: [{
+	                        bidder: "appnexus",
+	                        params: {
+	                            placementId: "5823281"
+	                        }
+	                    }]
+	                }];
+
+	                pbjs.que.push(function () {
+	                    pbjs.addAdUnits(adUnits);
+	                    pbjs.requestBids({
+	                        bidsBackHandler: _sendAdserverRequest
+	                    });
+	                });
+
+	                var _sendAdserverRequest = function _sendAdserverRequest() {
+	                    if (pbjs.adserverRequestSent) {
+	                        return;
+	                    }
+	                    pbjs.adserverRequestSent = true;
+	                    Bling._adManager.googletag.cmd.push(function () {
+	                        pbjs.que.push(function () {
+	                            pbjs.setTargetingForGPTAsync();
+	                            window.googletag.pubads().refresh();
+	                            Bling._adManager.googletag.display(divId);
+	                        });
+	                    });
+	                };
+
+	                setTimeout(function () {
+	                    _sendAdserverRequest();
+	                }, PREBID_TIMEOUT);
+
+	                // Bling._adManager.googletag.display(divId);
 	                if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
 	                    this.refresh();
 	                }

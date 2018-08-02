@@ -693,17 +693,54 @@ class Bling extends Component {
         if (content) {
             Bling._adManager.googletag.content().setContent(adSlot, content);
         } else {
-            if (
-                !Bling._adManager._disableInitialLoad &&
-                !Bling._adManager._syncCorrelator
-            ) {
+            if (!Bling._adManager._disableInitialLoad && !Bling._adManager._syncCorrelator) {
                 Bling._adManager.updateCorrelator();
             }
-            Bling._adManager.googletag.display(divId);
-            if (
-                Bling._adManager._disableInitialLoad &&
-                !Bling._adManager._initialRender
-            ) {
+
+            const PREBID_TIMEOUT = 700;
+            const pbjs = pbjs || {};
+            pbjs.que = pbjs.que || [];
+
+            Bling._adManager.googletag.pubads().disableInitialLoad();
+
+            const adUnits = [{
+                code: "bling-1",
+                sizes: [[728, 90], [970, 90]],
+                bids: [{
+                    bidder: "appnexus",
+                    params: {
+                        placementId: "5823281"
+                    }
+                }]
+            }];
+
+            pbjs.que.push(() => {
+                pbjs.addAdUnits(adUnits);
+                pbjs.requestBids({
+                    bidsBackHandler: sendAdserverRequest
+                });
+            });
+
+            const sendAdserverRequest = () => {
+                if (pbjs.adserverRequestSent) {
+                    return;
+                }
+                pbjs.adserverRequestSent = true;
+                Bling._adManager.googletag.cmd.push(() => {
+                    pbjs.que.push(() => {
+                        pbjs.setTargetingForGPTAsync();
+                        window.googletag.pubads().refresh();
+                        Bling._adManager.googletag.display(divId);
+                    });
+                });
+            };
+
+            setTimeout(() => {
+                sendAdserverRequest();
+            }, PREBID_TIMEOUT);
+
+            // Bling._adManager.googletag.display(divId);
+            if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
                 this.refresh();
             }
         }
