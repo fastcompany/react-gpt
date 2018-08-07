@@ -697,21 +697,27 @@ class Bling extends Component {
                 Bling._adManager.updateCorrelator();
             }
 
+            // PBJS configs
             const PREBID_TIMEOUT = 700;
             const pbjs = window.pbjs || {};
             pbjs.que = pbjs.que || [];
 
+            let slotSize = this.getSlotSize();
+            const prebidConf = this.props.prebidConf || [{
+                bidder: "appnexus",
+                params: {
+                    placementId: "5823281"
+                }
+            }];
+
+            // Pause ad
             Bling._adManager.googletag.pubads().disableInitialLoad();
 
+            // Define pbjs unit
             const adUnits = [{
-                code: "bling-1",
-                sizes: [[728, 90], [970, 90]],
-                bids: [{
-                    bidder: "appnexus",
-                    params: {
-                        placementId: "5823281"
-                    }
-                }]
+                code: divId,
+                sizes: slotSize,
+                bids: prebidConf
             }];
 
             pbjs.que.push(() => {
