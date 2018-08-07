@@ -1507,21 +1507,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            bidsBackHandler: _sendAdserverRequest
 	                        });
 	                    });
-	                    var slotSent = {
-	                        divId: false
-	                    };
 
 	                    var _sendAdserverRequest = function _sendAdserverRequest() {
-	                        if (pbjs.adserverRequestSent && slotSent[divId]) {
+	                        if (pbjs.adserverRequestSent) {
 	                            return;
 	                        }
+
 	                        pbjs.adserverRequestSent = true;
-	                        slotSent[divId] = true;
 	                        Bling._adManager.googletag.cmd.push(function () {
 	                            pbjs.que.push(function () {
 	                                pbjs.setTargetingForGPTAsync();
 	                                window.googletag.pubads().refresh();
 	                                Bling._adManager.googletag.display(divId);
+	                                pbjs.adserverRequestSent = false;
 	                            });
 	                        });
 	                    };
