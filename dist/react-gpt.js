@@ -1488,49 +1488,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	                pbjs.que = pbjs.que || [];
 
 	                var slotSize = this.getSlotSize();
-	                var prebidConf = this.props.prebidConf || [{
-	                    bidder: "appnexus",
-	                    params: {
-	                        placementId: "5823281"
-	                    }
-	                }];
+	                var prebidConf = this.props.prebidConf;
 
-	                // Pause ad
-	                Bling._adManager.googletag.pubads().disableInitialLoad();
+	                if (prebidConf) {
+	                    // Pause ad
+	                    Bling._adManager.googletag.pubads().disableInitialLoad();
 
-	                // Define pbjs unit
-	                var adUnits = [{
-	                    code: divId,
-	                    sizes: slotSize,
-	                    bids: prebidConf
-	                }];
+	                    // Define pbjs unit
+	                    var adUnits = [{
+	                        code: divId,
+	                        sizes: slotSize,
+	                        bids: prebidConf
+	                    }];
 
-	                pbjs.que.push(function () {
-	                    pbjs.addAdUnits(adUnits);
-	                    pbjs.requestBids({
-	                        bidsBackHandler: _sendAdserverRequest
-	                    });
-	                });
-
-	                var _sendAdserverRequest = function _sendAdserverRequest() {
-	                    if (pbjs.adserverRequestSent) {
-	                        return;
-	                    }
-	                    pbjs.adserverRequestSent = true;
-	                    Bling._adManager.googletag.cmd.push(function () {
-	                        pbjs.que.push(function () {
-	                            pbjs.setTargetingForGPTAsync();
-	                            window.googletag.pubads().refresh();
-	                            Bling._adManager.googletag.display(divId);
+	                    pbjs.que.push(function () {
+	                        pbjs.addAdUnits(adUnits);
+	                        pbjs.requestBids({
+	                            bidsBackHandler: _sendAdserverRequest
 	                        });
 	                    });
-	                };
 
-	                setTimeout(function () {
-	                    _sendAdserverRequest();
-	                }, PREBID_TIMEOUT);
+	                    var _sendAdserverRequest = function _sendAdserverRequest() {
+	                        if (pbjs.adserverRequestSent) {
+	                            return;
+	                        }
+	                        pbjs.adserverRequestSent = true;
+	                        Bling._adManager.googletag.cmd.push(function () {
+	                            pbjs.que.push(function () {
+	                                pbjs.setTargetingForGPTAsync();
+	                                window.googletag.pubads().refresh();
+	                                Bling._adManager.googletag.display(divId);
+	                            });
+	                        });
+	                    };
 
-	                // Bling._adManager.googletag.display(divId);
+	                    setTimeout(function () {
+	                        _sendAdserverRequest();
+	                    }, PREBID_TIMEOUT);
+	                } else {
+	                    Bling._adManager.googletag.display(divId);
+	                }
+
 	                if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
 	                    this.refresh();
 	                }

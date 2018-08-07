@@ -703,49 +703,47 @@ class Bling extends Component {
             pbjs.que = pbjs.que || [];
 
             let slotSize = this.getSlotSize();
-            const prebidConf = this.props.prebidConf || [{
-                bidder: "appnexus",
-                params: {
-                    placementId: "5823281"
-                }
-            }];
+            const prebidConf = this.props.prebidConf;
 
-            // Pause ad
-            Bling._adManager.googletag.pubads().disableInitialLoad();
+            if (prebidConf) {
+                // Pause ad
+                Bling._adManager.googletag.pubads().disableInitialLoad();
 
-            // Define pbjs unit
-            const adUnits = [{
-                code: divId,
-                sizes: slotSize,
-                bids: prebidConf
-            }];
+                // Define pbjs unit
+                const adUnits = [{
+                    code: divId,
+                    sizes: slotSize,
+                    bids: prebidConf
+                }];
 
-            pbjs.que.push(() => {
-                pbjs.addAdUnits(adUnits);
-                pbjs.requestBids({
-                    bidsBackHandler: sendAdserverRequest
-                });
-            });
-
-            const sendAdserverRequest = () => {
-                if (pbjs.adserverRequestSent) {
-                    return;
-                }
-                pbjs.adserverRequestSent = true;
-                Bling._adManager.googletag.cmd.push(() => {
-                    pbjs.que.push(() => {
-                        pbjs.setTargetingForGPTAsync();
-                        window.googletag.pubads().refresh();
-                        Bling._adManager.googletag.display(divId);
+                pbjs.que.push(() => {
+                    pbjs.addAdUnits(adUnits);
+                    pbjs.requestBids({
+                        bidsBackHandler: sendAdserverRequest
                     });
                 });
-            };
 
-            setTimeout(() => {
-                sendAdserverRequest();
-            }, PREBID_TIMEOUT);
+                const sendAdserverRequest = () => {
+                    if (pbjs.adserverRequestSent) {
+                        return;
+                    }
+                    pbjs.adserverRequestSent = true;
+                    Bling._adManager.googletag.cmd.push(() => {
+                        pbjs.que.push(() => {
+                            pbjs.setTargetingForGPTAsync();
+                            window.googletag.pubads().refresh();
+                            Bling._adManager.googletag.display(divId);
+                        });
+                    });
+                };
 
-            // Bling._adManager.googletag.display(divId);
+                setTimeout(() => {
+                    sendAdserverRequest();
+                }, PREBID_TIMEOUT);
+            } else {
+                Bling._adManager.googletag.display(divId);
+            }
+
             if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
                 this.refresh();
             }
