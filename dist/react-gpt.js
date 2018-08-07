@@ -1483,7 +1483,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 
 	                // PBJS configs
-	                var PREBID_TIMEOUT = 700;
+	                var PREBID_TIMEOUT = 800;
 	                var pbjs = window.pbjs || {};
 	                pbjs.que = pbjs.que || [];
 
@@ -1503,6 +1503,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                    pbjs.que.push(function () {
 	                        pbjs.addAdUnits(adUnits);
+
+	                        console.log("addAdUnits ", adUnits);
 	                        pbjs.requestBids({
 	                            bidsBackHandler: _sendAdserverRequest
 	                        });
@@ -1517,7 +1519,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        Bling._adManager.googletag.cmd.push(function () {
 	                            pbjs.que.push(function () {
 	                                pbjs.setTargetingForGPTAsync();
-	                                window.googletag.pubads().refresh();
+	                                // window.googletag.pubads().refresh();
 	                                Bling._adManager.googletag.display(divId);
 	                                pbjs.adserverRequestSent = false;
 	                            });

@@ -698,7 +698,7 @@ class Bling extends Component {
             }
 
             // PBJS configs
-            const PREBID_TIMEOUT = 700;
+            const PREBID_TIMEOUT = 800;
             const pbjs = window.pbjs || {};
             pbjs.que = pbjs.que || [];
 
@@ -732,7 +732,6 @@ class Bling extends Component {
                     Bling._adManager.googletag.cmd.push(() => {
                         pbjs.que.push(() => {
                             pbjs.setTargetingForGPTAsync();
-                            window.googletag.pubads().refresh();
                             Bling._adManager.googletag.display(divId);
                             pbjs.adserverRequestSent = false;
                         });
