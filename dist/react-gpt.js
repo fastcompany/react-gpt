@@ -1507,12 +1507,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            bidsBackHandler: _sendAdserverRequest
 	                        });
 	                    });
+	                    var slotSent = {
+	                        divId: false
+	                    };
 
 	                    var _sendAdserverRequest = function _sendAdserverRequest() {
-	                        if (pbjs.adserverRequestSent) {
+	                        if (pbjs.adserverRequestSent && slotSent[divId]) {
 	                            return;
 	                        }
 	                        pbjs.adserverRequestSent = true;
+	                        slotSent[divId] = true;
 	                        Bling._adManager.googletag.cmd.push(function () {
 	                            pbjs.que.push(function () {
 	                                pbjs.setTargetingForGPTAsync();

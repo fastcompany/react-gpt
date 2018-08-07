@@ -722,12 +722,16 @@ class Bling extends Component {
                         bidsBackHandler: sendAdserverRequest
                     });
                 });
+                const slotSent = {
+                    divId: false
+                };
 
                 const sendAdserverRequest = () => {
-                    if (pbjs.adserverRequestSent) {
+                    if (pbjs.adserverRequestSent && slotSent[divId]) {
                         return;
                     }
                     pbjs.adserverRequestSent = true;
+                    slotSent[divId] = true;
                     Bling._adManager.googletag.cmd.push(() => {
                         pbjs.que.push(() => {
                             pbjs.setTargetingForGPTAsync();
