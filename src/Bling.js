@@ -699,13 +699,14 @@ class Bling extends Component {
 
             // PBJS configs
             const prebidConf = this.props.prebidConf;
-            const PREBID_TIMEOUT = prebidConf.timeout;
-            const pbjs = window.pbjs || {};
-            pbjs.que = pbjs.que || [];
-
-            let slotSize = this.getSlotSize();
 
             if (prebidConf) {
+                const PREBID_TIMEOUT = prebidConf.timeout;
+                const pbjs = window.pbjs || {};
+                pbjs.que = pbjs.que || [];
+
+                let slotSize = this.getSlotSize();
+
                 // Pause ad
                 Bling._adManager.googletag.pubads().disableInitialLoad();
 

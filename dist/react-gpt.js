@@ -1484,13 +1484,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                // PBJS configs
 	                var prebidConf = this.props.prebidConf;
-	                var PREBID_TIMEOUT = prebidConf.timeout;
-	                var pbjs = window.pbjs || {};
-	                pbjs.que = pbjs.que || [];
-
-	                var slotSize = this.getSlotSize();
 
 	                if (prebidConf) {
+	                    var PREBID_TIMEOUT = prebidConf.timeout;
+	                    var pbjs = window.pbjs || {};
+	                    pbjs.que = pbjs.que || [];
+
+	                    var slotSize = this.getSlotSize();
+
 	                    // Pause ad
 	                    Bling._adManager.googletag.pubads().disableInitialLoad();
 
