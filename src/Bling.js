@@ -698,12 +698,12 @@ class Bling extends Component {
             }
 
             // PBJS configs
-            const PREBID_TIMEOUT = 800;
+            const prebidConf = this.props.prebidConf;
+            const PREBID_TIMEOUT = prebidConf.timeout;
             const pbjs = window.pbjs || {};
             pbjs.que = pbjs.que || [];
 
             let slotSize = this.getSlotSize();
-            const prebidConf = this.props.prebidConf;
 
             if (prebidConf) {
                 // Pause ad
@@ -713,7 +713,7 @@ class Bling extends Component {
                 const adUnits = [{
                     code: divId,
                     sizes: slotSize,
-                    bids: prebidConf
+                    bids: prebidConf.bidParams
                 }];
 
                 pbjs.que.push(() => {

@@ -1483,12 +1483,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 
 	                // PBJS configs
-	                var PREBID_TIMEOUT = 800;
+	                var prebidConf = this.props.prebidConf;
+	                var PREBID_TIMEOUT = prebidConf.timeout;
 	                var pbjs = window.pbjs || {};
 	                pbjs.que = pbjs.que || [];
 
 	                var slotSize = this.getSlotSize();
-	                var prebidConf = this.props.prebidConf;
 
 	                if (prebidConf) {
 	                    // Pause ad
@@ -1498,7 +1498,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var adUnits = [{
 	                        code: divId,
 	                        sizes: slotSize,
-	                        bids: prebidConf
+	                        bids: prebidConf.bidParams
 	                    }];
 
 	                    pbjs.que.push(function () {
