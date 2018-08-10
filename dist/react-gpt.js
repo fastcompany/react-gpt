@@ -1566,6 +1566,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                        pbjs.setTargetingForGPTAsync();
 	                                    }
 	                                }
+	                                console.log(adSlot.getTargeting('hb_pb'));
+	                                var hbpbValue = adSlot.getTargeting('hb_pb');
+	                                adSlot.setTargeting('hb_pb', hbpbValue + "x");
 	                                Bling._adManager.googletag.display(divId);
 	                                pbjs.adserverRequestSent = false;
 	                            });
