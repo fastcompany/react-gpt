@@ -685,6 +685,41 @@ class Bling extends Component {
         }
     }
 
+    floorPrice(day, floorConf) {
+        if (!floorConf.floor) {
+            return 0.25;
+        }
+        // Sunday
+        if (day === 0) {
+            return floorConf.floor.sunday || floorConf.floor;
+        }
+        // Monday
+        if (day === 1) {
+            return floorConf.floor.monday || floorConf.floor;
+        }
+        // Tuesday
+        if (day === 2) {
+            return floorConf.floor.tuesday || floorConf.floor;
+        }
+        // Wednesday
+        if (day === 3) {
+            return floorConf.floor.wednesday || floorConf.floor;
+        }
+        // Thursday
+        if (day === 4) {
+            return floorConf.floor.thursday || floorConf.floor;
+        }
+        // Friday
+        if (day === 5) {
+            return floorConf.floor.friday || floorConf.floor;
+        }
+        // Saturday
+        if (day === 6) {
+            return floorConf.floor.saturday || floorConf.floor;
+        }
+        return 0.25;
+    }
+
     display() {
         const {content} = this.props;
         const divId = this._divId;
@@ -693,7 +728,10 @@ class Bling extends Component {
         if (content) {
             Bling._adManager.googletag.content().setContent(adSlot, content);
         } else {
-            if (!Bling._adManager._disableInitialLoad && !Bling._adManager._syncCorrelator) {
+            if (
+                !Bling._adManager._disableInitialLoad &&
+                !Bling._adManager._syncCorrelator
+            ) {
                 Bling._adManager.updateCorrelator();
             }
 
@@ -702,20 +740,27 @@ class Bling extends Component {
 
             if (prebidConf) {
                 const PREBID_TIMEOUT = prebidConf.timeout;
+                const priceBucket = prebidConf.priceBuckets;
+                const floorConf = prebidConf.floorPrices;
                 const pbjs = window.pbjs || {};
                 pbjs.que = pbjs.que || [];
+                const slotSize = this.getSlotSize();
 
-                let slotSize = this.getSlotSize();
+                // Set config
+                pbjs.setConfig({priceGranularity: priceBucket});
+                const floor = this.floorPrice(new Date().getDay(), floorConf);
 
                 // Pause ad
                 Bling._adManager.googletag.pubads().disableInitialLoad();
 
                 // Define pbjs unit
-                const adUnits = [{
-                    code: divId,
-                    sizes: slotSize,
-                    bids: prebidConf.bidParams
-                }];
+                const adUnits = [
+                    {
+                        code: divId,
+                        sizes: slotSize,
+                        bids: prebidConf.bidParams
+                    }
+                ];
 
                 pbjs.que.push(() => {
                     pbjs.addAdUnits(adUnits);
@@ -730,9 +775,16 @@ class Bling extends Component {
                     }
 
                     pbjs.adserverRequestSent = true;
+
                     Bling._adManager.googletag.cmd.push(() => {
                         pbjs.que.push(() => {
-                            pbjs.setTargetingForGPTAsync();
+                            if (pbjs.getHighestCpmBids(divId).length) {
+                                let highestBid = pbjs.getHighestCpmBids(divId)[0].cpm;
+                                highestBid = parseFloat(highestBid);
+                                if (highestBid >= floor) {
+                                    pbjs.setTargetingForGPTAsync();
+                                }
+                            }
                             Bling._adManager.googletag.display(divId);
                             pbjs.adserverRequestSent = false;
                         });
@@ -746,7 +798,10 @@ class Bling extends Component {
                 Bling._adManager.googletag.display(divId);
             }
 
-            if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
+            if (
+                Bling._adManager._disableInitialLoad &&
+                !Bling._adManager._initialRender
+            ) {
                 this.refresh();
             }
         }

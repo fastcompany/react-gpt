@@ -1468,6 +1468,42 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        }
 	    }, {
+	        key: "floorPrice",
+	        value: function floorPrice(day, floorConf) {
+	            if (!floorConf.floor) {
+	                return 0.25;
+	            }
+	            // Sunday
+	            if (day === 0) {
+	                return floorConf.floor.sunday || floorConf.floor;
+	            }
+	            // Monday
+	            if (day === 1) {
+	                return floorConf.floor.monday || floorConf.floor;
+	            }
+	            // Tuesday
+	            if (day === 2) {
+	                return floorConf.floor.tuesday || floorConf.floor;
+	            }
+	            // Wednesday
+	            if (day === 3) {
+	                return floorConf.floor.wednesday || floorConf.floor;
+	            }
+	            // Thursday
+	            if (day === 4) {
+	                return floorConf.floor.thursday || floorConf.floor;
+	            }
+	            // Friday
+	            if (day === 5) {
+	                return floorConf.floor.friday || floorConf.floor;
+	            }
+	            // Saturday
+	            if (day === 6) {
+	                return floorConf.floor.saturday || floorConf.floor;
+	            }
+	            return 0.25;
+	        }
+	    }, {
 	        key: "display",
 	        value: function display() {
 	            var content = this.props.content;
@@ -1487,10 +1523,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                if (prebidConf) {
 	                    var PREBID_TIMEOUT = prebidConf.timeout;
+	                    var priceBucket = prebidConf.priceBuckets;
+	                    var floorConf = prebidConf.floorPrices;
 	                    var pbjs = window.pbjs || {};
 	                    pbjs.que = pbjs.que || [];
-
 	                    var slotSize = this.getSlotSize();
+
+	                    // Set config
+	                    pbjs.setConfig({ priceGranularity: priceBucket });
+	                    var floor = this.floorPrice(new Date().getDay(), floorConf);
 
 	                    // Pause ad
 	                    Bling._adManager.googletag.pubads().disableInitialLoad();
@@ -1515,9 +1556,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 
 	                        pbjs.adserverRequestSent = true;
+
 	                        Bling._adManager.googletag.cmd.push(function () {
 	                            pbjs.que.push(function () {
-	                                pbjs.setTargetingForGPTAsync();
+	                                if (pbjs.getHighestCpmBids(divId).length) {
+	                                    var highestBid = pbjs.getHighestCpmBids(divId)[0].cpm;
+	                                    highestBid = parseFloat(highestBid);
+	                                    if (highestBid >= floor) {
+	                                        pbjs.setTargetingForGPTAsync();
+	                                    }
+	                                }
 	                                Bling._adManager.googletag.display(divId);
 	                                pbjs.adserverRequestSent = false;
 	                            });
@@ -2030,7 +2078,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var clientRect = el.getBoundingClientRect();
 	    if (!viewableThresholdValues) {
 	        viewableThresholdValues = {
-	            userViewport: 'desktop',
+	            userViewport: "desktop",
 	            mobileValue: 500,
 	            desktopValue: 500
 	        };
@@ -2040,7 +2088,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        mobileValue = _viewableThresholdVal.mobileValue,
 	        desktopValue = _viewableThresholdVal.desktopValue;
 
-	    var preLoadOffset = userViewport && userViewport === 'mobile' ? mobileValue : desktopValue;
+	    var preLoadOffset = userViewport && userViewport === "mobile" ? mobileValue : desktopValue;
 	    var rect = {
 	        top: clientRect.top - preLoadOffset,
 	        left: clientRect.left,
