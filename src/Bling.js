@@ -789,6 +789,7 @@ class Bling extends Component {
                             adSlot.setTargeting('hb_pb', `${hbpbValue}x`);
                             Bling._adManager.googletag.display(divId);
                             pbjs.adserverRequestSent = false;
+                            adSlot.clearTargeting();
                         });
                     });
                 };
