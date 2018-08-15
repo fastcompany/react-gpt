@@ -1564,10 +1564,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                    highestBid = parseFloat(highestBid);
 	                                    if (highestBid >= floor) {
 	                                        pbjs.setTargetingForGPTAsync();
+	                                    } else {
+	                                        pbjs.setTargetingForGPTAsync();
+	                                        var hbpbValue = adSlot.getTargeting('hb_pb');
+	                                        adSlot.setTargeting('hb_pb', hbpbValue + "x");
 	                                    }
 	                                }
-	                                var hbpbValue = adSlot.getTargeting('hb_pb');
-	                                adSlot.setTargeting('hb_pb', hbpbValue + "x");
 	                                Bling._adManager.googletag.display(divId);
 	                                pbjs.adserverRequestSent = false;
 	                                adSlot.clearTargeting();
