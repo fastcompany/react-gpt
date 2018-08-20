@@ -1346,7 +1346,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }, {
 	        key: "getSlotSize",
-	        value: function getSlotSize() {
+	        value: function getSlotSize(useSecondary) {
 	            var _props = this.props,
 	                origSlotSize = _props.slotSize,
 	                origSizeMapping = _props.sizeMapping;
@@ -1357,6 +1357,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            } else if (origSizeMapping) {
 	                var sizeMapping = origSizeMapping;
 	                slotSize = sizeMapping[0] && sizeMapping[0].slot;
+
+	                // For internal use, inc defines it with 0, 0 first
+	                if (useSecondary) {
+	                    slotSize = sizeMapping[1] && sizeMapping[1].slot;
+	                }
 	            }
 
 	            return slotSize;
@@ -1527,7 +1532,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var floorConf = prebidConf.floorPrices;
 	                    var pbjs = window.pbjs || {};
 	                    pbjs.que = pbjs.que || [];
-	                    var slotSize = this.getSlotSize();
+	                    var slotSize = this.getSlotSize(useSecondary = true);
 
 	                    // Set config
 	                    pbjs.setConfig({ priceGranularity: priceBucket });

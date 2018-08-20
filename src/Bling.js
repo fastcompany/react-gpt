@@ -568,7 +568,7 @@ class Bling extends Component {
     getUserViewableThresholdValues() {
         return this.props.viewableThresholdValues;
     }
-    getSlotSize() {
+    getSlotSize(useSecondary) {
         const {
             slotSize: origSlotSize,
             sizeMapping: origSizeMapping
@@ -579,6 +579,11 @@ class Bling extends Component {
         } else if (origSizeMapping) {
             const sizeMapping = origSizeMapping;
             slotSize = sizeMapping[0] && sizeMapping[0].slot;
+
+            // For internal use, inc defines it with 0, 0 first
+            if (useSecondary) {
+                slotSize = sizeMapping[1] && sizeMapping[1].slot;
+            }
         }
 
         return slotSize;
@@ -744,7 +749,7 @@ class Bling extends Component {
                 const floorConf = prebidConf.floorPrices;
                 const pbjs = window.pbjs || {};
                 pbjs.que = pbjs.que || [];
-                const slotSize = this.getSlotSize();
+                const slotSize = this.getSlotSize(useSecondary=true);
 
                 // Set config
                 pbjs.setConfig({priceGranularity: priceBucket});
