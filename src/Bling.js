@@ -749,7 +749,7 @@ class Bling extends Component {
                 const floorConf = prebidConf.floorPrices;
                 const pbjs = window.pbjs || {};
                 pbjs.que = pbjs.que || [];
-                const slotSize = this.getSlotSize(useSecondary=true);
+                const slotSize = this.getSlotSize(this.props.useSecondaryAdSizeForPrebid);
 
                 // Set config
                 pbjs.setConfig({priceGranularity: priceBucket});
