@@ -1532,7 +1532,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var floorConf = prebidConf.floorPrices;
 	                    var pbjs = window.pbjs || {};
 	                    pbjs.que = pbjs.que || [];
-	                    var slotSize = this.getSlotSize(this.props.useSecondaryAdSizeForPrebid);
+	                    var slotSize = this.getSlotSize(prebidConf.useSecondaryAdSizeForPrebid);
 
 	                    // Set config
 	                    pbjs.setConfig({ priceGranularity: priceBucket });
