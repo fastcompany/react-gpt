@@ -747,12 +747,25 @@ class Bling extends Component {
                 const PREBID_TIMEOUT = prebidConf.timeout;
                 const priceBucket = prebidConf.priceBuckets;
                 const floorConf = prebidConf.floorPrices;
+                const prebidAnalytics = prebidConf.analytics;
                 const pbjs = window.pbjs || {};
                 pbjs.que = pbjs.que || [];
                 const slotSize = this.getSlotSize(prebidConf.useSecondaryAdSizeForPrebid);
 
                 // Set config
                 pbjs.setConfig({priceGranularity: priceBucket});
+
+                // analytics
+                if (prebidAnalytics && prebidAnalytics.rubicon) {
+                    pbjs.enableAnalytics({
+                        provider: 'rubicon',
+                        options: {
+                        accountId: prebidAnalytics.rubicon,
+                        endpoint: 'https://prebid-a.rubiconproject.com/event'
+                        }
+                    });
+                }
+
                 const floor = this.floorPrice(new Date().getDay(), floorConf);
 
                 // Pause ad

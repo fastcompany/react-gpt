@@ -1530,12 +1530,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var PREBID_TIMEOUT = prebidConf.timeout;
 	                    var priceBucket = prebidConf.priceBuckets;
 	                    var floorConf = prebidConf.floorPrices;
+	                    var prebidAnalytics = prebidConf.analytics;
 	                    var pbjs = window.pbjs || {};
 	                    pbjs.que = pbjs.que || [];
 	                    var slotSize = this.getSlotSize(prebidConf.useSecondaryAdSizeForPrebid);
 
 	                    // Set config
 	                    pbjs.setConfig({ priceGranularity: priceBucket });
+
+	                    // analytics
+	                    if (prebidAnalytics && prebidAnalytics.rubicon) {
+	                        pbjs.enableAnalytics({
+	                            provider: 'rubicon',
+	                            options: {
+	                                accountId: prebidAnalytics.rubicon,
+	                                endpoint: 'https://prebid-a.rubiconproject.com/event'
+	                            }
+	                        });
+	                    }
+
 	                    var floor = this.floorPrice(new Date().getDay(), floorConf);
 
 	                    // Pause ad
