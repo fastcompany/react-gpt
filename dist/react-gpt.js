@@ -1511,7 +1511,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "display",
 	        value: function display() {
-	            var content = this.props.content;
+	            var _props3 = this.props,
+	                content = _props3.content,
+	                adUnitPath = _props3.adUnitPath;
 
 	            var divId = this._divId;
 	            var adSlot = this._adSlot;
@@ -1558,7 +1560,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var adUnits = [{
 	                        code: divId,
 	                        sizes: slotSize,
-	                        bids: prebidConf.bidParams
+	                        bids: adUnitPath.indexOf('oop') === -1 ? prebidConf.bidParams : prebidConf.oopBidParams
 	                    }];
 
 	                    pbjs.que.push(function () {
@@ -1636,10 +1638,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "render",
 	        value: function render() {
 	            var scriptLoaded = this.state.scriptLoaded;
-	            var _props3 = this.props,
-	                id = _props3.id,
-	                outOfPage = _props3.outOfPage,
-	                style = _props3.style;
+	            var _props4 = this.props,
+	                id = _props4.id,
+	                outOfPage = _props4.outOfPage,
+	                style = _props4.style;
 
 	            var shouldNotRender = this.notInViewport(this.props, this.state);
 

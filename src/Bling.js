@@ -726,7 +726,7 @@ class Bling extends Component {
     }
 
     display() {
-        const {content} = this.props;
+        const {content, adUnitPath} = this.props;
         const divId = this._divId;
         const adSlot = this._adSlot;
 
@@ -771,12 +771,13 @@ class Bling extends Component {
                 // Pause ad
                 Bling._adManager.googletag.pubads().disableInitialLoad();
 
+
                 // Define pbjs unit
                 const adUnits = [
                     {
                         code: divId,
                         sizes: slotSize,
-                        bids: prebidConf.bidParams
+                        bids: (adUnitPath.indexOf('oop') ===-1) ? prebidConf.bidParams : prebidConf.oopBidParams
                     }
                 ];
 
