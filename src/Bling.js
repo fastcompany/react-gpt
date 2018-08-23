@@ -800,9 +800,9 @@ class Bling extends Component {
                                 let highestBid = pbjs.getHighestCpmBids(divId)[0].cpm;
                                 highestBid = parseFloat(highestBid);
                                 if (highestBid >= floor) {
-                                    pbjs.setTargetingForGPTAsync();
+                                    pbjs.setTargetingForGPTAsync([divId]);
                                 } else {
-                                    pbjs.setTargetingForGPTAsync();
+                                    pbjs.setTargetingForGPTAsync([divId]);
                                     const hbpbValue = adSlot.getTargeting('hb_pb');
                                     adSlot.setTargeting('hb_pb', `${hbpbValue}x`);
                                 }

@@ -1581,9 +1581,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                    var highestBid = pbjs.getHighestCpmBids(divId)[0].cpm;
 	                                    highestBid = parseFloat(highestBid);
 	                                    if (highestBid >= floor) {
-	                                        pbjs.setTargetingForGPTAsync();
+	                                        pbjs.setTargetingForGPTAsync([divId]);
 	                                    } else {
-	                                        pbjs.setTargetingForGPTAsync();
+	                                        pbjs.setTargetingForGPTAsync([divId]);
 	                                        var hbpbValue = adSlot.getTargeting('hb_pb');
 	                                        adSlot.setTargeting('hb_pb', hbpbValue + "x");
 	                                    }
