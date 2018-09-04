@@ -1538,7 +1538,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var slotSize = this.getSlotSize(prebidConf.useSecondaryAdSizeForPrebid);
 
 	                    // Set config
-	                    pbjs.setConfig({ priceGranularity: priceBucket });
+	                    pbjs.setConfig({
+	                        consentManagement: {
+	                            cmpApi: 'iab',
+	                            timeout: 8000,
+	                            allowAuctionWithoutConsent: false
+	                        },
+	                        priceGranularity: priceBucket });
 
 	                    // analytics
 	                    if (prebidAnalytics && prebidAnalytics.rubicon) {
