@@ -1544,7 +1544,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            timeout: 8000,
 	                            allowAuctionWithoutConsent: false
 	                        },
-	                        priceGranularity: priceBucket });
+	                        priceGranularity: priceBucket
+	                    });
 
 	                    // analytics
 	                    if (prebidAnalytics && prebidAnalytics.rubicon) {
@@ -1574,6 +1575,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        pbjs.requestBids({
 	                            bidsBackHandler: _sendAdserverRequest
 	                        });
+	                        pbjs.removeAdUnit(divId);
 	                    });
 
 	                    var _sendAdserverRequest = function _sendAdserverRequest() {

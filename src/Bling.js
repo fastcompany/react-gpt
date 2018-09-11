@@ -759,8 +759,8 @@ class Bling extends Component {
                         timeout: 8000,
                         allowAuctionWithoutConsent: false
                     },
-                    priceGranularity: priceBucket}
-                );
+                    priceGranularity: priceBucket
+                });
 
                 // analytics
                 if (prebidAnalytics && prebidAnalytics.rubicon) {
@@ -793,6 +793,7 @@ class Bling extends Component {
                     pbjs.requestBids({
                         bidsBackHandler: sendAdserverRequest
                     });
+                    pbjs.removeAdUnit(divId);
                 });
 
                 const sendAdserverRequest = () => {
