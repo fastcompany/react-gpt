@@ -568,7 +568,7 @@ class Bling extends Component {
     getUserViewableThresholdValues() {
         return this.props.viewableThresholdValues;
     }
-    getSlotSize() {
+    getSlotSize(useSecondary) {
         const {
             slotSize: origSlotSize,
             sizeMapping: origSizeMapping
@@ -579,11 +579,15 @@ class Bling extends Component {
         } else if (origSizeMapping) {
             const sizeMapping = origSizeMapping;
             slotSize = sizeMapping[0] && sizeMapping[0].slot;
+
+            // For internal use, inc defines it with 0, 0 first
+            if (useSecondary) {
+                slotSize = sizeMapping[1] && sizeMapping[1].slot;
+            }
         }
 
         return slotSize;
     }
-
 
     setMoatPrebidData() {
         console.log('set moat prebid data');
@@ -707,8 +711,43 @@ class Bling extends Component {
         this.setMoatPrebidData();
     }
 
+    floorPrice(day, floorConf) {
+        if (!floorConf.floor) {
+            return 0.25;
+        }
+        // Sunday
+        if (day === 0) {
+            return floorConf.floor.sunday || floorConf.floor;
+        }
+        // Monday
+        if (day === 1) {
+            return floorConf.floor.monday || floorConf.floor;
+        }
+        // Tuesday
+        if (day === 2) {
+            return floorConf.floor.tuesday || floorConf.floor;
+        }
+        // Wednesday
+        if (day === 3) {
+            return floorConf.floor.wednesday || floorConf.floor;
+        }
+        // Thursday
+        if (day === 4) {
+            return floorConf.floor.thursday || floorConf.floor;
+        }
+        // Friday
+        if (day === 5) {
+            return floorConf.floor.friday || floorConf.floor;
+        }
+        // Saturday
+        if (day === 6) {
+            return floorConf.floor.saturday || floorConf.floor;
+        }
+        return 0.25;
+    }
+
     display() {
-        const { content } = this.props;
+        const { content, adUnitPath } = this.props;
         const divId = this._divId;
         const adSlot = this._adSlot;
 
@@ -721,7 +760,97 @@ class Bling extends Component {
             ) {
                 Bling._adManager.updateCorrelator();
             }
-            Bling._adManager.googletag.display(divId);
+
+            // PBJS configs
+            const prebidConf = this.props.prebidConf;
+
+            if (prebidConf) {
+                const PREBID_TIMEOUT = prebidConf.timeout;
+                const priceBucket = prebidConf.priceBuckets;
+                const floorConf = prebidConf.floorPrices;
+                const prebidAnalytics = prebidConf.analytics;
+                const pbjs = window.pbjs || {};
+                pbjs.que = pbjs.que || [];
+                const slotSize = this.getSlotSize(prebidConf.useSecondaryAdSizeForPrebid);
+
+                // Set config
+                pbjs.setConfig({
+                    consentManagement: {
+                        cmpApi: 'iab',
+                        timeout: 8000,
+                        allowAuctionWithoutConsent: false
+                    },
+                    priceGranularity: priceBucket
+                });
+
+                // analytics
+                if (prebidAnalytics && prebidAnalytics.rubicon) {
+                    pbjs.enableAnalytics({
+                        provider: 'rubicon',
+                        options: {
+                            accountId: prebidAnalytics.rubicon,
+                            endpoint: 'https://prebid-a.rubiconproject.com/event'
+                        }
+                    });
+                }
+
+                const floor = this.floorPrice(new Date().getDay(), floorConf);
+
+                // Pause ad
+                Bling._adManager.googletag.pubads().disableInitialLoad();
+
+
+                // Define pbjs unit
+                const adUnits = [
+                    {
+                        code: divId,
+                        sizes: slotSize,
+                        bids: (adUnitPath.indexOf('oop') === -1) ? prebidConf.bidParams : prebidConf.oopBidParams
+                    }
+                ];
+
+                pbjs.que.push(() => {
+                    pbjs.addAdUnits(adUnits);
+                    pbjs.requestBids({
+                        bidsBackHandler: sendAdserverRequest
+                    });
+                    pbjs.removeAdUnit(divId);
+                });
+
+                const sendAdserverRequest = () => {
+                    if (pbjs.adserverRequestSent) {
+                        return;
+                    }
+
+                    pbjs.adserverRequestSent = true;
+
+                    Bling._adManager.googletag.cmd.push(() => {
+                        pbjs.que.push(() => {
+                            if (pbjs.getHighestCpmBids(divId).length) {
+                                let highestBid = pbjs.getHighestCpmBids(divId)[0].cpm;
+                                highestBid = parseFloat(highestBid);
+                                if (highestBid >= floor) {
+                                    pbjs.setTargetingForGPTAsync([divId]);
+                                } else {
+                                    pbjs.setTargetingForGPTAsync([divId]);
+                                    const hbpbValue = adSlot.getTargeting('hb_pb');
+                                    adSlot.setTargeting('hb_pb', `${hbpbValue}x`);
+                                }
+                            }
+                            Bling._adManager.googletag.display(divId);
+                            pbjs.adserverRequestSent = false;
+                            adSlot.clearTargeting();
+                        });
+                    });
+                };
+
+                setTimeout(() => {
+                    sendAdserverRequest();
+                }, PREBID_TIMEOUT);
+            } else {
+                Bling._adManager.googletag.display(divId);
+            }
+
             if (
                 Bling._adManager._disableInitialLoad &&
                 !Bling._adManager._initialRender
