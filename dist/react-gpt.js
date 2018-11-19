@@ -1368,7 +1368,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }, {
 	        key: "setMoatPrebidData",
-	        value: function setMoatPrebidData() {
+	        value: function setMoatPrebidData(adSlot) {
 	            console.log('set moat prebid data');
 	            // Optional, enables debugging logs in console
 	            if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.enableLogging === 'function') {
@@ -1376,11 +1376,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	                console.log('moat prebid api logging enabled');
 	            }
 	            if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === 'function' && window.top.moatPrebidApi.slotDataAvailable()) {
+	                console.log("set moat targeting for slot", adSlot);
+	                window.top.setMoatTargetingForSlot(adSlot);
 	                // Sets available targeting data on all existing GPT slot objects
-	                return window.top.moatPrebidApi.setMoatTargetingForAllSlots();
+	                // return window.top.moatPrebidApi.setMoatTargetingForAllSlots();
+	                this.display();
 	            } else {
 	                // Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.
-	                console.log('// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.');
+	                console.log("// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.");
+	                this.display();
 	                return false;
 	            }
 	        }
@@ -1388,9 +1392,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "renderAd",
 	        value: function renderAd() {
 	            this.defineSlot();
-	            console.log('render ad');
-	            setTimeout(this.display, 1000);
-	            console.log('timeout over');
+	            // console.log('render ad');
+	            // setTimeout(this.display, 1000);
+	            // console.log('timeout over');
 	        }
 	    }, {
 	        key: "notInViewport",
@@ -1492,7 +1496,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                adSlot.addService(Bling._adManager.googletag.pubads());
 	            }
 
-	            this.setMoatPrebidData();
+	            this.setMoatPrebidData(adSlot);
 	        }
 	    }, {
 	        key: "floorPrice",
