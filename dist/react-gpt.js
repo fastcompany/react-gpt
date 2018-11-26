@@ -1391,6 +1391,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "renderAd",
 	        value: function renderAd() {
+	            console.log('render ad');
 	            this.defineSlot();
 	            // console.log('render ad');
 	            // setTimeout(this.display, 1000);
@@ -1429,6 +1430,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "configureSlot",
 	        value: function configureSlot(adSlot) {
 	            var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.props;
+
+	            console.log("configureSlot adSlot", adSlot);
 	            var sizeMapping = props.sizeMapping,
 	                attributes = props.attributes,
 	                targeting = props.targeting,

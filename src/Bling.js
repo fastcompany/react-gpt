@@ -611,6 +611,7 @@ class Bling extends Component {
     }
 
     renderAd() {
+        console.log('render ad');
         this.defineSlot();
         // console.log('render ad');
         // setTimeout(this.display, 1000);
@@ -646,6 +647,7 @@ class Bling extends Component {
     }
 
     configureSlot(adSlot, props = this.props) {
+        console.log("configureSlot adSlot", adSlot);
         const {
             sizeMapping,
             attributes,
