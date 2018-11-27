@@ -106,6 +106,7 @@
         "commit": "git-cz",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
         "build": "npm run clean && npm run compile",
+        "full": "npm run clean && npm run compile && npm run build:umd && npm run build:umd:min",
         "build:es": "BABEL_ENV=es babel --copy-files ./src -d es",
         "build:umd": "NODE_ENV=development webpack src/index.js dist/react-gpt.js",
         "build:umd:min": "NODE_ENV=production webpack -p src/index.js dist/react-gpt.min.js",
