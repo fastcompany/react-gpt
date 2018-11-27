@@ -1367,18 +1367,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return slotSize;
 	        }
 	    }, {
-	        key: "setMoatPrebidData",
-	        value: function setMoatPrebidData(adSlot) {
-	            console.log("set moat prebid data", adSlot);
-	        }
-	    }, {
 	        key: "renderAd",
 	        value: function renderAd() {
-	            console.log("render ad");
 	            this.defineSlot();
-	            // console.log('render ad');
-	            // setTimeout(this.display, 1000);
-	            // console.log('timeout over');
+	            this.display();
 	        }
 	    }, {
 	        key: "notInViewport",
@@ -1413,8 +1405,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "configureSlot",
 	        value: function configureSlot(adSlot) {
 	            var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.props;
-
-	            console.log("configureSlot adSlot", adSlot);
 	            var sizeMapping = props.sizeMapping,
 	                attributes = props.attributes,
 	                targeting = props.targeting,
@@ -1481,8 +1471,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            } else {
 	                adSlot.addService(Bling._adManager.googletag.pubads());
 	            }
-
-	            this.setMoatPrebidData(adSlot);
 	        }
 	    }, {
 	        key: "floorPrice",
