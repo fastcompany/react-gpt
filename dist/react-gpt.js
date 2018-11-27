@@ -1367,10 +1367,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return slotSize;
 	        }
 	    }, {
+	        key: "setMoatPrebidData",
+	        value: function setMoatPrebidData(adSlot) {
+	            console.log("set moat prebid data");
+	            // Optional, enables debugging logs in console
+	            if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.enableLogging === "function") {
+	                window.moatPrebidApi.enableLogging();
+	                console.log("moat prebid api logging enabled");
+	            }
+	            if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function" && window.top.moatPrebidApi.slotDataAvailable()) {
+	                console.log("set moat targeting for slot", adSlot);
+	                window.top.setMoatTargetingForSlot(adSlot);
+	                console('moat targeting set');
+	                // Sets available targeting data on all existing GPT slot objects
+	                // return window.top.moatPrebidApi.setMoatTargetingForAllSlots();
+	                // this.display();
+	            } else {
+	                // Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.
+	                console.log("// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.");
+	                this.display();
+	                // return false;
+	            }
+	        }
+	    }, {
 	        key: "renderAd",
 	        value: function renderAd() {
+	            console.log("render ad");
 	            this.defineSlot();
-	            this.display();
+	            // console.log('render ad');
+	            // setTimeout(this.display, 1000);
+	            // console.log('timeout over');
 	        }
 	    }, {
 	        key: "notInViewport",
@@ -1405,6 +1431,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "configureSlot",
 	        value: function configureSlot(adSlot) {
 	            var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.props;
+
+	            console.log("configureSlot adSlot", adSlot);
 	            var sizeMapping = props.sizeMapping,
 	                attributes = props.attributes,
 	                targeting = props.targeting,
@@ -1471,6 +1499,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            } else {
 	                adSlot.addService(Bling._adManager.googletag.pubads());
 	            }
+
+	            this.setMoatPrebidData(adSlot);
 	        }
 	    }, {
 	        key: "floorPrice",
