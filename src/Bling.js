@@ -725,7 +725,7 @@ class Bling extends Component {
             adSlot.addService(Bling._adManager.googletag.pubads());
         }
 
-        this.setMoatPrebidData(adSlot);
+        setTimeout(this.setMoatPrebidData(adSlot), 500);
     }
 
     floorPrice(day, floorConf) {

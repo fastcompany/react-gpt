@@ -1500,7 +1500,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                adSlot.addService(Bling._adManager.googletag.pubads());
 	            }
 
-	            this.setMoatPrebidData(adSlot);
+	            setTimeout(this.setMoatPrebidData(adSlot), 500);
 	        }
 	    }, {
 	        key: "floorPrice",
