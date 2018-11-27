@@ -1377,7 +1377,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === 'function' && window.top.moatPrebidApi.slotDataAvailable()) {
 	                console.log("set moat targeting for slot", adSlot);
-	                window.top.setMoatTargetingForSlot(adSlot);
+	                // return window.top.setMoatTargetingForSlot(adSlot);
 	                // Sets available targeting data on all existing GPT slot objects
 	                // return window.top.moatPrebidApi.setMoatTargetingForAllSlots();
 	                this.display();
