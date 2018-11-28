@@ -605,11 +605,11 @@ class Bling extends Component {
             // if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function" && window.top.moatPrebidApi.slotDataAvailable() ) {
             if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function") {
                 console.log("set moat targeting for slot", adSlot);
-                window.top.setMoatTargetingForSlot(adSlot);
-                console.log("moat targeting set");
+                return window.top.setMoatTargetingForSlot(adSlot);
+                // console.log("moat targeting set");
                 // Sets available targeting data on all existing GPT slot objects
                 // return window.top.moatPrebidApi.setMoatTargetingForAllSlots();
-                this.display();
+                // this.display();
                 window.moatYieldReady = null;
             } else {
                 // Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.
@@ -662,7 +662,7 @@ class Bling extends Component {
     }
 
     configureSlot(adSlot, props = this.props) {
-        console.log("configureSlot adSlot", adSlot);
+        // console.log("configureSlot adSlot", adSlot);
         const {
             sizeMapping,
             attributes,
