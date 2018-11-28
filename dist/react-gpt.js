@@ -953,7 +953,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Bling.__proto__ || Object.getPrototypeOf(Bling)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
 	            scriptLoaded: false,
-	            inViewport: false
+	            inViewport: false,
+	            moatYieldReady: false
 	        }, _temp), _possibleConstructorReturn(_this, _ret);
 	    }
 
@@ -1201,8 +1202,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "addMoatYieldReadyFunc",
 	        value: function addMoatYieldReadyFunc(adSlot) {
-	            window.moatYieldReady = function () {
-	                console.log("moat yeild ready");
+	            console.log('adding moat yield ready');
+	            window['moatYieldReady'] = function () {
+	                console.log("moat yeild ready", adSlot);
 
 	                if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.enableLogging === "function") {
 	                    window.moatPrebidApi.enableLogging();
@@ -1211,14 +1213,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function" && window.top.moatPrebidApi.slotDataAvailable()) {
 	                    console.log("set moat targeting for slot", adSlot);
 	                    window.top.setMoatTargetingForSlot(adSlot);
-	                    console("moat targeting set");
+	                    console.log("moat targeting set");
 	                    // Sets available targeting data on all existing GPT slot objects
 	                    // return window.top.moatPrebidApi.setMoatTargetingForAllSlots();
-	                    // this.display();
+	                    this.display();
+	                    window.moatYieldReady = null;
 	                } else {
 	                    // Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.
 	                    console.log("// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.");
-	                    this.display();
+	                    window.moatYieldReady = null;
+	                    // this.display();
 	                    // return false;
 	                }
 	            };

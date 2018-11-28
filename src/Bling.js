@@ -358,7 +358,8 @@ class Bling extends Component {
 
     state = {
         scriptLoaded: false,
-        inViewport: false
+        inViewport: false,
+        moatYieldReady: false
     };
 
     get adSlot() {
@@ -590,8 +591,9 @@ class Bling extends Component {
     }
 
     addMoatYieldReadyFunc(adSlot) {
-        window.moatYieldReady = function() {
-            console.log("moat yeild ready");
+        console.log('adding moat yield ready');
+        window['moatYieldReady'] = function() {
+            console.log("moat yeild ready", adSlot);
 
             if (
                 window.top.moatPrebidApi &&
@@ -608,16 +610,18 @@ class Bling extends Component {
             ) {
                 console.log("set moat targeting for slot", adSlot);
                 window.top.setMoatTargetingForSlot(adSlot);
-                console("moat targeting set");
+                console.log("moat targeting set");
                 // Sets available targeting data on all existing GPT slot objects
                 // return window.top.moatPrebidApi.setMoatTargetingForAllSlots();
-                // this.display();
+                this.display();
+                window.moatYieldReady = null;
             } else {
                 // Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.
                 console.log(
                     "// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL."
                 );
-                this.display();
+                window.moatYieldReady = null;
+                // this.display();
                 // return false;
             }
         };
