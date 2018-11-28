@@ -602,12 +602,8 @@ class Bling extends Component {
                 window.moatPrebidApi.enableLogging();
                 console.log("moat prebid api logging enabled");
             }
-            if (
-                window.top.moatPrebidApi &&
-                typeof window.top.moatPrebidApi.slotDataAvailable ===
-                    "function" &&
-                window.top.moatPrebidApi.slotDataAvailable()
-            ) {
+            // if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function" && window.top.moatPrebidApi.slotDataAvailable() ) {
+            if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function") {
                 console.log("set moat targeting for slot", adSlot);
                 window.top.setMoatTargetingForSlot(adSlot);
                 console.log("moat targeting set");
