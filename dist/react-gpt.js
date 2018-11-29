@@ -1223,24 +1223,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	                window.top.moatPrebidApi.enableLogging();
 	                console.log("moat prebid api logging enabled");
 	            }
-	            // if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function" && window.top.moatPrebidApi.slotDataAvailable() ) {
-	            if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function") {
+
+	            if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function" && window.top.moatPrebidApi.slotDataAvailable()) {
 	                // this.configureSlot(this._adSlot);
 	                console.log("set moat targeting for slot", adSlot);
 	                return window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
-	                // console.log("moat targeting set");
 	                // Sets available targeting data on all existing GPT slot objects
 	                // return window.top.moatPrebidApi.setMoatTargetingForAllSlots();
-	                // this.display();
-	                window.moatYieldReady = null;
 	            } else {
-	                // Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.
 	                console.log("// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.");
-	                // window.moatYieldReady = null;
-	                // this.display();
-	                // return false;
+	                this.display();
 	            }
-	            // };
+	            // }
 	        }
 	    }, {
 	        key: "renderAd",
