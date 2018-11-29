@@ -1199,6 +1199,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            return slotSize;
 	        }
+
+	        // addMoatPrebidHeader() {
+	        //     console.log('header tag added');
+	        //     let my_awesome_script = window.top.document.createElement('script')
+
+	        //     my_awesome_script.setAttribute('src', 'https://z.moatads.com/mansuetoprebidheader15141606144/yi.js')
+
+	        //     window.top.document.head.appendChild(my_awesome_script)
+	        //     window['moatYieldReady'] = function () {
+	        //         alert('moat Yield Ready')
+	        //     }
+	        // }
+
 	    }, {
 	        key: "addMoatYieldReadyFunc",
 	        value: function addMoatYieldReadyFunc(adSlot) {
@@ -1212,11 +1225,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	                // if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function" && window.top.moatPrebidApi.slotDataAvailable() ) {
 	                if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function") {
+	                    // this.configureSlot(this._adSlot);
 	                    console.log("set moat targeting for slot", adSlot);
-	                    // return window.top.setMoatTargetingForSlot(adSlot);
+	                    return window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
 	                    // console.log("moat targeting set");
 	                    // Sets available targeting data on all existing GPT slot objects
-	                    return window.top.moatPrebidApi.setMoatTargetingForAllSlots();
+	                    // return window.top.moatPrebidApi.setMoatTargetingForAllSlots();
 	                    // this.display();
 	                    window.moatYieldReady = null;
 	                } else {
@@ -1228,12 +1242,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            };
 	        }
-
-	        // setMoatPrebidData(adSlot) {
-	        //     console.log("set moat prebid data");
-	        //     // Optional, enables debugging logs in console
-	        // }
-
 	    }, {
 	        key: "renderAd",
 	        value: function renderAd() {
@@ -1252,6 +1260,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "defineSlot",
 	        value: function defineSlot() {
+	            var _this2 = this;
+
 	            console.log('define slot');
 	            var _props2 = this.props,
 	                adUnitPath = _props2.adUnitPath,
@@ -1267,10 +1277,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    this._adSlot = Bling._adManager.googletag.defineSlot(adUnitPath, slotSize || [], divId);
 	                }
 	                // CALL MOAT AFTER SLOT HAS BEEN DEFINED
-	                // this.addMoatYieldReadyFunc(adSlot);
+	                setTimeout(function () {
+	                    _this2.addMoatYieldReadyFunc(_this2._adSlot);
+	                    // this.configureSlot(this._adSlot);
+	                }, 300);
 	            }
-
-	            this.configureSlot(this._adSlot);
 	        }
 	    }, {
 	        key: "configureSlot",
