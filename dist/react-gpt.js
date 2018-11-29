@@ -1213,16 +1213,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                // if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function" && window.top.moatPrebidApi.slotDataAvailable() ) {
 	                if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function") {
 	                    console.log("set moat targeting for slot", adSlot);
-	                    return window.top.setMoatTargetingForSlot(adSlot);
+	                    // return window.top.setMoatTargetingForSlot(adSlot);
 	                    // console.log("moat targeting set");
 	                    // Sets available targeting data on all existing GPT slot objects
-	                    // return window.top.moatPrebidApi.setMoatTargetingForAllSlots();
+	                    return window.top.moatPrebidApi.setMoatTargetingForAllSlots();
 	                    // this.display();
 	                    window.moatYieldReady = null;
 	                } else {
 	                    // Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.
 	                    console.log("// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.");
-	                    window.moatYieldReady = null;
+	                    // window.moatYieldReady = null;
 	                    // this.display();
 	                    // return false;
 	                }
@@ -1252,6 +1252,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "defineSlot",
 	        value: function defineSlot() {
+	            console.log('define slot');
 	            var _props2 = this.props,
 	                adUnitPath = _props2.adUnitPath,
 	                outOfPage = _props2.outOfPage;
@@ -1265,6 +1266,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                } else {
 	                    this._adSlot = Bling._adManager.googletag.defineSlot(adUnitPath, slotSize || [], divId);
 	                }
+	                // CALL MOAT AFTER SLOT HAS BEEN DEFINED
+	                // this.addMoatYieldReadyFunc(adSlot);
 	            }
 
 	            this.configureSlot(this._adSlot);
@@ -1341,9 +1344,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            } else {
 	                adSlot.addService(Bling._adManager.googletag.pubads());
 	            }
-
-	            // setTimeout(this.setMoatPrebidData(adSlot), 500);
-	            this.addMoatYieldReadyFunc(adSlot);
 	        }
 	    }, {
 	        key: "floorPrice",

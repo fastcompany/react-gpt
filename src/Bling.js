@@ -605,10 +605,10 @@ class Bling extends Component {
             // if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function" && window.top.moatPrebidApi.slotDataAvailable() ) {
             if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function") {
                 console.log("set moat targeting for slot", adSlot);
-                return window.top.setMoatTargetingForSlot(adSlot);
+                // return window.top.setMoatTargetingForSlot(adSlot);
                 // console.log("moat targeting set");
                 // Sets available targeting data on all existing GPT slot objects
-                // return window.top.moatPrebidApi.setMoatTargetingForAllSlots();
+                return window.top.moatPrebidApi.setMoatTargetingForAllSlots();
                 // this.display();
                 window.moatYieldReady = null;
             } else {
@@ -616,7 +616,7 @@ class Bling extends Component {
                 console.log(
                     "// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL."
                 );
-                window.moatYieldReady = null;
+                // window.moatYieldReady = null;
                 // this.display();
                 // return false;
             }
@@ -639,6 +639,7 @@ class Bling extends Component {
     }
 
     defineSlot() {
+        console.log('define slot')
         const {adUnitPath, outOfPage} = this.props;
         const divId = this._divId;
         const slotSize = this.getSlotSize();
@@ -656,6 +657,8 @@ class Bling extends Component {
                     divId
                 );
             }
+            // CALL MOAT AFTER SLOT HAS BEEN DEFINED
+            // this.addMoatYieldReadyFunc(adSlot);
         }
 
         this.configureSlot(this._adSlot);
@@ -728,9 +731,6 @@ class Bling extends Component {
         } else {
             adSlot.addService(Bling._adManager.googletag.pubads());
         }
-
-        // setTimeout(this.setMoatPrebidData(adSlot), 500);
-        this.addMoatYieldReadyFunc(adSlot);
     }
 
     floorPrice(day, floorConf) {
