@@ -1232,9 +1232,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                // return window.top.moatPrebidApi.setMoatTargetingForAllSlots();
 	            } else {
 	                console.log("// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.");
-	                this.display();
 	            }
-	            // }
+	            this.display();
 	        }
 	    }, {
 	        key: "renderAd",

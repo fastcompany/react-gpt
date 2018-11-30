@@ -629,9 +629,9 @@ class Bling extends Component {
             console.log(
                 "// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL."
             );
-            this.display();
+            
         }
-        // }
+        this.display();
     }
 
     renderAd() {
