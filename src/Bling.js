@@ -603,26 +603,35 @@ class Bling extends Component {
     // }
 
     addMoatYieldReadyFunc(adSlot) {
-        console.log('adding moat yield ready');
+        console.log("adding moat yield ready");
         // window['moatYieldReady'] = function() {
         //     console.log("moat yeild ready", adSlot);
 
-        if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.enableLogging === "function") {
+        if (
+            window.top.moatPrebidApi &&
+            typeof window.top.moatPrebidApi.enableLogging === "function"
+        ) {
             window.top.moatPrebidApi.enableLogging();
             console.log("moat prebid api logging enabled");
         }
 
-        if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function" && window.top.moatPrebidApi.slotDataAvailable()) {
+        if (
+            window.top.moatPrebidApi &&
+            typeof window.top.moatPrebidApi.slotDataAvailable === "function" &&
+            window.top.moatPrebidApi.slotDataAvailable()
+        ) {
             // this.configureSlot(this._adSlot);
             console.log("set moat targeting for slot", adSlot);
             return window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
             // Sets available targeting data on all existing GPT slot objects
             // return window.top.moatPrebidApi.setMoatTargetingForAllSlots();
         } else {
-            console.log("// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.");
+            console.log(
+                "// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL."
+            );
             this.display();
         }
-    // }
+        // }
     }
 
     renderAd() {
@@ -636,7 +645,7 @@ class Bling extends Component {
     }
 
     defineSlot() {
-        console.log('define slot')
+        console.log("define slot");
         const {adUnitPath, outOfPage} = this.props;
         const divId = this._divId;
         const slotSize = this.getSlotSize();
@@ -729,7 +738,7 @@ class Bling extends Component {
         setTimeout(() => {
             this.addMoatYieldReadyFunc(this._adSlot);
             // this.configureSlot(this._adSlot);
-        }, 300);
+        }, 1000);
     }
 
     floorPrice(day, floorConf) {
@@ -864,7 +873,10 @@ class Bling extends Component {
                                     const hbpbValue = adSlot.getTargeting(
                                         "hb_pb"
                                     );
-                                    adSlot.setTargeting("hb_pb", `${hbpbValue}x`);
+                                    adSlot.setTargeting(
+                                        "hb_pb",
+                                        `${hbpbValue}x`
+                                    );
                                 }
                             }
                             Bling._adManager.googletag.display(divId);
@@ -938,7 +950,15 @@ class Bling extends Component {
                 height: slotSize[1]
             };
             // render node element instead of script element so that `inViewport` check works.
-            return <div style={emptyStyle} />;
+            return (
+                <div style={emptyStyle}>
+                    <noscript className="MOAT-mansuetodfp4895838934?moatClientLevel1=%eadv!&amp;moatClientLevel2=%ebuy!&amp;moatClientLevel3=%eaid!&amp;moatClientLevel4=%ecid!&amp;moatClientSlicer1=%esid!&amp;moatClientSlicer2=%epid!&amp;zMoatMSafety=%%PATTERN:m_safety%%&amp;zMoatMData=%%PATTERN:m_data%%&amp;zMoatAdSlot=%%PATTERN:adslot%%&amp;zMoatPosition=%%PATTERN:pos%%&amp;zMoatSC=%%PATTERN:scroll%%&amp;zMoatCT=%%PATTERN:c_type%%&amp;zMoatTC=%%PATTERN:cid%%&amp;zMoatAB=%%PATTERN:abgroup%%&amp;zMoatPAT=%%PATTERN:pat%%&amp;zMoatSZ=%%WIDTH%%x%%HEIGHT%%&amp;zMoatMGV=%%PATTERN:m_gv%%&amp;zMoatMMV=%%PATTERN:m_mv%%" />
+                    <script
+                        src="https://z.moatads.com/mansuetodfp4895838934/moatad.js#moatClientLevel1=%eadv!&moatClientLevel2=%ebuy!&moatClientLevel3=%eaid!&moatClientLevel4=%ecid!&moatClientSlicer1=%esid!&moatClientSlicer2=%epid!&zMoatMSafety=%%PATTERN:m_safety%%&zMoatMData=%%PATTERN:m_data%%&zMoatAdSlot=%%PATTERN:adslot%%&zMoatPosition=%%PATTERN:pos%%&zMoatSC=%%PATTERN:scroll%%&zMoatCT=%%PATTERN:c_type%%&zMoatTC=%%PATTERN:cid%%&zMoatAB=%%PATTERN:abgroup%%&zMoatPAT=%%PATTERN:pat%%&zMoatSZ=%%WIDTH%%x%%HEIGHT%%&zMoatMGV=%%PATTERN:m_gv%%&zMoatMMV=%%PATTERN:m_mv%%"
+                        type="text/javascript"
+                    />
+                </div>
+            );
         }
 
         // clear the current ad if exists
