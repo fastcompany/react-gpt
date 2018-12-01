@@ -1199,19 +1199,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            return slotSize;
 	        }
-
-	        // addMoatPrebidHeader() {
-	        //     console.log('header tag added');
-	        //     let my_awesome_script = window.top.document.createElement('script')
-
-	        //     my_awesome_script.setAttribute('src', 'https://z.moatads.com/mansuetoprebidheader15141606144/yi.js')
-
-	        //     window.top.document.head.appendChild(my_awesome_script)
-	        //     window['moatYieldReady'] = function () {
-	        //         alert('moat Yield Ready')
-	        //     }
-	        // }
-
 	    }, {
 	        key: "addMoatYieldReadyFunc",
 	        value: function addMoatYieldReadyFunc(adSlot) {
@@ -1227,9 +1214,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function" && window.top.moatPrebidApi.slotDataAvailable()) {
 	                // this.configureSlot(this._adSlot);
 	                console.log("set moat targeting for slot", adSlot);
-	                return window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
-	                // Sets available targeting data on all existing GPT slot objects
-	                // return window.top.moatPrebidApi.setMoatTargetingForAllSlots();
+	                // return window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
+	                window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
 	            } else {
 	                console.log("// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.");
 	            }
