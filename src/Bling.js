@@ -592,9 +592,14 @@ class Bling extends Component {
 
     addMoatYieldReadyFunc(adSlot) {
         console.log("adding moat yield ready");
-        // window['moatYieldReady'] = function() {
-        //     console.log("moat yeild ready", adSlot);
+        window['moatYieldReady'] = function() {
+            console.log("moat yeild ready!", adSlot);
+            // Run moat call here
+            this.callMoatPrebidAnalytics(adSlot);
+        };
+    }
 
+    callMoatPrebidAnalytics(adSlot) {
         if (
             window.top.moatPrebidApi &&
             typeof window.top.moatPrebidApi.enableLogging === "function"
@@ -602,16 +607,14 @@ class Bling extends Component {
             window.top.moatPrebidApi.enableLogging();
             console.log("moat prebid api logging enabled");
         }
-
         if (
             window.top.moatPrebidApi &&
             typeof window.top.moatPrebidApi.slotDataAvailable === "function" &&
             window.top.moatPrebidApi.slotDataAvailable()
         ) {
-            // this.configureSlot(this._adSlot);
             console.log("set moat targeting for slot", adSlot);
-            // return window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
             window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
+            // return window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
         } else {
             console.log(
                 "// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL."
@@ -720,11 +723,17 @@ class Bling extends Component {
         } else {
             adSlot.addService(Bling._adManager.googletag.pubads());
         }
+
         // CALL MOAT AFTER SLOT HAS BEEN DEFINED
-        setTimeout(() => {
+        // if (typeof window.top.moatYieldReady !== "function" && this.props.abgroup === 20) {
+        if (typeof window.top.moatYieldReady !== "function") {
+            // add moat yeild then call moat
             this.addMoatYieldReadyFunc(this._adSlot);
-            // this.configureSlot(this._adSlot);
-        }, 1000);
+        } else {
+            console.log("moat yield ready already defined");
+            // immediately run moat call
+            this.callMoatPrebidAnalytics(this._adSlot);
+        }
     }
 
     floorPrice(day, floorConf) {
@@ -865,6 +874,7 @@ class Bling extends Component {
                                     );
                                 }
                             }
+                            //execute moat stuff here ??
                             Bling._adManager.googletag.display(divId);
                             pbjs.adserverRequestSent = false;
                             adSlot.clearTargeting();
@@ -876,6 +886,7 @@ class Bling extends Component {
                     sendAdserverRequest();
                 }, PREBID_TIMEOUT);
             } else {
+                //execute moat stuff here ??
                 Bling._adManager.googletag.display(divId);
             }
 

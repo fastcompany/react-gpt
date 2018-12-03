@@ -1203,19 +1203,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "addMoatYieldReadyFunc",
 	        value: function addMoatYieldReadyFunc(adSlot) {
 	            console.log("adding moat yield ready");
-	            // window['moatYieldReady'] = function() {
-	            //     console.log("moat yeild ready", adSlot);
-
+	            window['moatYieldReady'] = function () {
+	                console.log("moat yeild ready!", adSlot);
+	                // Run moat call here
+	                this.callMoatPrebidAnalytics(adSlot);
+	            };
+	        }
+	    }, {
+	        key: "callMoatPrebidAnalytics",
+	        value: function callMoatPrebidAnalytics(adSlot) {
 	            if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.enableLogging === "function") {
 	                window.top.moatPrebidApi.enableLogging();
 	                console.log("moat prebid api logging enabled");
 	            }
-
 	            if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function" && window.top.moatPrebidApi.slotDataAvailable()) {
-	                // this.configureSlot(this._adSlot);
 	                console.log("set moat targeting for slot", adSlot);
-	                // return window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
 	                window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
+	                // return window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
 	            } else {
 	                console.log("// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.");
 	            }
@@ -1259,8 +1263,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "configureSlot",
 	        value: function configureSlot(adSlot) {
-	            var _this2 = this;
-
 	            var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.props;
 
 	            // console.log("configureSlot adSlot", adSlot);
@@ -1330,11 +1332,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	            } else {
 	                adSlot.addService(Bling._adManager.googletag.pubads());
 	            }
+
 	            // CALL MOAT AFTER SLOT HAS BEEN DEFINED
-	            setTimeout(function () {
-	                _this2.addMoatYieldReadyFunc(_this2._adSlot);
-	                // this.configureSlot(this._adSlot);
-	            }, 1000);
+	            // if (typeof window.top.moatYieldReady !== "function" && this.props.abgroup === 20) {
+	            if (typeof window.top.moatYieldReady !== "function") {
+	                // add moat yeild then call moat
+	                this.addMoatYieldReadyFunc(this._adSlot);
+	            } else {
+	                console.log("moat yield ready already defined");
+	                // immediately run moat call
+	                this.callMoatPrebidAnalytics(this._adSlot);
+	            }
 	        }
 	    }, {
 	        key: "floorPrice",
@@ -1462,6 +1470,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                        adSlot.setTargeting("hb_pb", hbpbValue + "x");
 	                                    }
 	                                }
+	                                //execute moat stuff here ??
 	                                Bling._adManager.googletag.display(divId);
 	                                pbjs.adserverRequestSent = false;
 	                                adSlot.clearTargeting();
@@ -1473,6 +1482,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        _sendAdserverRequest();
 	                    }, PREBID_TIMEOUT);
 	                } else {
+	                    //execute moat stuff here ??
 	                    Bling._adManager.googletag.display(divId);
 	                }
 
