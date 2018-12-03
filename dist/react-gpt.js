@@ -1203,7 +1203,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "addMoatYieldReadyFunc",
 	        value: function addMoatYieldReadyFunc(adSlot) {
 	            console.log("adding moat yield ready");
-	            window['moatYieldReady'] = function () {
+	            window.top["moatYieldReady"] = function () {
 	                console.log("moat yeild ready!", adSlot);
 	                // Run moat call here
 	                this.callMoatPrebidAnalytics(adSlot);
@@ -1337,11 +1337,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // if (typeof window.top.moatYieldReady !== "function" && this.props.abgroup === 20) {
 	            if (typeof window.top.moatYieldReady !== "function") {
 	                // add moat yeild then call moat
-	                this.addMoatYieldReadyFunc(this._adSlot);
+	                this.addMoatYieldReadyFunc(adSlot);
 	            } else {
 	                console.log("moat yield ready already defined");
 	                // immediately run moat call
-	                this.callMoatPrebidAnalytics(this._adSlot);
+	                this.callMoatPrebidAnalytics(adSlot);
 	            }
 	        }
 	    }, {
@@ -1490,6 +1490,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    this.refresh();
 	                }
 	            }
+	            console.log("ad should be displayed");
 	        }
 	    }, {
 	        key: "clear",

@@ -592,7 +592,7 @@ class Bling extends Component {
 
     addMoatYieldReadyFunc(adSlot) {
         console.log("adding moat yield ready");
-        window['moatYieldReady'] = function() {
+        window.top["moatYieldReady"] = function() {
             console.log("moat yeild ready!", adSlot);
             // Run moat call here
             this.callMoatPrebidAnalytics(adSlot);
@@ -728,11 +728,11 @@ class Bling extends Component {
         // if (typeof window.top.moatYieldReady !== "function" && this.props.abgroup === 20) {
         if (typeof window.top.moatYieldReady !== "function") {
             // add moat yeild then call moat
-            this.addMoatYieldReadyFunc(this._adSlot);
+            this.addMoatYieldReadyFunc(adSlot);
         } else {
             console.log("moat yield ready already defined");
             // immediately run moat call
-            this.callMoatPrebidAnalytics(this._adSlot);
+            this.callMoatPrebidAnalytics(adSlot);
         }
     }
 
@@ -897,6 +897,7 @@ class Bling extends Component {
                 this.refresh();
             }
         }
+        console.log("ad should be displayed");
     }
 
     clear() {
