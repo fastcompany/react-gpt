@@ -614,13 +614,11 @@ class Bling extends Component {
         ) {
             console.log("set moat targeting for slot", adSlot);
             window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
-            // return window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
+            this.display();
         } else {
-            console.log(
-                "// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL."
-            );
+            console.log("// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.");
+            this.display();
         }
-        this.display();
     }
 
     renderAd() {

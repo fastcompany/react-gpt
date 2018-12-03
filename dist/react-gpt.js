@@ -1219,11 +1219,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function" && window.top.moatPrebidApi.slotDataAvailable()) {
 	                console.log("set moat targeting for slot", adSlot);
 	                window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
-	                // return window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
+	                this.display();
 	            } else {
 	                console.log("// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.");
+	                this.display();
 	            }
-	            this.display();
 	        }
 	    }, {
 	        key: "renderAd",
