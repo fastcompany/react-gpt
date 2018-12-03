@@ -794,14 +794,12 @@ class Bling extends Component {
                 const prebidAnalytics = prebidConf.analytics;
                 const pbjs = window.pbjs || {};
                 pbjs.que = pbjs.que || [];
-                const slotSize = this.getSlotSize(
-                    prebidConf.useSecondaryAdSizeForPrebid
-                );
+                const slotSize = this.getSlotSize(prebidConf.useSecondaryAdSizeForPrebid);
 
                 // Set config
                 pbjs.setConfig({
                     consentManagement: {
-                        cmpApi: "iab",
+                        cmpApi: 'iab',
                         timeout: 8000,
                         allowAuctionWithoutConsent: false
                     },
@@ -811,11 +809,10 @@ class Bling extends Component {
                 // analytics
                 if (prebidAnalytics && prebidAnalytics.rubicon) {
                     pbjs.enableAnalytics({
-                        provider: "rubicon",
+                        provider: 'rubicon',
                         options: {
-                            accountId: prebidAnalytics.rubicon,
-                            endpoint:
-                                "https://prebid-a.rubiconproject.com/event"
+                        accountId: prebidAnalytics.rubicon,
+                        endpoint: 'https://prebid-a.rubiconproject.com/event'
                         }
                     });
                 }
@@ -825,15 +822,13 @@ class Bling extends Component {
                 // Pause ad
                 Bling._adManager.googletag.pubads().disableInitialLoad();
 
+
                 // Define pbjs unit
                 const adUnits = [
                     {
                         code: divId,
                         sizes: slotSize,
-                        bids:
-                            adUnitPath.indexOf("oop") === -1
-                                ? prebidConf.bidParams
-                                : prebidConf.oopBidParams
+                        bids: (adUnitPath.indexOf('oop') ===-1) ? prebidConf.bidParams : prebidConf.oopBidParams
                     }
                 ];
 
@@ -855,24 +850,16 @@ class Bling extends Component {
                     Bling._adManager.googletag.cmd.push(() => {
                         pbjs.que.push(() => {
                             if (pbjs.getHighestCpmBids(divId).length) {
-                                let highestBid = pbjs.getHighestCpmBids(
-                                    divId
-                                )[0].cpm;
+                                let highestBid = pbjs.getHighestCpmBids(divId)[0].cpm;
                                 highestBid = parseFloat(highestBid);
                                 if (highestBid >= floor) {
                                     pbjs.setTargetingForGPTAsync([divId]);
                                 } else {
                                     pbjs.setTargetingForGPTAsync([divId]);
-                                    const hbpbValue = adSlot.getTargeting(
-                                        "hb_pb"
-                                    );
-                                    adSlot.setTargeting(
-                                        "hb_pb",
-                                        `${hbpbValue}x`
-                                    );
+                                    const hbpbValue = adSlot.getTargeting('hb_pb');
+                                    adSlot.setTargeting('hb_pb', `${hbpbValue}x`);
                                 }
                             }
-                            //execute moat stuff here ??
                             Bling._adManager.googletag.display(divId);
                             pbjs.adserverRequestSent = false;
                             adSlot.clearTargeting();
@@ -884,7 +871,6 @@ class Bling extends Component {
                     sendAdserverRequest();
                 }, PREBID_TIMEOUT);
             } else {
-                //execute moat stuff here ??
                 Bling._adManager.googletag.display(divId);
             }
 
@@ -895,7 +881,6 @@ class Bling extends Component {
                 this.refresh();
             }
         }
-        console.log("ad should be displayed");
     }
 
     clear() {

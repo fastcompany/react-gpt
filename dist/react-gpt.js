@@ -1412,7 +1412,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    // Set config
 	                    pbjs.setConfig({
 	                        consentManagement: {
-	                            cmpApi: "iab",
+	                            cmpApi: 'iab',
 	                            timeout: 8000,
 	                            allowAuctionWithoutConsent: false
 	                        },
@@ -1422,10 +1422,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    // analytics
 	                    if (prebidAnalytics && prebidAnalytics.rubicon) {
 	                        pbjs.enableAnalytics({
-	                            provider: "rubicon",
+	                            provider: 'rubicon',
 	                            options: {
 	                                accountId: prebidAnalytics.rubicon,
-	                                endpoint: "https://prebid-a.rubiconproject.com/event"
+	                                endpoint: 'https://prebid-a.rubiconproject.com/event'
 	                            }
 	                        });
 	                    }
@@ -1439,7 +1439,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var adUnits = [{
 	                        code: divId,
 	                        sizes: slotSize,
-	                        bids: adUnitPath.indexOf("oop") === -1 ? prebidConf.bidParams : prebidConf.oopBidParams
+	                        bids: adUnitPath.indexOf('oop') === -1 ? prebidConf.bidParams : prebidConf.oopBidParams
 	                    }];
 
 	                    pbjs.que.push(function () {
@@ -1466,11 +1466,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                        pbjs.setTargetingForGPTAsync([divId]);
 	                                    } else {
 	                                        pbjs.setTargetingForGPTAsync([divId]);
-	                                        var hbpbValue = adSlot.getTargeting("hb_pb");
-	                                        adSlot.setTargeting("hb_pb", hbpbValue + "x");
+	                                        var hbpbValue = adSlot.getTargeting('hb_pb');
+	                                        adSlot.setTargeting('hb_pb', hbpbValue + "x");
 	                                    }
 	                                }
-	                                //execute moat stuff here ??
 	                                Bling._adManager.googletag.display(divId);
 	                                pbjs.adserverRequestSent = false;
 	                                adSlot.clearTargeting();
@@ -1482,7 +1481,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        _sendAdserverRequest();
 	                    }, PREBID_TIMEOUT);
 	                } else {
-	                    //execute moat stuff here ??
 	                    Bling._adManager.googletag.display(divId);
 	                }
 
@@ -1490,7 +1488,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    this.refresh();
 	                }
 	            }
-	            console.log("ad should be displayed");
 	        }
 	    }, {
 	        key: "clear",
