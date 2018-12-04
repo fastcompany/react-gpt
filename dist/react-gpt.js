@@ -1219,10 +1219,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.slotDataAvailable === "function" && window.top.moatPrebidApi.slotDataAvailable()) {
 	                console.log("set moat targeting for slot", adSlot);
 	                window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
-	                this.display();
+	                // this.display();
 	            } else {
 	                console.log("// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.");
-	                this.display();
+	                // this.display();
 	            }
 	        }
 	    }, {
@@ -1230,6 +1230,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function renderAd() {
 	            console.log("render ad");
 	            this.defineSlot();
+	            this.display();
 	        }
 	    }, {
 	        key: "notInViewport",
@@ -1470,6 +1471,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                        adSlot.setTargeting('hb_pb', hbpbValue + "x");
 	                                    }
 	                                }
+	                                console.log('should be displaying', divId);
 	                                Bling._adManager.googletag.display(divId);
 	                                pbjs.adserverRequestSent = false;
 	                                adSlot.clearTargeting();

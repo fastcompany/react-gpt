@@ -614,16 +614,17 @@ class Bling extends Component {
         ) {
             console.log("set moat targeting for slot", adSlot);
             window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
-            this.display();
+            // this.display();
         } else {
             console.log("// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.");
-            this.display();
+            // this.display();
         }
     }
 
     renderAd() {
         console.log("render ad");
         this.defineSlot();
+        this.display();
     }
 
     notInViewport(props = this.props, state = this.state) {
@@ -770,7 +771,7 @@ class Bling extends Component {
     }
 
     display() {
-        const {content, adUnitPath} = this.props;
+        const { content, adUnitPath } = this.props;
         const divId = this._divId;
         const adSlot = this._adSlot;
 
@@ -811,8 +812,8 @@ class Bling extends Component {
                     pbjs.enableAnalytics({
                         provider: 'rubicon',
                         options: {
-                        accountId: prebidAnalytics.rubicon,
-                        endpoint: 'https://prebid-a.rubiconproject.com/event'
+                            accountId: prebidAnalytics.rubicon,
+                            endpoint: 'https://prebid-a.rubiconproject.com/event'
                         }
                     });
                 }
@@ -828,7 +829,7 @@ class Bling extends Component {
                     {
                         code: divId,
                         sizes: slotSize,
-                        bids: (adUnitPath.indexOf('oop') ===-1) ? prebidConf.bidParams : prebidConf.oopBidParams
+                        bids: (adUnitPath.indexOf('oop') === -1) ? prebidConf.bidParams : prebidConf.oopBidParams
                     }
                 ];
 
@@ -860,6 +861,7 @@ class Bling extends Component {
                                     adSlot.setTargeting('hb_pb', `${hbpbValue}x`);
                                 }
                             }
+                            console.log('should be displaying', divId);
                             Bling._adManager.googletag.display(divId);
                             pbjs.adserverRequestSent = false;
                             adSlot.clearTargeting();
