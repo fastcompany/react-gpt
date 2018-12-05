@@ -1546,15 +1546,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    height: slotSize[1]
 	                };
 	                // render node element instead of script element so that `inViewport` check works.
-	                return _react2.default.createElement(
-	                    "div",
-	                    { style: emptyStyle },
-	                    _react2.default.createElement("noscript", { className: "MOAT-mansuetodfp4895838934?moatClientLevel1=%eadv!&moatClientLevel2=%ebuy!&moatClientLevel3=%eaid!&moatClientLevel4=%ecid!&moatClientSlicer1=%esid!&moatClientSlicer2=%epid!&zMoatMSafety=%%PATTERN:m_safety%%&zMoatMData=%%PATTERN:m_data%%&zMoatAdSlot=%%PATTERN:adslot%%&zMoatPosition=%%PATTERN:pos%%&zMoatSC=%%PATTERN:scroll%%&zMoatCT=%%PATTERN:c_type%%&zMoatTC=%%PATTERN:cid%%&zMoatAB=%%PATTERN:abgroup%%&zMoatPAT=%%PATTERN:pat%%&zMoatSZ=%%WIDTH%%x%%HEIGHT%%&zMoatMGV=%%PATTERN:m_gv%%&zMoatMMV=%%PATTERN:m_mv%%" }),
-	                    _react2.default.createElement("script", {
-	                        src: "https://z.moatads.com/mansuetodfp4895838934/moatad.js#moatClientLevel1=%eadv!&moatClientLevel2=%ebuy!&moatClientLevel3=%eaid!&moatClientLevel4=%ecid!&moatClientSlicer1=%esid!&moatClientSlicer2=%epid!&zMoatMSafety=%%PATTERN:m_safety%%&zMoatMData=%%PATTERN:m_data%%&zMoatAdSlot=%%PATTERN:adslot%%&zMoatPosition=%%PATTERN:pos%%&zMoatSC=%%PATTERN:scroll%%&zMoatCT=%%PATTERN:c_type%%&zMoatTC=%%PATTERN:cid%%&zMoatAB=%%PATTERN:abgroup%%&zMoatPAT=%%PATTERN:pat%%&zMoatSZ=%%WIDTH%%x%%HEIGHT%%&zMoatMGV=%%PATTERN:m_gv%%&zMoatMMV=%%PATTERN:m_mv%%",
-	                        type: "text/javascript"
-	                    })
-	                );
+	                return _react2.default.createElement("div", { style: emptyStyle });
 	            }
 
 	            // clear the current ad if exists

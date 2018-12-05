@@ -934,13 +934,7 @@ class Bling extends Component {
             };
             // render node element instead of script element so that `inViewport` check works.
             return (
-                <div style={emptyStyle}>
-                    <noscript className="MOAT-mansuetodfp4895838934?moatClientLevel1=%eadv!&amp;moatClientLevel2=%ebuy!&amp;moatClientLevel3=%eaid!&amp;moatClientLevel4=%ecid!&amp;moatClientSlicer1=%esid!&amp;moatClientSlicer2=%epid!&amp;zMoatMSafety=%%PATTERN:m_safety%%&amp;zMoatMData=%%PATTERN:m_data%%&amp;zMoatAdSlot=%%PATTERN:adslot%%&amp;zMoatPosition=%%PATTERN:pos%%&amp;zMoatSC=%%PATTERN:scroll%%&amp;zMoatCT=%%PATTERN:c_type%%&amp;zMoatTC=%%PATTERN:cid%%&amp;zMoatAB=%%PATTERN:abgroup%%&amp;zMoatPAT=%%PATTERN:pat%%&amp;zMoatSZ=%%WIDTH%%x%%HEIGHT%%&amp;zMoatMGV=%%PATTERN:m_gv%%&amp;zMoatMMV=%%PATTERN:m_mv%%" />
-                    <script
-                        src="https://z.moatads.com/mansuetodfp4895838934/moatad.js#moatClientLevel1=%eadv!&moatClientLevel2=%ebuy!&moatClientLevel3=%eaid!&moatClientLevel4=%ecid!&moatClientSlicer1=%esid!&moatClientSlicer2=%epid!&zMoatMSafety=%%PATTERN:m_safety%%&zMoatMData=%%PATTERN:m_data%%&zMoatAdSlot=%%PATTERN:adslot%%&zMoatPosition=%%PATTERN:pos%%&zMoatSC=%%PATTERN:scroll%%&zMoatCT=%%PATTERN:c_type%%&zMoatTC=%%PATTERN:cid%%&zMoatAB=%%PATTERN:abgroup%%&zMoatPAT=%%PATTERN:pat%%&zMoatSZ=%%WIDTH%%x%%HEIGHT%%&zMoatMGV=%%PATTERN:m_gv%%&zMoatMMV=%%PATTERN:m_mv%%"
-                        type="text/javascript"
-                    />
-                </div>
+                <div style={emptyStyle}></div>
             );
         }
 
