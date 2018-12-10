@@ -591,9 +591,9 @@ class Bling extends Component {
     }
 
     addMoatYieldReadyFunc(adSlot) {
-        console.log("adding moat yield ready");
+        // console.log("adding moat yield ready");
         window.top["moatYieldReady"] = function() {
-            console.log("moat yeild ready!", adSlot);
+            // console.log("moat yeild ready!", adSlot);
             // Run moat call here
             this.callMoatPrebidAnalytics(adSlot);
         };
@@ -605,24 +605,24 @@ class Bling extends Component {
             typeof window.top.moatPrebidApi.enableLogging === "function"
         ) {
             window.top.moatPrebidApi.enableLogging();
-            console.log("moat prebid api logging enabled");
+            // console.log("moat prebid api logging enabled");
         }
         if (
             window.top.moatPrebidApi &&
             typeof window.top.moatPrebidApi.slotDataAvailable === "function" &&
             window.top.moatPrebidApi.slotDataAvailable()
         ) {
-            console.log("set moat targeting for slot", adSlot);
+            // console.log("set moat targeting for slot", adSlot);
             window.top.moatPrebidApi.setMoatTargetingForSlot(adSlot);
             // this.display();
         } else {
-            console.log("// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.");
+            // console.log("// Moat tag hasn’t fully rendered yet, or slot data is not available for this URL.");
             // this.display();
         }
     }
 
     renderAd() {
-        console.log("render ad");
+        // console.log("render ad");
         this.defineSlot();
         this.display();
     }
@@ -633,7 +633,7 @@ class Bling extends Component {
     }
 
     defineSlot() {
-        console.log("define slot");
+        // console.log("define slot");
         const {adUnitPath, outOfPage} = this.props;
         const divId = this._divId;
         const slotSize = this.getSlotSize();
@@ -729,7 +729,7 @@ class Bling extends Component {
             // add moat yeild then call moat
             this.addMoatYieldReadyFunc(adSlot);
         } else {
-            console.log("moat yield ready already defined");
+            // console.log("moat yield ready already defined");
             // immediately run moat call
             this.callMoatPrebidAnalytics(adSlot);
         }
@@ -861,7 +861,7 @@ class Bling extends Component {
                                     adSlot.setTargeting('hb_pb', `${hbpbValue}x`);
                                 }
                             }
-                            console.log('should be displaying', divId);
+                            // console.log('should be displaying', divId);
                             Bling._adManager.googletag.display(divId);
                             pbjs.adserverRequestSent = false;
                             adSlot.clearTargeting();
