@@ -799,6 +799,9 @@ class Bling extends Component {
 
                 // Set config
                 pbjs.setConfig({
+                    timeout: PREBID_TIMEOUT,
+                    timeoutBuffer: 500,
+                    useBidCache: true,
                     consentManagement: {
                         cmpApi: 'iab',
                         timeout: 8000,
@@ -828,24 +831,20 @@ class Bling extends Component {
                 const adUnits = [
                     {
                         code: divId,
-                        sizes: slotSize,
+                        mediaTypes: {
+                            banner: {
+                                sizes: slotSize
+                            }
+                        },
                         bids: (adUnitPath.indexOf('oop') === -1) ? prebidConf.bidParams : prebidConf.oopBidParams
                     }
                 ];
 
-                pbjs.que.push(() => {
-                    pbjs.addAdUnits(adUnits);
-                    // pbjs.requestBids({
-                    //     bidsBackHandler: sendAdserverRequest
-                    // });
-                    pbjs.removeAdUnit(divId);
-                });
-
-                const sendAdserverRequest = (bid, timedOut) => {
+                const sendAdserverRequest = () => {
+                    console.log('sendAdserverReq', divId);
                     if (pbjs.adserverRequestSent) {
                         return;
                     }
-                    console.log('NEW bid', bid, 'timedout?', timedOut);
                     pbjs.adserverRequestSent = true;
 
                     Bling._adManager.googletag.cmd.push(() => {
@@ -867,17 +866,32 @@ class Bling extends Component {
                             }
                             // console.log('should be displaying', divId);
                             Bling._adManager.googletag.display(divId);
+                            pbjs.removeAdUnit(divId);
                             pbjs.adserverRequestSent = false;
                             adSlot.clearTargeting();
                         });
                     });
                 };
 
-                setTimeout(() => {
-                    sendAdserverRequest();
-                }, PREBID_TIMEOUT);
+                pbjs.que.push(() => {
+                    pbjs.addAdUnits(adUnits);
+                    pbjs.requestBids({
+                        bidsBackHandler: sendAdserverRequest
+                    });
+                    // pbjs.removeAdUnit(divId);
+                });
+                // setTimeout(() => {
+                //     sendAdserverRequest();
+                // }, PREBID_TIMEOUT);
             } else {
-                Bling._adManager.googletag.display(divId);
+                console.log('no prebid Conf', divId);
+                // Any ads that are loaded at the same time will default to the prebid conf for the last add loaded
+                // For example,  If Bling-1 and 2 are loaded at the same time, since bling 2 has no prebid-conf it prevents bling 1 from getting any bids
+                // For this reason we set a small timeout to allow for any slot with a prebidconf to recieve bids before the call to dfp is made by a slot
+                //  without a prebidconf
+                setTimeout(() => {
+                    Bling._adManager.googletag.display(divId);
+                }, 60);
             }
 
             if (
