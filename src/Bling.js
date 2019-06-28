@@ -835,17 +835,17 @@ class Bling extends Component {
 
                 pbjs.que.push(() => {
                     pbjs.addAdUnits(adUnits);
-                    pbjs.requestBids({
-                        bidsBackHandler: sendAdserverRequest
-                    });
+                    // pbjs.requestBids({
+                    //     bidsBackHandler: sendAdserverRequest
+                    // });
                     pbjs.removeAdUnit(divId);
                 });
 
-                const sendAdserverRequest = () => {
+                const sendAdserverRequest = (bid, timedOut) => {
                     if (pbjs.adserverRequestSent) {
                         return;
                     }
-
+                    console.log('NEW bid', bid, 'timedout?', timedOut);
                     pbjs.adserverRequestSent = true;
 
                     Bling._adManager.googletag.cmd.push(() => {
@@ -854,9 +854,13 @@ class Bling extends Component {
                                 let highestBid = pbjs.getHighestCpmBids(divId)[0].cpm;
                                 highestBid = parseFloat(highestBid);
                                 if (highestBid >= floor) {
-                                    pbjs.setTargetingForGPTAsync([divId]);
+                                    pbjs.setTargetingForGPTAsync(
+                                        [divId]
+                                    );
                                 } else {
-                                    pbjs.setTargetingForGPTAsync([divId]);
+                                    pbjs.setTargetingForGPTAsync(
+                                        [divId]
+                                    );
                                     const hbpbValue = adSlot.getTargeting('hb_pb');
                                     adSlot.setTargeting('hb_pb', `${hbpbValue}x`);
                                 }
