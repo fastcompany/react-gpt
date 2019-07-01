@@ -795,6 +795,7 @@ class Bling extends Component {
                 const prebidAnalytics = prebidConf.analytics;
                 const pbjs = window.pbjs || {};
                 pbjs.que = pbjs.que || [];
+                // NEED TO CHECK IF WE SHOULD USE SECONDARY BASED ON AD REQUESTED
                 const slotSize = this.getSlotSize(prebidConf.useSecondaryAdSizeForPrebid);
 
                 // Set config
@@ -807,7 +808,16 @@ class Bling extends Component {
                         timeout: 8000,
                         allowAuctionWithoutConsent: false
                     },
-                    priceGranularity: priceBucket
+                    priceGranularity: priceBucket,
+                    userSync: {
+                        syncsPerBidder: 0, // Number of registered syncs allowed per adapter. Default: 5. To allow all, set to 0.
+                        filterSettings: {
+                            iframe: {
+                                bidders: '*',   // '*' means all bidders
+                                filter: 'include'
+                            }
+                        }
+                    }
                 });
 
                 // analytics

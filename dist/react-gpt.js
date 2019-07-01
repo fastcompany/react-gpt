@@ -1584,6 +1584,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var prebidAnalytics = prebidConf.analytics;
 	                    var pbjs = window.pbjs || {};
 	                    pbjs.que = pbjs.que || [];
+	                    // NEED TO CHECK IF WE SHOULD USE SECONDARY BASED ON AD REQUESTED
 	                    var slotSize = this.getSlotSize(prebidConf.useSecondaryAdSizeForPrebid);
 
 	                    // Set config
@@ -1596,7 +1597,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            timeout: 8000,
 	                            allowAuctionWithoutConsent: false
 	                        },
-	                        priceGranularity: priceBucket
+	                        priceGranularity: priceBucket,
+	                        userSync: {
+	                            syncsPerBidder: 0, // Number of registered syncs allowed per adapter. Default: 5. To allow all, set to 0.
+	                            filterSettings: {
+	                                iframe: {
+	                                    bidders: '*', // '*' means all bidders
+	                                    filter: 'include'
+	                                }
+	                            }
+	                        }
 	                    });
 
 	                    // analytics
