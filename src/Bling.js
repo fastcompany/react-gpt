@@ -797,7 +797,7 @@ class Bling extends Component {
                 pbjs.que = pbjs.que || [];
                 // NEED TO CHECK IF WE SHOULD USE SECONDARY BASED ON AD REQUESTED
                 const slotSize = this.getSlotSize(prebidConf.useSecondaryAdSizeForPrebid);
-                console.log('prebid slot size', slotSize, divId, adUnitPath, adSlot, 'prebid bidparams', prebidConf.bidParams);
+                // console.log('prebid slot size', slotSize, divId, adUnitPath, adSlot, 'prebid bidparams', prebidConf.bidParams);
                 // Set config
                 pbjs.setConfig({
                     timeout: PREBID_TIMEOUT,
@@ -849,9 +849,9 @@ class Bling extends Component {
                         bids: (adUnitPath.indexOf('oop') === -1) ? prebidConf.bidParams : prebidConf.oopBidParams
                     }
                 ];
-                console.log('adUnits requesting', adUnits);
+                // console.log('adUnits requesting', adUnits);
                 const sendAdserverRequest = () => {
-                    console.log('sendAdserverReq', divId);
+                    // console.log('sendAdserverReq', divId);
                     if (pbjs.adserverRequestSent) {
                         return;
                     }
@@ -894,7 +894,7 @@ class Bling extends Component {
                 //     sendAdserverRequest();
                 // }, PREBID_TIMEOUT);
             } else {
-                console.log('no prebid Conf', divId);
+                // console.log('no prebid Conf', divId);
                 // Any ads that are loaded at the same time will default to the prebid conf for the last add loaded
                 // For example,  If Bling-1 and 2 are loaded at the same time, since bling 2 has no prebid-conf it prevents bling 1 from getting any bids
                 // For this reason we set a small timeout to allow for any slot with a prebidconf to recieve bids before the call to dfp is made by a slot
