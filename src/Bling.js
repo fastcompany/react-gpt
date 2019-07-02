@@ -797,7 +797,7 @@ class Bling extends Component {
                 pbjs.que = pbjs.que || [];
                 // NEED TO CHECK IF WE SHOULD USE SECONDARY BASED ON AD REQUESTED
                 const slotSize = this.getSlotSize(prebidConf.useSecondaryAdSizeForPrebid);
-
+                console.log('prebid slot size', slotSize, divId, adUnitPath, adSlot, 'prebid bidparams', prebidConf.bidParams);
                 // Set config
                 pbjs.setConfig({
                     timeout: PREBID_TIMEOUT,
@@ -849,7 +849,7 @@ class Bling extends Component {
                         bids: (adUnitPath.indexOf('oop') === -1) ? prebidConf.bidParams : prebidConf.oopBidParams
                     }
                 ];
-
+                console.log('adUnits requesting', adUnits);
                 const sendAdserverRequest = () => {
                     console.log('sendAdserverReq', divId);
                     if (pbjs.adserverRequestSent) {

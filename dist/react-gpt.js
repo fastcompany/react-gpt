@@ -1586,7 +1586,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    pbjs.que = pbjs.que || [];
 	                    // NEED TO CHECK IF WE SHOULD USE SECONDARY BASED ON AD REQUESTED
 	                    var slotSize = this.getSlotSize(prebidConf.useSecondaryAdSizeForPrebid);
-
+	                    console.log('prebid slot size', slotSize, divId, adUnitPath, adSlot, 'prebid bidparams', prebidConf.bidParams);
 	                    // Set config
 	                    pbjs.setConfig({
 	                        timeout: PREBID_TIMEOUT,
@@ -1635,7 +1635,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        },
 	                        bids: adUnitPath.indexOf('oop') === -1 ? prebidConf.bidParams : prebidConf.oopBidParams
 	                    }];
-
+	                    console.log('adUnits requesting', adUnits);
 	                    var sendAdserverRequest = function sendAdserverRequest() {
 	                        console.log('sendAdserverReq', divId);
 	                        if (pbjs.adserverRequestSent) {
