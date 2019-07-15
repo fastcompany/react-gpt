@@ -1595,7 +1595,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        consentManagement: {
 	                            cmpApi: 'iab',
 	                            timeout: 1000,
-	                            allowAuctionWithoutConsent: false
+	                            allowAuctionWithoutConsent: true
 	                        },
 	                        priceGranularity: priceBucket,
 	                        userSync: {

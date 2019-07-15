@@ -806,7 +806,7 @@ class Bling extends Component {
                     consentManagement: {
                         cmpApi: 'iab',
                         timeout: 1000,
-                        allowAuctionWithoutConsent: false
+                        allowAuctionWithoutConsent: true
                     },
                     priceGranularity: priceBucket,
                     userSync: {
