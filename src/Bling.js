@@ -801,7 +801,7 @@ class Bling extends Component {
                 pbjs.setConfig({
                     consentManagement: {
                         cmpApi: 'iab',
-                        timeout: 8000,
+                        timeout: 1000,
                         allowAuctionWithoutConsent: false
                     },
                     priceGranularity: priceBucket

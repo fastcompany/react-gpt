@@ -7,7 +7,7 @@
 		exports["ReactGPT"] = factory(require("react"), require("react-dom"));
 	else
 		root["ReactGPT"] = factory(root["React"], root["ReactDOM"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_27__, __WEBPACK_EXTERNAL_MODULE_28__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_26__, __WEBPACK_EXTERNAL_MODULE_27__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -121,9 +121,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _eventemitter2 = _interopRequireDefault(_eventemitter);
 
-	var _throttleDebounce = __webpack_require__(26);
+	var _throttleDebounce = __webpack_require__(25);
 
-	var _invariant = __webpack_require__(6);
+	var _invariant = __webpack_require__(3);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
@@ -696,172 +696,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports) {
-
-	"use strict";
-
-	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
-	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
-	 *
-	 * 
-	 */
-
-	function makeEmptyFunction(arg) {
-	  return function () {
-	    return arg;
-	  };
-	}
-
-	/**
-	 * This function accepts and discards inputs; it has no side effects. This is
-	 * primarily useful idiomatically for overridable function endpoints which
-	 * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
-	 */
-	var emptyFunction = function emptyFunction() {};
-
-	emptyFunction.thatReturns = makeEmptyFunction;
-	emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
-	emptyFunction.thatReturnsTrue = makeEmptyFunction(true);
-	emptyFunction.thatReturnsNull = makeEmptyFunction(null);
-	emptyFunction.thatReturnsThis = function () {
-	  return this;
-	};
-	emptyFunction.thatReturnsArgument = function (arg) {
-	  return arg;
-	};
-
-	module.exports = emptyFunction;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
-	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
-	 *
-	 */
-
-	'use strict';
-
-	/**
-	 * Use invariant() to assert state which your program assumes to be true.
-	 *
-	 * Provide sprintf-style format (only %s is supported) and arguments
-	 * to provide information about what broke and what you were
-	 * expecting.
-	 *
-	 * The invariant message will be stripped in production, but the invariant
-	 * will remain to ensure logic does not differ in production.
-	 */
-
-	var validateFormat = function validateFormat(format) {};
-
-	if (true) {
-	  validateFormat = function validateFormat(format) {
-	    if (format === undefined) {
-	      throw new Error('invariant requires an error message argument');
-	    }
-	  };
-	}
-
-	function invariant(condition, format, a, b, c, d, e, f) {
-	  validateFormat(format);
-
-	  if (!condition) {
-	    var error;
-	    if (format === undefined) {
-	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
-	    } else {
-	      var args = [a, b, c, d, e, f];
-	      var argIndex = 0;
-	      error = new Error(format.replace(/%s/g, function () {
-	        return args[argIndex++];
-	      }));
-	      error.name = 'Invariant Violation';
-	    }
-
-	    error.framesToPop = 1; // we don't care about invariant's own frame
-	    throw error;
-	  }
-	}
-
-	module.exports = invariant;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright (c) 2014-present, Facebook, Inc.
-	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
-	 *
-	 */
-
-	'use strict';
-
-	var emptyFunction = __webpack_require__(3);
-
-	/**
-	 * Similar to invariant but only logs a warning if the condition is not met.
-	 * This can be used to log issues in development environments in critical
-	 * paths. Removing the logging code for production environments will keep the
-	 * same logic and follow the same code paths.
-	 */
-
-	var warning = emptyFunction;
-
-	if (true) {
-	  var printWarning = function printWarning(format) {
-	    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-	      args[_key - 1] = arguments[_key];
-	    }
-
-	    var argIndex = 0;
-	    var message = 'Warning: ' + format.replace(/%s/g, function () {
-	      return args[argIndex++];
-	    });
-	    if (typeof console !== 'undefined') {
-	      console.error(message);
-	    }
-	    try {
-	      // --- Welcome to debugging React ---
-	      // This error was thrown as a convenience so that you can use this stack
-	      // to find the callsite that caused this warning to fire.
-	      throw new Error(message);
-	    } catch (x) {}
-	  };
-
-	  warning = function warning(condition, format) {
-	    if (format === undefined) {
-	      throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
-	    }
-
-	    if (format.indexOf('Failed Composite propType: ') === 0) {
-	      return; // Ignore CompositeComponent proptype check.
-	    }
-
-	    if (!condition) {
-	      for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-	        args[_key2 - 2] = arguments[_key2];
-	      }
-
-	      printWarning.apply(undefined, [format].concat(args));
-	    }
-	  };
-	}
-
-	module.exports = warning;
-
-/***/ }),
-/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -918,14 +752,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 7 */
+/* 4 */
 /***/ (function(module, exports) {
 
 	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
 	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
 	'use strict';
@@ -934,6 +770,178 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	module.exports = ReactPropTypesSecret;
 
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * 
+	 */
+
+	function makeEmptyFunction(arg) {
+	  return function () {
+	    return arg;
+	  };
+	}
+
+	/**
+	 * This function accepts and discards inputs; it has no side effects. This is
+	 * primarily useful idiomatically for overridable function endpoints which
+	 * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
+	 */
+	var emptyFunction = function emptyFunction() {};
+
+	emptyFunction.thatReturns = makeEmptyFunction;
+	emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
+	emptyFunction.thatReturnsTrue = makeEmptyFunction(true);
+	emptyFunction.thatReturnsNull = makeEmptyFunction(null);
+	emptyFunction.thatReturnsThis = function () {
+	  return this;
+	};
+	emptyFunction.thatReturnsArgument = function (arg) {
+	  return arg;
+	};
+
+	module.exports = emptyFunction;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 */
+
+	'use strict';
+
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+
+	var validateFormat = function validateFormat(format) {};
+
+	if (true) {
+	  validateFormat = function validateFormat(format) {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  };
+	}
+
+	function invariant(condition, format, a, b, c, d, e, f) {
+	  validateFormat(format);
+
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error(format.replace(/%s/g, function () {
+	        return args[argIndex++];
+	      }));
+	      error.name = 'Invariant Violation';
+	    }
+
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	}
+
+	module.exports = invariant;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 */
+
+	'use strict';
+
+	var emptyFunction = __webpack_require__(5);
+
+	/**
+	 * Similar to invariant but only logs a warning if the condition is not met.
+	 * This can be used to log issues in development environments in critical
+	 * paths. Removing the logging code for production environments will keep the
+	 * same logic and follow the same code paths.
+	 */
+
+	var warning = emptyFunction;
+
+	if (true) {
+	  var printWarning = function printWarning(format) {
+	    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	      args[_key - 1] = arguments[_key];
+	    }
+
+	    var argIndex = 0;
+	    var message = 'Warning: ' + format.replace(/%s/g, function () {
+	      return args[argIndex++];
+	    });
+	    if (typeof console !== 'undefined') {
+	      console.error(message);
+	    }
+	    try {
+	      // --- Welcome to debugging React ---
+	      // This error was thrown as a convenience so that you can use this stack
+	      // to find the callsite that caused this warning to fire.
+	      throw new Error(message);
+	    } catch (x) {}
+	  };
+
+	  warning = function warning(condition, format) {
+	    if (format === undefined) {
+	      throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
+	    }
+
+	    if (format.indexOf('Failed Composite propType: ') === 0) {
+	      return; // Ignore CompositeComponent proptype check.
+	    }
+
+	    if (!condition) {
+	      for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+	        args[_key2 - 2] = arguments[_key2];
+	      }
+
+	      printWarning.apply(undefined, [format].concat(args));
+	    }
+	  };
+	}
+
+	module.exports = warning;
 
 /***/ }),
 /* 8 */
@@ -1049,19 +1057,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _class, _temp2; /* eslint-disable react/sort-comp */
 
 
-	var _react = __webpack_require__(27);
+	var _react = __webpack_require__(26);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _propTypes = __webpack_require__(24);
+	var _propTypes = __webpack_require__(23);
 
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 
-	var _reactDom = __webpack_require__(28);
+	var _reactDom = __webpack_require__(27);
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _invariant = __webpack_require__(6);
+	var _invariant = __webpack_require__(3);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
@@ -1582,7 +1590,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    pbjs.setConfig({
 	                        consentManagement: {
 	                            cmpApi: 'iab',
-	                            timeout: 8000,
+	                            timeout: 1000,
 	                            allowAuctionWithoutConsent: false
 	                        },
 	                        priceGranularity: priceBucket
@@ -3214,117 +3222,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 21 */
-/***/ (function(module, exports) {
-
-	/*
-	object-assign
-	(c) Sindre Sorhus
-	@license MIT
-	*/
-
-	'use strict';
-	/* eslint-disable no-unused-vars */
-	var getOwnPropertySymbols = Object.getOwnPropertySymbols;
-	var hasOwnProperty = Object.prototype.hasOwnProperty;
-	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-	function toObject(val) {
-		if (val === null || val === undefined) {
-			throw new TypeError('Object.assign cannot be called with null or undefined');
-		}
-
-		return Object(val);
-	}
-
-	function shouldUseNative() {
-		try {
-			if (!Object.assign) {
-				return false;
-			}
-
-			// Detect buggy property enumeration order in older V8 versions.
-
-			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-			var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
-			test1[5] = 'de';
-			if (Object.getOwnPropertyNames(test1)[0] === '5') {
-				return false;
-			}
-
-			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-			var test2 = {};
-			for (var i = 0; i < 10; i++) {
-				test2['_' + String.fromCharCode(i)] = i;
-			}
-			var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
-				return test2[n];
-			});
-			if (order2.join('') !== '0123456789') {
-				return false;
-			}
-
-			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-			var test3 = {};
-			'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
-				test3[letter] = letter;
-			});
-			if (Object.keys(Object.assign({}, test3)).join('') !==
-					'abcdefghijklmnopqrst') {
-				return false;
-			}
-
-			return true;
-		} catch (err) {
-			// We don't expect any of the above to throw, but better to be safe.
-			return false;
-		}
-	}
-
-	module.exports = shouldUseNative() ? Object.assign : function (target, source) {
-		var from;
-		var to = toObject(target);
-		var symbols;
-
-		for (var s = 1; s < arguments.length; s++) {
-			from = Object(arguments[s]);
-
-			for (var key in from) {
-				if (hasOwnProperty.call(from, key)) {
-					to[key] = from[key];
-				}
-			}
-
-			if (getOwnPropertySymbols) {
-				symbols = getOwnPropertySymbols(from);
-				for (var i = 0; i < symbols.length; i++) {
-					if (propIsEnumerable.call(from, symbols[i])) {
-						to[symbols[i]] = from[symbols[i]];
-					}
-				}
-			}
-		}
-
-		return to;
-	};
-
-
-/***/ }),
-/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
 	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
 	'use strict';
 
 	if (true) {
-	  var invariant = __webpack_require__(4);
-	  var warning = __webpack_require__(5);
-	  var ReactPropTypesSecret = __webpack_require__(7);
+	  var invariant = __webpack_require__(6);
+	  var warning = __webpack_require__(7);
+	  var ReactPropTypesSecret = __webpack_require__(4);
 	  var loggedTypeFailures = {};
 	}
 
@@ -3350,7 +3264,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        try {
 	          // This is intentionally an invariant that gets caught. It's the same
 	          // behavior as without this statement except with a better message.
-	          invariant(typeof typeSpecs[typeSpecName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'the `prop-types` package, but received `%s`.', componentName || 'React class', location, typeSpecName, typeof typeSpecs[typeSpecName]);
+	          invariant(typeof typeSpecs[typeSpecName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'React.PropTypes.', componentName || 'React class', location, typeSpecName);
 	          error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
 	        } catch (ex) {
 	          error = ex;
@@ -3374,25 +3288,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
 	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
 	'use strict';
 
-	var emptyFunction = __webpack_require__(3);
-	var invariant = __webpack_require__(4);
-	var warning = __webpack_require__(5);
-	var assign = __webpack_require__(21);
+	var emptyFunction = __webpack_require__(5);
+	var invariant = __webpack_require__(6);
+	var warning = __webpack_require__(7);
 
-	var ReactPropTypesSecret = __webpack_require__(7);
-	var checkPropTypes = __webpack_require__(22);
+	var ReactPropTypesSecret = __webpack_require__(4);
+	var checkPropTypes = __webpack_require__(21);
 
 	module.exports = function(isValidElement, throwOnDirectAccess) {
 	  /* global Symbol */
@@ -3488,8 +3403,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    objectOf: createObjectOfTypeChecker,
 	    oneOf: createEnumTypeChecker,
 	    oneOfType: createUnionTypeChecker,
-	    shape: createShapeTypeChecker,
-	    exact: createStrictShapeTypeChecker,
+	    shape: createShapeTypeChecker
 	  };
 
 	  /**
@@ -3704,7 +3618,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (typeof checker !== 'function') {
 	        warning(
 	          false,
-	          'Invalid argument supplied to oneOfType. Expected an array of check functions, but ' +
+	          'Invalid argument supplid to oneOfType. Expected an array of check functions, but ' +
 	          'received %s at index %s.',
 	          getPostfixForTypeWarning(checker),
 	          i
@@ -3755,36 +3669,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      return null;
 	    }
-	    return createChainableTypeChecker(validate);
-	  }
-
-	  function createStrictShapeTypeChecker(shapeTypes) {
-	    function validate(props, propName, componentName, location, propFullName) {
-	      var propValue = props[propName];
-	      var propType = getPropType(propValue);
-	      if (propType !== 'object') {
-	        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
-	      }
-	      // We need to check all keys in case some are required but missing from
-	      // props.
-	      var allKeys = assign({}, props[propName], shapeTypes);
-	      for (var key in allKeys) {
-	        var checker = shapeTypes[key];
-	        if (!checker) {
-	          return new PropTypeError(
-	            'Invalid ' + location + ' `' + propFullName + '` key `' + key + '` supplied to `' + componentName + '`.' +
-	            '\nBad object: ' + JSON.stringify(props[propName], null, '  ') +
-	            '\nValid keys: ' +  JSON.stringify(Object.keys(shapeTypes), null, '  ')
-	          );
-	        }
-	        var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
-	        if (error) {
-	          return error;
-	        }
-	      }
-	      return null;
-	    }
-
 	    return createChainableTypeChecker(validate);
 	  }
 
@@ -3922,14 +3806,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
 	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
 	if (true) {
@@ -3947,7 +3833,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // By explicitly using `prop-types` you are opting into new development behavior.
 	  // http://fb.me/prop-types-in-prod
 	  var throwOnDirectAccess = true;
-	  module.exports = __webpack_require__(23)(isValidElement, throwOnDirectAccess);
+	  module.exports = __webpack_require__(22)(isValidElement, throwOnDirectAccess);
 	} else {
 	  // By explicitly using `prop-types` you are opting into new production behavior.
 	  // http://fb.me/prop-types-in-prod
@@ -3956,7 +3842,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* eslint-disable no-undefined */
@@ -3983,11 +3869,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var throttle = __webpack_require__(8);
-	var debounce = __webpack_require__(25);
+	var debounce = __webpack_require__(24);
 
 	module.exports = {
 		throttle: throttle,
@@ -3996,16 +3882,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
+/* 26 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_26__;
+
+/***/ }),
 /* 27 */
 /***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_27__;
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_28__;
 
 /***/ })
 /******/ ])
