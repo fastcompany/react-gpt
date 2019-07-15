@@ -1584,16 +1584,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var prebidAnalytics = prebidConf.analytics;
 	                    var pbjs = window.pbjs || {};
 	                    pbjs.que = pbjs.que || [];
+	                    // NEED TO CHECK IF WE SHOULD USE SECONDARY BASED ON AD REQUESTED
 	                    var slotSize = this.getSlotSize(prebidConf.useSecondaryAdSizeForPrebid);
-
+	                    // console.log('prebid slot size', slotSize, divId, adUnitPath, adSlot, 'prebid bidparams', prebidConf.bidParams);
 	                    // Set config
 	                    pbjs.setConfig({
+	                        timeout: PREBID_TIMEOUT,
+	                        timeoutBuffer: 500,
+	                        useBidCache: true,
 	                        consentManagement: {
 	                            cmpApi: 'iab',
 	                            timeout: 1000,
 	                            allowAuctionWithoutConsent: false
 	                        },
-	                        priceGranularity: priceBucket
+	                        priceGranularity: priceBucket,
+	                        userSync: {
+	                            syncsPerBidder: 0, // Number of registered syncs allowed per adapter. Default: 5. To allow all, set to 0.
+	                            filterSettings: {
+	                                iframe: {
+	                                    bidders: '*', // '*' means all bidders
+	                                    filter: 'include'
+	                                }
+	                            }
+	                        }
 	                    });
 
 	                    // analytics
@@ -1615,23 +1628,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    // Define pbjs unit
 	                    var adUnits = [{
 	                        code: divId,
-	                        sizes: slotSize,
+	                        mediaTypes: {
+	                            banner: {
+	                                sizes: slotSize
+	                            }
+	                        },
 	                        bids: adUnitPath.indexOf('oop') === -1 ? prebidConf.bidParams : prebidConf.oopBidParams
 	                    }];
-
-	                    pbjs.que.push(function () {
-	                        pbjs.addAdUnits(adUnits);
-	                        pbjs.requestBids({
-	                            bidsBackHandler: _sendAdserverRequest
-	                        });
-	                        pbjs.removeAdUnit(divId);
-	                    });
-
-	                    var _sendAdserverRequest = function _sendAdserverRequest() {
+	                    // console.log('adUnits requesting', adUnits);
+	                    var sendAdserverRequest = function sendAdserverRequest() {
+	                        // console.log('sendAdserverReq', divId);
 	                        if (pbjs.adserverRequestSent) {
 	                            return;
 	                        }
-
 	                        pbjs.adserverRequestSent = true;
 
 	                        Bling._adManager.googletag.cmd.push(function () {
@@ -1649,17 +1658,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                }
 	                                // console.log('should be displaying', divId);
 	                                Bling._adManager.googletag.display(divId);
+	                                pbjs.removeAdUnit(divId);
 	                                pbjs.adserverRequestSent = false;
 	                                adSlot.clearTargeting();
 	                            });
 	                        });
 	                    };
 
-	                    setTimeout(function () {
-	                        _sendAdserverRequest();
-	                    }, PREBID_TIMEOUT);
+	                    pbjs.que.push(function () {
+	                        pbjs.addAdUnits(adUnits);
+	                        pbjs.requestBids({
+	                            bidsBackHandler: sendAdserverRequest
+	                        });
+	                        // pbjs.removeAdUnit(divId);
+	                    });
+	                    // setTimeout(() => {
+	                    //     sendAdserverRequest();
+	                    // }, PREBID_TIMEOUT);
 	                } else {
-	                    Bling._adManager.googletag.display(divId);
+	                    // console.log('no prebid Conf', divId);
+	                    // Any ads that are loaded at the same time will default to the prebid conf for the last add loaded
+	                    // For example,  If Bling-1 and 2 are loaded at the same time, since bling 2 has no prebid-conf it prevents bling 1 from getting any bids
+	                    // For this reason we set a small timeout to allow for any slot with a prebidconf to recieve bids before the call to dfp is made by a slot
+	                    //  without a prebidconf
+	                    setTimeout(function () {
+	                        Bling._adManager.googletag.display(divId);
+	                    }, 60);
 	                }
 
 	                if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
