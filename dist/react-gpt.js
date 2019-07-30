@@ -1379,10 +1379,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "addMoatYieldReadyFunc",
 	        value: function addMoatYieldReadyFunc(adSlot) {
 	            // console.log("adding moat yield ready");
+	            var self = this;
 	            window.top["moatYieldReady"] = function () {
 	                // console.log("moat yeild ready!", adSlot);
 	                // Run moat call here
-	                this.callMoatPrebidAnalytics(adSlot);
+	                self.callMoatPrebidAnalytics(adSlot);
 	            };
 	        }
 	    }, {

@@ -592,10 +592,11 @@ class Bling extends Component {
 
     addMoatYieldReadyFunc(adSlot) {
         // console.log("adding moat yield ready");
+        let self = this;
         window.top["moatYieldReady"] = function() {
             // console.log("moat yeild ready!", adSlot);
             // Run moat call here
-            this.callMoatPrebidAnalytics(adSlot);
+            self.callMoatPrebidAnalytics(adSlot);
         };
     }
 
