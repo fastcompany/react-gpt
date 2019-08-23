@@ -1600,13 +1600,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        },
 	                        priceGranularity: priceBucket,
 	                        userSync: {
-	                            syncsPerBidder: 0, // Number of registered syncs allowed per adapter. Default: 5. To allow all, set to 0.
-	                            filterSettings: {
-	                                iframe: {
-	                                    bidders: '*', // '*' means all bidders
-	                                    filter: 'include'
-	                                }
-	                            }
+	                            syncsPerBidder: 3 // Number of registered syncs allowed per adapter. Default: 5. To allow all, set to 0.
 	                        }
 	                    });
 
