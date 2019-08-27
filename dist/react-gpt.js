@@ -1610,7 +1610,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            provider: 'rubicon',
 	                            options: {
 	                                accountId: prebidAnalytics.rubicon,
-	                                endpoint: 'https://prebid-a.rubiconproject.com/event'
+	                                endpoint: 'https://prebid-a.rubiconproject.com/event',
+	                                samplingFactor: 1
 	                            }
 	                        });
 	                    }
