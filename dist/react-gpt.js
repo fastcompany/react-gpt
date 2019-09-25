@@ -1738,8 +1738,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    slotSize = ["auto", "auto"];
 	                }
 	                var emptyStyle = slotSize && {
-	                    width: slotSize[0],
-	                    height: slotSize[1]
+	                    maxWidth: slotSize[0],
+	                    maxHeight: slotSize[1]
 	                };
 	                // render node element instead of script element so that `inViewport` check works.
 	                return _react2.default.createElement("div", { style: emptyStyle });
