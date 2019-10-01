@@ -953,9 +953,14 @@ class Bling extends Component {
                 slotSize = ["auto", "auto"];
             }
             const emptyStyle = slotSize && {
-                maxWidth: slotSize[0],
-                maxHeight: slotSize[1]
+                width: 0,
+                height: 0
             };
+
+            // const emptyStyle = slotSize && {
+            //     width: slotSize[0],
+            //     height: slotSize[1]
+            // };
             // render node element instead of script element so that `inViewport` check works.
             return (
                 <div style={emptyStyle}></div>
