@@ -1737,15 +1737,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (slotSize === "fluid") {
 	                    slotSize = ["auto", "auto"];
 	                }
-	                var emptyStyle = slotSize && {
-	                    width: 0,
-	                    height: 0
-	                };
 
-	                // const emptyStyle = slotSize && {
-	                //     width: slotSize[0],
-	                //     height: slotSize[1]
-	                // };
+	                var emptyStyle = slotSize && {
+	                    width: slotSize[0],
+	                    height: slotSize[1]
+	                };
 	                // render node element instead of script element so that `inViewport` check works.
 	                return _react2.default.createElement("div", { style: emptyStyle });
 	            }
