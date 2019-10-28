@@ -591,7 +591,7 @@ class Bling extends Component {
     }
 
     addMoatYieldReadyFunc(adSlot) {
-        // console.log("adding moat yield ready");
+        console.log("adding moat yield ready for adslot:", adSlot);
         let self = this;
         window.top["moatYieldReady"] = function () {
             // console.log("moat yeild ready!", adSlot);
@@ -601,6 +601,7 @@ class Bling extends Component {
     }
 
     callMoatPrebidAnalytics(adSlot) {
+        console.log('call Moat Prebid Analytics for adslot', adSlot)
         if (
             window.top.moatPrebidApi &&
             typeof window.top.moatPrebidApi.enableLogging === "function"
@@ -634,7 +635,6 @@ class Bling extends Component {
     }
 
     defineSlot() {
-        // console.log("define slot");
         const { adUnitPath, outOfPage } = this.props;
         const divId = this._divId;
         const slotSize = this.getSlotSize();
@@ -653,11 +653,14 @@ class Bling extends Component {
                 );
             }
         }
+
+        console.log("define slot", 'adUnitPath', adUnitPath, 'outofpage', outOfPage, 'divId', divId, 'slotSize', slotSize, '✅', this._adSlot);
+
         this.configureSlot(this._adSlot);
     }
 
     configureSlot(adSlot, props = this.props) {
-        // console.log("configureSlot adSlot", adSlot);
+        console.log("configureSlot adSlot", adSlot);
         const {
             sizeMapping,
             attributes,

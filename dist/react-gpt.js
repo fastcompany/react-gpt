@@ -1378,7 +1378,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "addMoatYieldReadyFunc",
 	        value: function addMoatYieldReadyFunc(adSlot) {
-	            // console.log("adding moat yield ready");
+	            console.log("adding moat yield ready for adslot:", adSlot);
 	            var self = this;
 	            window.top["moatYieldReady"] = function () {
 	                // console.log("moat yeild ready!", adSlot);
@@ -1389,6 +1389,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "callMoatPrebidAnalytics",
 	        value: function callMoatPrebidAnalytics(adSlot) {
+	            console.log('call Moat Prebid Analytics for adslot', adSlot);
 	            if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.enableLogging === "function") {
 	                window.top.moatPrebidApi.enableLogging();
 	                // console.log("moat prebid api logging enabled");
@@ -1421,7 +1422,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "defineSlot",
 	        value: function defineSlot() {
-	            // console.log("define slot");
 	            var _props2 = this.props,
 	                adUnitPath = _props2.adUnitPath,
 	                outOfPage = _props2.outOfPage;
@@ -1436,6 +1436,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    this._adSlot = Bling._adManager.googletag.defineSlot(adUnitPath, slotSize || [], divId);
 	                }
 	            }
+
+	            console.log("define slot", 'adUnitPath', adUnitPath, 'outofpage', outOfPage, 'divId', divId, 'slotSize', slotSize, '✅', this._adSlot);
+
 	            this.configureSlot(this._adSlot);
 	        }
 	    }, {
@@ -1443,7 +1446,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function configureSlot(adSlot) {
 	            var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.props;
 
-	            // console.log("configureSlot adSlot", adSlot);
+	            console.log("configureSlot adSlot", adSlot);
 	            var sizeMapping = props.sizeMapping,
 	                attributes = props.attributes,
 	                targeting = props.targeting,
