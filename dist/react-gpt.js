@@ -1427,15 +1427,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            var divId = this._divId;
 	            var slotSize = this.getSlotSize();
-	            console.log('DEFINESLOT', 'divId', divId, 'slotsize', slotSize, 'aduunitpath', adUnitPath);
+	            // console.log('DEFINESLOT', 'divId', divId, 'slotsize', slotSize, 'aduunitpath', adUnitPath);
 
 	            if (!this._adSlot) {
-	                console.log('💀 DEFINESLOT: no ad slot case', divId, slotSize, adUnitPath);
+	                // console.log('💀 DEFINESLOT: no ad slot case', divId, slotSize, adUnitPath)
 	                if (outOfPage) {
 	                    this._adSlot = Bling._adManager.googletag.defineOutOfPageSlot(adUnitPath, divId);
 	                } else {
 	                    this._adSlot = Bling._adManager.googletag.defineSlot(adUnitPath, slotSize || [], divId);
-	                    console.log('👀 DEFINESLOT: slot defined manually', this._adSlot);
+	                    // console.log('👀 DEFINESLOT: slot defined manually', this._adSlot)
 	                }
 	            }
 	            this.configureSlot(this._adSlot);
@@ -1445,7 +1445,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function configureSlot(adSlot) {
 	            var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.props;
 
-	            console.log("CONFIGURESLOT adSlot", adSlot);
+	            // console.log("CONFIGURESLOT adSlot", adSlot);
 	            var sizeMapping = props.sizeMapping,
 	                attributes = props.attributes,
 	                targeting = props.targeting,
@@ -1461,7 +1461,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.defineSizeMapping(adSlot, sizeMapping);
 
 	            if (collapseEmptyDiv !== undefined) {
-	                console.log('CONFIGURESLOT: collapseEmptyDiv value', collapseEmptyDiv);
+	                // console.log('CONFIGURESLOT: collapseEmptyDiv value', collapseEmptyDiv)
 	                if (Array.isArray(collapseEmptyDiv)) {
 	                    var _adSlot$setCollapseEm;
 

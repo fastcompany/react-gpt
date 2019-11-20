@@ -637,10 +637,10 @@ class Bling extends Component {
         const { adUnitPath, outOfPage } = this.props;
         const divId = this._divId;
         const slotSize = this.getSlotSize();
-        console.log('DEFINESLOT', 'divId', divId, 'slotsize', slotSize, 'aduunitpath', adUnitPath);
+        // console.log('DEFINESLOT', 'divId', divId, 'slotsize', slotSize, 'aduunitpath', adUnitPath);
 
         if (!this._adSlot) {
-            console.log('💀 DEFINESLOT: no ad slot case', divId, slotSize, adUnitPath)
+            // console.log('💀 DEFINESLOT: no ad slot case', divId, slotSize, adUnitPath)
             if (outOfPage) {
                 this._adSlot = Bling._adManager.googletag.defineOutOfPageSlot(
                     adUnitPath,
@@ -652,14 +652,14 @@ class Bling extends Component {
                     slotSize || [],
                     divId
                 );
-                console.log('👀 DEFINESLOT: slot defined manually', this._adSlot)
+                // console.log('👀 DEFINESLOT: slot defined manually', this._adSlot)
             }
         }
         this.configureSlot(this._adSlot);
     }
 
     configureSlot(adSlot, props = this.props) {
-        console.log("CONFIGURESLOT adSlot", adSlot);
+        // console.log("CONFIGURESLOT adSlot", adSlot);
         const {
             sizeMapping,
             attributes,
@@ -676,7 +676,7 @@ class Bling extends Component {
         this.defineSizeMapping(adSlot, sizeMapping);
 
         if (collapseEmptyDiv !== undefined) {
-            console.log('CONFIGURESLOT: collapseEmptyDiv value', collapseEmptyDiv)
+            // console.log('CONFIGURESLOT: collapseEmptyDiv value', collapseEmptyDiv)
             if (Array.isArray(collapseEmptyDiv)) {
                 adSlot.setCollapseEmptyDiv.call(adSlot, ...collapseEmptyDiv);
             } else {
