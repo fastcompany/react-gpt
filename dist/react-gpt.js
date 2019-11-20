@@ -1421,19 +1421,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "defineSlot",
 	        value: function defineSlot() {
-	            // console.log("define slot");
 	            var _props2 = this.props,
 	                adUnitPath = _props2.adUnitPath,
 	                outOfPage = _props2.outOfPage;
 
 	            var divId = this._divId;
 	            var slotSize = this.getSlotSize();
+	            console.log('DEFINESLOT', 'divId', divId, 'slotsize', slotSize, 'aduunitpath', adUnitPath);
 
 	            if (!this._adSlot) {
+	                console.log('💀 DEFINESLOT: no ad slot case', divId, slotSize, adUnitPath);
 	                if (outOfPage) {
 	                    this._adSlot = Bling._adManager.googletag.defineOutOfPageSlot(adUnitPath, divId);
 	                } else {
 	                    this._adSlot = Bling._adManager.googletag.defineSlot(adUnitPath, slotSize || [], divId);
+	                    console.log('👀 DEFINESLOT: slot defined manually', this._adSlot);
 	                }
 	            }
 	            this.configureSlot(this._adSlot);
@@ -1443,7 +1445,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function configureSlot(adSlot) {
 	            var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.props;
 
-	            // console.log("configureSlot adSlot", adSlot);
+	            console.log("CONFIGURESLOT adSlot", adSlot);
 	            var sizeMapping = props.sizeMapping,
 	                attributes = props.attributes,
 	                targeting = props.targeting,
@@ -1459,6 +1461,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.defineSizeMapping(adSlot, sizeMapping);
 
 	            if (collapseEmptyDiv !== undefined) {
+	                console.log('CONFIGURESLOT: collapseEmptyDiv value', collapseEmptyDiv);
 	                if (Array.isArray(collapseEmptyDiv)) {
 	                    var _adSlot$setCollapseEm;
 
@@ -1590,7 +1593,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    // console.log('prebid slot size', slotSize, divId, adUnitPath, adSlot, 'prebid bidparams', prebidConf.bidParams);
 	                    // Set config
 	                    pbjs.setConfig({
-	                        timeout: PREBID_TIMEOUT,
+	                        bidderTimeout: PREBID_TIMEOUT,
 	                        timeoutBuffer: 500,
 	                        useBidCache: true,
 	                        consentManagement: {
