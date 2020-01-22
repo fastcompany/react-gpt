@@ -1593,6 +1593,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    // console.log('prebid slot size', slotSize, divId, adUnitPath, adSlot, 'prebid bidparams', prebidConf.bidParams);
 	                    // Set config
 	                    pbjs.setConfig({
+	                        enableSendAllBids: true,
+	                        targetingControls: {
+	                            alwaysIncludeDeals: true
+	                        },
 	                        bidderTimeout: PREBID_TIMEOUT,
 	                        timeoutBuffer: 500,
 	                        useBidCache: true,
