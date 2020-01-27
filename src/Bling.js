@@ -804,7 +804,7 @@ class Bling extends Component {
                 // console.log('prebid slot size', slotSize, divId, adUnitPath, adSlot, 'prebid bidparams', prebidConf.bidParams);
                 // Set config
                 pbjs.setConfig({
-                    enableSendAllBids: true,
+                    enableSendAllBids: false,
                     targetingControls: {
                         alwaysIncludeDeals: true
                     },
