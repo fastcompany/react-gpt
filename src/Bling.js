@@ -792,7 +792,7 @@ class Bling extends Component {
             // PBJS configs
             const prebidConf = this.props.prebidConf;
 
-            if (prebidConf) {
+            if (prebidConf !== null || prebidConf !== undefined) {
                 const PREBID_TIMEOUT = prebidConf.timeout;
                 const priceBucket = prebidConf.priceBuckets;
                 const floorConf = prebidConf.floorPrices;
