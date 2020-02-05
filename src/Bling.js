@@ -812,9 +812,15 @@ class Bling extends Component {
                     timeoutBuffer: 500,
                     useBidCache: true,
                     consentManagement: {
-                        cmpApi: 'iab',
-                        timeout: 1000,
-                        allowAuctionWithoutConsent: true
+                        gdpr: {
+                            cmpApi: 'iab',
+                            allowAuctionWithoutConsent: true, // suppress auctions if there's no GDPR consent string
+                            timeout: 3000  // GDPR timeout 3000ms
+                        },
+                        usp: {
+                            cmpApi: 'iab',
+                            timeout: 100 // US Privacy timeout 100ms
+                        }
                     },
                     priceGranularity: priceBucket,
                     userSync: {
