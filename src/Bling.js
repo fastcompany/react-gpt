@@ -796,6 +796,7 @@ class Bling extends Component {
                 const PREBID_TIMEOUT = prebidConf.timeout;
                 const priceBucket = prebidConf.priceBuckets;
                 const floorConf = prebidConf.floorPrices;
+                const floor = this.floorPrice(new Date().getDay(), floorConf);
                 const prebidAnalytics = prebidConf.analytics;
                 const pbjs = window.pbjs || {};
                 pbjs.que = pbjs.que || [];
@@ -804,47 +805,32 @@ class Bling extends Component {
                 // console.log('prebid slot size', slotSize, divId, adUnitPath, adSlot, 'prebid bidparams', prebidConf.bidParams);
                 // Set config
                 pbjs.setConfig({
+                    bidderTimeout: PREBID_TIMEOUT,
+                    timeoutBuffer: 500,
                     enableSendAllBids: false,
+                    useBidCache: true,
+                    priceGranularity: priceBucket,
                     targetingControls: {
                         alwaysIncludeDeals: true
                     },
-                    bidderTimeout: PREBID_TIMEOUT,
-                    timeoutBuffer: 500,
-                    useBidCache: true,
+                    userSync: {
+                        syncsPerBidder: 2 // Number of registered syncs allowed per adapter. Default: 5. To allow all, set to 0.
+                    },
                     consentManagement: {
                         gdpr: {
                             cmpApi: 'iab',
                             allowAuctionWithoutConsent: true, // suppress auctions if there's no GDPR consent string
-                            timeout: 3000  // GDPR timeout 3000ms
+                            timeout: PREBID_TIMEOUT  // GDPR timeout
                         },
                         usp: {
                             cmpApi: 'iab',
                             timeout: 100 // US Privacy timeout 100ms
                         }
-                    },
-                    priceGranularity: priceBucket,
-                    userSync: {
-                        syncsPerBidder: 3 // Number of registered syncs allowed per adapter. Default: 5. To allow all, set to 0.
                     }
                 });
 
-                // analytics
-                if (prebidAnalytics && prebidAnalytics.rubicon) {
-                    pbjs.enableAnalytics({
-                        provider: 'rubicon',
-                        options: {
-                            accountId: prebidAnalytics.rubicon,
-                            endpoint: 'https://prebid-a.rubiconproject.com/event',
-                            samplingFactor: 1
-                        }
-                    });
-                }
-
-                const floor = this.floorPrice(new Date().getDay(), floorConf);
-
                 // Pause ad
                 Bling._adManager.googletag.pubads().disableInitialLoad();
-
 
                 // Define pbjs unit
                 const adUnits = [
@@ -855,10 +841,10 @@ class Bling extends Component {
                                 sizes: slotSize
                             }
                         },
-                        bids: (adUnitPath.indexOf('oop') === -1) ? prebidConf.bidParams : prebidConf.oopBidParams
+                        bids: prebidConf.bidParams
                     }
                 ];
-                // console.log('adUnits requesting', adUnits);
+                // console.log('adUnits requesting', adUnitPath, adUnits);
                 const sendAdserverRequest = () => {
                     // console.log('sendAdserverReq', divId);
                     if (pbjs.adserverRequestSent) {
@@ -868,6 +854,18 @@ class Bling extends Component {
 
                     Bling._adManager.googletag.cmd.push(() => {
                         pbjs.que.push(() => {
+                            // analytics
+                            if (prebidAnalytics && prebidAnalytics.rubicon) {
+                                pbjs.enableAnalytics({
+                                    provider: 'rubicon',
+                                    options: {
+                                        accountId: prebidAnalytics.rubicon,
+                                        endpoint: 'https://prebid-a.rubiconproject.com/event',
+                                        samplingFactor: 1
+                                    }
+                                });
+                            }
+
                             if (pbjs.getHighestCpmBids(divId).length) {
                                 let highestBid = pbjs.getHighestCpmBids(divId)[0].cpm;
                                 highestBid = parseFloat(highestBid);
@@ -894,14 +892,11 @@ class Bling extends Component {
 
                 pbjs.que.push(() => {
                     pbjs.addAdUnits(adUnits);
+                    pbjs.aliasBidder('appnexus', 'pangaea');
                     pbjs.requestBids({
                         bidsBackHandler: sendAdserverRequest
                     });
-                    // pbjs.removeAdUnit(divId);
                 });
-                // setTimeout(() => {
-                //     sendAdserverRequest();
-                // }, PREBID_TIMEOUT);
             } else {
                 // console.log('no prebid Conf', divId);
                 // Any ads that are loaded at the same time will default to the prebid conf for the last add loaded
@@ -910,7 +905,7 @@ class Bling extends Component {
                 //  without a prebidconf
                 setTimeout(() => {
                     Bling._adManager.googletag.display(divId);
-                }, 60);
+                }, 50);
             }
 
             if (
