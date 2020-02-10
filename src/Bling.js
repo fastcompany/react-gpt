@@ -814,7 +814,14 @@ class Bling extends Component {
                         alwaysIncludeDeals: true
                     },
                     userSync: {
-                        syncsPerBidder: 2 // Number of registered syncs allowed per adapter. Default: 5. To allow all, set to 0.
+                        filterSettings: {
+                            iframe: {
+                                bidders: '*',   // '*' means all bidders
+                                filter: 'include'
+                            }
+                        },
+                        syncsPerBidder: 4,
+                        syncDelay: 6000
                     },
                     consentManagement: {
                         gdpr: {
