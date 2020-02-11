@@ -906,13 +906,9 @@ class Bling extends Component {
                 });
             } else {
                 // console.log('no prebid Conf', divId);
-                // Any ads that are loaded at the same time will default to the prebid conf for the last add loaded
-                // For example,  If Bling-1 and 2 are loaded at the same time, since bling 2 has no prebid-conf it prevents bling 1 from getting any bids
-                // For this reason we set a small timeout to allow for any slot with a prebidconf to recieve bids before the call to dfp is made by a slot
-                //  without a prebidconf
                 setTimeout(() => {
                     Bling._adManager.googletag.display(divId);
-                }, 50);
+                });
             }
 
             if (
