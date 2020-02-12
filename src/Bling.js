@@ -1,5 +1,5 @@
 /* eslint-disable react/sort-comp */
-import React, {Component} from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 import invariant from "invariant";
@@ -7,7 +7,7 @@ import deepEqual from "deep-equal";
 import hoistStatics from "hoist-non-react-statics";
 import Events from "./Events";
 import filterPropsSimple from "./utils/filterProps";
-import {createManager, pubadsAPI} from "./createManager";
+import { createManager, pubadsAPI } from "./createManager";
 /**
  * An Ad Component using Google Publisher Tags.
  * This component should work standalone w/o context.
@@ -19,6 +19,7 @@ import {createManager, pubadsAPI} from "./createManager";
  * @fires Bling#Events.SLOT_RENDER_ENDED
  * @fires Bling#Events.IMPRESSION_VIEWABLE
  * @fires Bling#Events.SLOT_VISIBILITY_CHANGED
+ * @fires Bling#Events.SLOT_LOADED
  */
 class Bling extends Component {
     static propTypes = {
@@ -155,6 +156,12 @@ class Bling extends Component {
          */
         onSlotVisibilityChanged: PropTypes.func,
         /**
+         * An optional event handler function for `googletag.events.SlotOnloadEvent`.
+         *
+         * @property onSlotOnload
+         */
+        onSlotOnload: PropTypes.func,
+        /**
          * An optional flag to indicate whether an ad should only render when it's fully in the viewport area.
          *
          * @property renderWhenViewable
@@ -184,7 +191,17 @@ class Bling extends Component {
          *
          * @property style
          */
-        style: PropTypes.object
+        style: PropTypes.object,
+        /**
+         * An optional property to control non-personalized Ads.
+         * https://support.google.com/admanager/answer/7678538
+         *
+         * Set to `true` to mark the ad request as NPA, and to `false` for ad requests that are eligible for personalized ads
+         * It is `false` by default, according to Google's definition.
+         *
+         * @property npa
+         */
+        npa: PropTypes.bool
     };
 
     /**
@@ -210,7 +227,13 @@ class Bling extends Component {
      * @property reRenderProps
      * @static
      */
-    static reRenderProps = ["adUnitPath", "slotSize", "outOfPage", "content"];
+    static reRenderProps = [
+        "adUnitPath",
+        "slotSize",
+        "outOfPage",
+        "content",
+        "npa"
+    ];
     /**
      * An instance of ad manager.
      *
@@ -382,6 +405,7 @@ class Bling extends Component {
     componentWillReceiveProps(nextProps) {
         const {propsEqual} = Bling._config;
         const {sizeMapping} = this.props;
+
         if (
             (nextProps.sizeMapping || sizeMapping) &&
             !propsEqual(nextProps.sizeMapping, sizeMapping)
@@ -393,7 +417,7 @@ class Bling extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         // if adUnitPath changes, need to create a new slot, re-render
         // otherwise, just refresh
-        const {scriptLoaded, inViewport} = nextState;
+        const { scriptLoaded, inViewport } = nextState;
         const notInViewport = this.notInViewport(nextProps, nextState);
         const inViewportChanged = this.state.inViewport !== inViewport;
         const isScriptLoaded = this.state.scriptLoaded !== scriptLoaded;
@@ -405,7 +429,7 @@ class Bling extends Component {
             return true;
         }
 
-        const {filterProps, propsEqual} = Bling._config;
+        const { filterProps, propsEqual } = Bling._config;
         const refreshableProps = filterProps(
             Bling.refreshableProps,
             this.props,
@@ -423,7 +447,6 @@ class Bling extends Component {
         const shouldRefresh =
             !shouldRender &&
             !propsEqual(refreshableProps.props, refreshableProps.nextProps);
-        // console.log(`shouldRefresh: ${shouldRefresh}, shouldRender: ${shouldRender}, isScriptLoaded: ${isScriptLoaded}, syncCorrelator: ${Bling._adManager._syncCorrelator}`);
 
         if (shouldRefresh) {
             this.configureSlot(this._adSlot, nextProps);
@@ -472,12 +495,12 @@ class Bling extends Component {
     }
 
     onScriptLoaded() {
-        const {onScriptLoaded} = this.props;
+        const { onScriptLoaded } = this.props;
 
         if (this.getRenderWhenViewable()) {
             this.foldCheck();
         }
-        this.setState({scriptLoaded: true}, onScriptLoaded); // eslint-disable-line react/no-did-mount-set-state
+        this.setState({ scriptLoaded: true }, onScriptLoaded); // eslint-disable-line react/no-did-mount-set-state
     }
 
     onScriptError(err) {
@@ -502,7 +525,10 @@ class Bling extends Component {
         if (Array.isArray(slotSize) && Array.isArray(slotSize[0])) {
             slotSize = slotSize[0];
         }
-        if (slotSize === "fluid") {
+        if (
+            slotSize === "fluid" ||
+            (Array.isArray(slotSize) && slotSize[0] === "fluid")
+        ) {
             slotSize = [0, 0];
         }
         const viewableThresholdValues = this.getUserViewableThresholdValues();
@@ -513,7 +539,7 @@ class Bling extends Component {
             viewableThresholdValues
         );
         if (inViewport) {
-            this.setState({inViewport: true});
+            this.setState({ inViewport: true });
         }
     }
 
@@ -590,14 +616,16 @@ class Bling extends Component {
     }
 
     notInViewport(props = this.props, state = this.state) {
-        const {inViewport} = state;
+        const { inViewport } = state;
         return this.getRenderWhenViewable(props) && !inViewport;
     }
 
     defineSlot() {
-        const {adUnitPath, outOfPage} = this.props;
+        const { adUnitPath, outOfPage, npa } = this.props;
         const divId = this._divId;
         const slotSize = this.getSlotSize();
+
+        this.handleSetNpaFlag(npa);
 
         if (!this._adSlot) {
             if (outOfPage) {
@@ -686,7 +714,7 @@ class Bling extends Component {
     }
 
     display() {
-        const {content} = this.props;
+        const { content } = this.props;
         const divId = this._divId;
         const adSlot = this._adSlot;
 
@@ -731,8 +759,8 @@ class Bling extends Component {
     }
 
     render() {
-        const {scriptLoaded} = this.state;
-        const {id, outOfPage, style} = this.props;
+        const { scriptLoaded } = this.state;
+        const { id, outOfPage, style } = this.props;
         const shouldNotRender = this.notInViewport(this.props, this.state);
 
         if (!scriptLoaded || shouldNotRender) {
@@ -749,7 +777,10 @@ class Bling extends Component {
                 slotSize = slotSize[0];
             }
             // https://developers.google.com/doubleclick-gpt/reference?hl=en#googletag.NamedSize
-            if (slotSize === "fluid") {
+            if (
+                slotSize === "fluid" ||
+                (Array.isArray(slotSize) && slotSize[0] === "fluid")
+            ) {
                 slotSize = ["auto", "auto"];
             }
             const emptyStyle = slotSize && {
@@ -770,13 +801,32 @@ class Bling extends Component {
 
         return <div id={this._divId} style={style} />;
     }
+
+    /**
+     * Call pubads and set the non-personalized Ads flag, if it is not undefined.
+     *
+     * @param {boolean} npa
+     */
+    handleSetNpaFlag(npa) {
+        if (npa === undefined) {
+            return;
+        }
+
+        Bling._adManager.pubadsProxy({
+            method: "setRequestNonPersonalizedAds",
+            args: [npa ? 1 : 0],
+            resolve: null,
+            reject: null
+        });
+    }
 }
 
 // proxy pubads API through Bling
 export default hoistStatics(
     Bling,
     pubadsAPI.reduce((api, method) => {
-        api[method] = (...args) => Bling._adManager.pubadsProxy({method, args});
+        api[method] = (...args) =>
+            Bling._adManager.pubadsProxy({ method, args });
         return api;
     }, {})
 );

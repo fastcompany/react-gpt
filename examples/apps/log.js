@@ -12,8 +12,11 @@ GPT.on(Events.SLOT_RENDER_ENDED, event => {
 
     if (!event.isEmpty && event.size) {
         console.log(
-            `ad creative '${event.creativeId}' is rendered to slot '${divId}' of size '${event
-                .size[0]}x${event.size[1]}'`,
+            `ad creative '${
+                event.creativeId
+            }' is rendered to slot '${divId}' of size '${event.size[0]}x${
+                event.size[1]
+            }'`,
             event,
             targeting
         );
@@ -39,4 +42,11 @@ GPT.on(Events.SLOT_VISIBILITY_CHANGED, event => {
     const divId = slot.getSlotElementId();
     const sizes = slot.getSizes();
     console.log(`SLOT_VISIBILITY_CHANGED for ${divId}(${JSON.stringify(sizes)}) to ${event.inViewPercentage}`, event);
+});
+
+GPT.on(Events.SLOT_LOADED, event => {
+    const slot = event.slot;
+    const divId = slot.getSlotElementId();
+    const sizes = slot.getSizes();
+    console.log(`SLOT_LOADED for ${divId}(${JSON.stringify(sizes)})`, event);
 });*/

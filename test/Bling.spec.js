@@ -1,20 +1,20 @@
 /* eslint-disable react/no-multi-comp */
-import React, {Component} from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ReactTestUtils from "react-dom/test-utils";
 import ShallowRenderer from "react-test-renderer/shallow";
 import Bling from "../src/Bling";
 import Events from "../src/Events";
-import {pubadsAPI, APIToCallBeforeServiceEnabled} from "../src/createManager";
-import {gptVersion, pubadsVersion} from "../src/utils/apiList";
-import {createManagerTest} from "../src/utils/createManagerTest";
+import { pubadsAPI, APIToCallBeforeServiceEnabled } from "../src/createManager";
+import { gptVersion, pubadsVersion } from "../src/utils/apiList";
+import { createManagerTest } from "../src/utils/createManagerTest";
 
 describe("Bling", () => {
     let googletag;
     const stubs = [];
 
     beforeEach(() => {
-        Bling.configure({renderWhenViewable: false});
+        Bling.configure({ renderWhenViewable: false });
         Bling.testManager = createManagerTest();
         googletag = Bling._adManager.googletag;
     });
@@ -43,7 +43,27 @@ describe("Bling", () => {
         );
         const result = renderer.getRenderOutput();
         expect(result.type).to.equal("div");
-        expect(result.props.style).to.eql({width: 728, height: 90});
+        expect(result.props.style).to.eql({ width: 728, height: 90 });
+    });
+
+    it("renders fluid to auto width and height", () => {
+        const renderer = new ShallowRenderer();
+        renderer.render(
+            <Bling adUnitPath="/4595/nfl.test.open" slotSize={"fluid"} />
+        );
+        const result = renderer.getRenderOutput();
+        expect(result.type).to.equal("div");
+        expect(result.props.style).to.eql({ width: "auto", height: "auto" });
+    });
+
+    it("renders ['fluid'] to auto width and height", () => {
+        const renderer = new ShallowRenderer();
+        renderer.render(
+            <Bling adUnitPath="/4595/nfl.test.open" slotSize={["fluid"]} />
+        );
+        const result = renderer.getRenderOutput();
+        expect(result.type).to.equal("div");
+        expect(result.props.style).to.eql({ width: "auto", height: "auto" });
     });
 
     it("returns gpt version", done => {
@@ -143,6 +163,45 @@ describe("Bling", () => {
         );
     });
 
+    it("call pubads API to set non-personalized Ads when npa prop is set", done => {
+        const spy = sinon.stub(Bling._adManager, "pubadsProxy");
+        const expectedParamTrue = {
+            method: "setRequestNonPersonalizedAds",
+            args: [1],
+            resolve: null,
+            reject: null
+        };
+        const expectedParamFalse = {
+            ...expectedParamTrue,
+            args: [0]
+        };
+
+        Bling.once(Events.RENDER, () => {
+            expect(spy.calledWith(expectedParamTrue)).to.be.true;
+            expect(spy.calledWith(expectedParamFalse)).to.be.true;
+            spy.restore();
+            done();
+        });
+
+        // Render once to test with non-personalized ads
+        ReactTestUtils.renderIntoDocument(
+            <Bling
+                adUnitPath="/4595/nfl.test.open"
+                npa={true}
+                slotSize={["fluid"]}
+            />
+        );
+
+        // Render a second time to test re-enable personalized ads
+        ReactTestUtils.renderIntoDocument(
+            <Bling
+                adUnitPath="/4595/nfl.test.open"
+                npa={false}
+                slotSize={["fluid"]}
+            />
+        );
+    });
+
     it("fires once event", done => {
         const events = Object.keys(Events).map(key => Events[key]);
 
@@ -239,7 +298,7 @@ describe("Bling", () => {
 
     it("calls getServices on adSlot on clear", () => {
         const instance = new Bling();
-        const adSlot = sinon.mock({getServices: () => {}});
+        const adSlot = sinon.mock({ getServices: () => {} });
         adSlot.expects("getServices").once();
         instance._adSlot = adSlot;
         instance.clear();
@@ -296,16 +355,16 @@ describe("Bling", () => {
             <Bling
                 adUnitPath="/4595/nfl.test.open"
                 sizeMapping={[
-                    {viewport: [0, 0], slot: [320, 50]},
-                    {viewport: [750, 200], slot: [728, 90]},
-                    {viewport: [1050, 200], slot: [1024, 120]}
+                    { viewport: [0, 0], slot: [320, 50] },
+                    { viewport: [750, 200], slot: [728, 90] },
+                    { viewport: [1050, 200], slot: [1024, 120] }
                 ]}
             />
         );
     });
 
     it("reflects targeting props to adSlot", done => {
-        const targeting = {t1: "v1", t2: [1, 2, 3]};
+        const targeting = { t1: "v1", t2: [1, 2, 3] };
 
         Bling.once(Events.RENDER, () => {
             const adSlot = instance.adSlot;
@@ -372,7 +431,7 @@ describe("Bling", () => {
         const instance = ReactTestUtils.renderIntoDocument(
             <Bling
                 adUnitPath="/4595/nfl.test.open"
-                attributes={{attr1: "val1", attr2: "val2"}}
+                attributes={{ attr1: "val1", attr2: "val2" }}
                 slotSize={[300, 250]}
             />
         );
@@ -575,6 +634,39 @@ describe("Bling", () => {
         );
     });
 
+    it("renders slotSize with an array", () => {
+        const renderer = new ShallowRenderer();
+        renderer.render(
+            <Bling adUnitPath="/4595/nfl.test.open" slotSize={[[300, 250]]} />
+        );
+        const result = renderer.getRenderOutput();
+        expect(result.type).to.equal("div");
+        expect(result.props.style).to.eql({ width: 300, height: 250 });
+    });
+
+    it("sets slotSize to 0,0 on foldCheck of 'fluid' or ['fluid']", done => {
+        const isInViewport = sinon.spy(Bling._adManager, "isInViewport");
+
+        class Wrapper extends Component {
+            onSlotRenderEnded = () => {
+                expect(isInViewport.args[0][1].join()).to.equal([0, 0].join());
+                done();
+            };
+            render() {
+                return (
+                    <Bling
+                        adUnitPath="/4595/nfl.test.open"
+                        renderWhenViewable={true}
+                        slotSize={["fluid"]}
+                        onSlotRenderEnded={this.onSlotRenderEnded}
+                    />
+                );
+            }
+        }
+
+        ReactTestUtils.renderIntoDocument(<Wrapper />);
+    });
+
     it("refreshes ad when refreshable prop changes", done => {
         let count = 0;
 
@@ -582,13 +674,13 @@ describe("Bling", () => {
 
         class Wrapper extends Component {
             state = {
-                targeting: {prop: "val"}
+                targeting: { prop: "val" }
             };
             onSlotRenderEnded = event => {
                 if (count === 0) {
                     expect(event.slot.getTargeting("prop")).to.equal("val");
                     this.setState({
-                        targeting: {prop: "val2"}
+                        targeting: { prop: "val2" }
                     });
                     count++;
                 } else {
@@ -597,7 +689,7 @@ describe("Bling", () => {
                 }
             };
             render() {
-                const {targeting} = this.state;
+                const { targeting } = this.state;
                 return (
                     <Bling
                         adUnitPath="/4595/nfl.test.open"
@@ -619,13 +711,13 @@ describe("Bling", () => {
 
         class Wrapper extends Component {
             state = {
-                targeting: {prop: "val"}
+                targeting: { prop: "val" }
             };
             onSlotRenderEnded = event => {
                 if (count === 0) {
                     expect(event.slot.getTargeting("prop")).to.equal("val");
                     this.setState({
-                        targeting: {prop: "val2"}
+                        targeting: { prop: "val2" }
                     });
                     count++;
                 } else {
@@ -634,7 +726,7 @@ describe("Bling", () => {
                 }
             };
             render() {
-                const {targeting} = this.state;
+                const { targeting } = this.state;
                 return (
                     <Bling
                         adUnitPath="/4595/nfl.test.open"
@@ -675,7 +767,7 @@ describe("Bling", () => {
                 }
             };
             render() {
-                const {adUnitPath} = this.state;
+                const { adUnitPath } = this.state;
                 return (
                     <Bling
                         adUnitPath={adUnitPath}

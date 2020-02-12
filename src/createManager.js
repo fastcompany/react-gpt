@@ -186,16 +186,15 @@ export class AdManager extends EventEmitter {
             [
                 Events.SLOT_RENDER_ENDED,
                 Events.IMPRESSION_VIEWABLE,
-                Events.SLOT_VISIBILITY_CHANGED
+                Events.SLOT_VISIBILITY_CHANGED,
+                Events.SLOT_LOADED
             ].forEach(eventType => {
                 ["pubads", "content", "companionAds"].forEach(service => {
                     // there is no API to remove listeners.
-                    this.googletag
-                        [service]()
-                        .addEventListener(
-                            eventType,
-                            this._onEvent.bind(this, eventType)
-                        );
+                    this.googletag[service]().addEventListener(
+                        eventType,
+                        this._onEvent.bind(this, eventType)
+                    );
                 });
             });
             this._listening = true;
