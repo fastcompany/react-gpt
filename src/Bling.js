@@ -924,7 +924,7 @@ class Bling extends Component {
                             }
                             // console.log('should be displaying', divId);
                             Bling._adManager.googletag.display(divId);
-                            pbjs.removeAdUnit(divId);
+                            // pbjs.removeAdUnit(divId);
                             pbjs.adserverRequestSent = false;
                             adSlot.clearTargeting();
                         });
