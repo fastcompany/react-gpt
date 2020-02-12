@@ -19,6 +19,7 @@ import { createManager, pubadsAPI } from "./createManager";
  * @fires Bling#Events.SLOT_RENDER_ENDED
  * @fires Bling#Events.IMPRESSION_VIEWABLE
  * @fires Bling#Events.SLOT_VISIBILITY_CHANGED
+ * @fires Bling#Events.SLOT_LOADED
  */
 class Bling extends Component {
     static propTypes = {
@@ -155,6 +156,12 @@ class Bling extends Component {
          */
         onSlotVisibilityChanged: PropTypes.func,
         /**
+         * An optional event handler function for `googletag.events.SlotOnloadEvent`.
+         *
+         * @property onSlotOnload
+         */
+        onSlotOnload: PropTypes.func,
+        /**
          * An optional flag to indicate whether an ad should only render when it's fully in the viewport area.
          *
          * @property renderWhenViewable
@@ -184,7 +191,17 @@ class Bling extends Component {
          *
          * @property style
          */
-        style: PropTypes.object
+        style: PropTypes.object,
+        /**
+         * An optional property to control non-personalized Ads.
+         * https://support.google.com/admanager/answer/7678538
+         *
+         * Set to `true` to mark the ad request as NPA, and to `false` for ad requests that are eligible for personalized ads
+         * It is `false` by default, according to Google's definition.
+         *
+         * @property npa
+         */
+        npa: PropTypes.bool
     };
 
     /**
@@ -210,7 +227,13 @@ class Bling extends Component {
      * @property reRenderProps
      * @static
      */
-    static reRenderProps = ["adUnitPath", "slotSize", "outOfPage", "content"];
+    static reRenderProps = [
+        "adUnitPath",
+        "slotSize",
+        "outOfPage",
+        "content",
+        "npa"
+    ];
     /**
      * An instance of ad manager.
      *
@@ -434,7 +457,8 @@ class Bling extends Component {
             if (shouldRefresh) {
                 Bling._adManager.refresh();
             } else if (shouldRender || isScriptLoaded) {
-                return true;
+                Bling._adManager.renderAll();
+                // return true;
             }
         } else {
             if (shouldRefresh) {
@@ -503,7 +527,10 @@ class Bling extends Component {
         if (Array.isArray(slotSize) && Array.isArray(slotSize[0])) {
             slotSize = slotSize[0];
         }
-        if (slotSize === "fluid") {
+        if (
+            slotSize === "fluid" ||
+            (Array.isArray(slotSize) && slotSize[0] === "fluid")
+        ) {
             slotSize = [0, 0];
         }
         const viewableThresholdValues = this.getUserViewableThresholdValues();
@@ -593,7 +620,7 @@ class Bling extends Component {
     addMoatYieldReadyFunc(adSlot) {
         // console.log("adding moat yield ready");
         let self = this;
-        window.top["moatYieldReady"] = function () {
+        window.top["moatYieldReady"] = function() {
             // console.log("moat yeild ready!", adSlot);
             // Run moat call here
             self.callMoatPrebidAnalytics(adSlot);
@@ -634,11 +661,12 @@ class Bling extends Component {
     }
 
     defineSlot() {
-        const { adUnitPath, outOfPage } = this.props;
+        const { adUnitPath, outOfPage, npa } = this.props;
         const divId = this._divId;
         const slotSize = this.getSlotSize();
         // console.log('DEFINESLOT', 'divId', divId, 'slotsize', slotSize, 'aduunitpath', adUnitPath);
 
+        this.handleSetNpaFlag(npa);
         if (!this._adSlot) {
             // console.log('💀 DEFINESLOT: no ad slot case', divId, slotSize, adUnitPath)
             if (outOfPage) {
@@ -801,7 +829,9 @@ class Bling extends Component {
                 const pbjs = window.pbjs || {};
                 pbjs.que = pbjs.que || [];
                 // NEED TO CHECK IF WE SHOULD USE SECONDARY BASED ON AD REQUESTED
-                const slotSize = this.getSlotSize(prebidConf.useSecondaryAdSizeForPrebid);
+                const slotSize = this.getSlotSize(
+                    prebidConf.useSecondaryAdSizeForPrebid
+                );
                 // console.log('prebid slot size', slotSize, divId, adUnitPath, adSlot, 'prebid bidparams', prebidConf.bidParams);
                 // Set config
                 pbjs.setConfig({
@@ -816,8 +846,8 @@ class Bling extends Component {
                     userSync: {
                         filterSettings: {
                             iframe: {
-                                bidders: '*',   // '*' means all bidders
-                                filter: 'include'
+                                bidders: "*", // '*' means all bidders
+                                filter: "include"
                             }
                         },
                         syncsPerBidder: 4,
@@ -825,12 +855,12 @@ class Bling extends Component {
                     },
                     consentManagement: {
                         gdpr: {
-                            cmpApi: 'iab',
+                            cmpApi: "iab",
                             allowAuctionWithoutConsent: true, // suppress auctions if there's no GDPR consent string
-                            timeout: PREBID_TIMEOUT  // GDPR timeout
+                            timeout: PREBID_TIMEOUT // GDPR timeout
                         },
                         usp: {
-                            cmpApi: 'iab',
+                            cmpApi: "iab",
                             timeout: 100 // US Privacy timeout 100ms
                         }
                     }
@@ -864,28 +894,32 @@ class Bling extends Component {
                             // analytics
                             if (prebidAnalytics && prebidAnalytics.rubicon) {
                                 pbjs.enableAnalytics({
-                                    provider: 'rubicon',
+                                    provider: "rubicon",
                                     options: {
                                         accountId: prebidAnalytics.rubicon,
-                                        endpoint: 'https://prebid-a.rubiconproject.com/event',
+                                        endpoint:
+                                            "https://prebid-a.rubiconproject.com/event",
                                         samplingFactor: 1
                                     }
                                 });
                             }
 
                             if (pbjs.getHighestCpmBids(divId).length) {
-                                let highestBid = pbjs.getHighestCpmBids(divId)[0].cpm;
+                                let highestBid = pbjs.getHighestCpmBids(
+                                    divId
+                                )[0].cpm;
                                 highestBid = parseFloat(highestBid);
                                 if (highestBid >= floor) {
-                                    pbjs.setTargetingForGPTAsync(
-                                        [divId]
-                                    );
+                                    pbjs.setTargetingForGPTAsync([divId]);
                                 } else {
-                                    pbjs.setTargetingForGPTAsync(
-                                        [divId]
+                                    pbjs.setTargetingForGPTAsync([divId]);
+                                    const hbpbValue = adSlot.getTargeting(
+                                        "hb_pb"
                                     );
-                                    const hbpbValue = adSlot.getTargeting('hb_pb');
-                                    adSlot.setTargeting('hb_pb', `${hbpbValue}x`);
+                                    adSlot.setTargeting(
+                                        "hb_pb",
+                                        `${hbpbValue}x`
+                                    );
                                 }
                             }
                             // console.log('should be displaying', divId);
@@ -899,7 +933,7 @@ class Bling extends Component {
 
                 pbjs.que.push(() => {
                     pbjs.addAdUnits(adUnits);
-                    pbjs.aliasBidder('appnexus', 'pangaea');
+                    pbjs.aliasBidder("appnexus", "pangaea");
                     pbjs.requestBids({
                         bidsBackHandler: sendAdserverRequest
                     });
@@ -960,7 +994,10 @@ class Bling extends Component {
                 slotSize = slotSize[0];
             }
             // https://developers.google.com/doubleclick-gpt/reference?hl=en#googletag.NamedSize
-            if (slotSize === "fluid") {
+            if (
+                slotSize === "fluid" ||
+                (Array.isArray(slotSize) && slotSize[0] === "fluid")
+            ) {
                 slotSize = ["auto", "auto"];
             }
 
@@ -969,9 +1006,7 @@ class Bling extends Component {
                 height: slotSize[1]
             };
             // render node element instead of script element so that `inViewport` check works.
-            return (
-                <div style={emptyStyle}></div>
-            );
+            return <div style={emptyStyle}></div>;
         }
 
         // clear the current ad if exists
@@ -983,6 +1018,24 @@ class Bling extends Component {
         this._divId = id || Bling._adManager.generateDivId();
 
         return <div id={this._divId} style={style} />;
+    }
+
+    /**
+     * Call pubads and set the non-personalized Ads flag, if it is not undefined.
+     *
+     * @param {boolean} npa
+     */
+    handleSetNpaFlag(npa) {
+        if (npa === undefined) {
+            return;
+        }
+
+        Bling._adManager.pubadsProxy({
+            method: "setRequestNonPersonalizedAds",
+            args: [npa ? 1 : 0],
+            resolve: null,
+            reject: null
+        });
     }
 }
 

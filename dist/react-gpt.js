@@ -1112,6 +1112,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @fires Bling#Events.SLOT_RENDER_ENDED
 	 * @fires Bling#Events.IMPRESSION_VIEWABLE
 	 * @fires Bling#Events.SLOT_VISIBILITY_CHANGED
+	 * @fires Bling#Events.SLOT_LOADED
 	 */
 	var Bling = (_temp2 = _class = function (_Component) {
 	    _inherits(Bling, _Component);
@@ -1217,7 +1218,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (shouldRefresh) {
 	                    Bling._adManager.refresh();
 	                } else if (shouldRender || isScriptLoaded) {
-	                    return true;
+	                    Bling._adManager.renderAll();
+	                    // return true;
 	                }
 	            } else {
 	                if (shouldRefresh) {
@@ -1290,7 +1292,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (Array.isArray(slotSize) && Array.isArray(slotSize[0])) {
 	                slotSize = slotSize[0];
 	            }
-	            if (slotSize === "fluid") {
+	            if (slotSize === "fluid" || Array.isArray(slotSize) && slotSize[0] === "fluid") {
 	                slotSize = [0, 0];
 	            }
 	            var viewableThresholdValues = this.getUserViewableThresholdValues();
@@ -1423,12 +1425,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function defineSlot() {
 	            var _props2 = this.props,
 	                adUnitPath = _props2.adUnitPath,
-	                outOfPage = _props2.outOfPage;
+	                outOfPage = _props2.outOfPage,
+	                npa = _props2.npa;
 
 	            var divId = this._divId;
 	            var slotSize = this.getSlotSize();
 	            // console.log('DEFINESLOT', 'divId', divId, 'slotsize', slotSize, 'aduunitpath', adUnitPath);
 
+	            this.handleSetNpaFlag(npa);
 	            if (!this._adSlot) {
 	                // console.log('💀 DEFINESLOT: no ad slot case', divId, slotSize, adUnitPath)
 	                if (outOfPage) {
@@ -1605,8 +1609,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        userSync: {
 	                            filterSettings: {
 	                                iframe: {
-	                                    bidders: '*', // '*' means all bidders
-	                                    filter: 'include'
+	                                    bidders: "*", // '*' means all bidders
+	                                    filter: "include"
 	                                }
 	                            },
 	                            syncsPerBidder: 4,
@@ -1614,12 +1618,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        },
 	                        consentManagement: {
 	                            gdpr: {
-	                                cmpApi: 'iab',
+	                                cmpApi: "iab",
 	                                allowAuctionWithoutConsent: true, // suppress auctions if there's no GDPR consent string
 	                                timeout: PREBID_TIMEOUT // GDPR timeout
 	                            },
 	                            usp: {
-	                                cmpApi: 'iab',
+	                                cmpApi: "iab",
 	                                timeout: 100 // US Privacy timeout 100ms
 	                            }
 	                        }
@@ -1651,10 +1655,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                // analytics
 	                                if (prebidAnalytics && prebidAnalytics.rubicon) {
 	                                    pbjs.enableAnalytics({
-	                                        provider: 'rubicon',
+	                                        provider: "rubicon",
 	                                        options: {
 	                                            accountId: prebidAnalytics.rubicon,
-	                                            endpoint: 'https://prebid-a.rubiconproject.com/event',
+	                                            endpoint: "https://prebid-a.rubiconproject.com/event",
 	                                            samplingFactor: 1
 	                                        }
 	                                    });
@@ -1667,8 +1671,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                        pbjs.setTargetingForGPTAsync([divId]);
 	                                    } else {
 	                                        pbjs.setTargetingForGPTAsync([divId]);
-	                                        var hbpbValue = adSlot.getTargeting('hb_pb');
-	                                        adSlot.setTargeting('hb_pb', hbpbValue + "x");
+	                                        var hbpbValue = adSlot.getTargeting("hb_pb");
+	                                        adSlot.setTargeting("hb_pb", hbpbValue + "x");
 	                                    }
 	                                }
 	                                // console.log('should be displaying', divId);
@@ -1682,7 +1686,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                    pbjs.que.push(function () {
 	                        pbjs.addAdUnits(adUnits);
-	                        pbjs.aliasBidder('appnexus', 'pangaea');
+	                        pbjs.aliasBidder("appnexus", "pangaea");
 	                        pbjs.requestBids({
 	                            bidsBackHandler: sendAdserverRequest
 	                        });
@@ -1746,7 +1750,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    slotSize = slotSize[0];
 	                }
 	                // https://developers.google.com/doubleclick-gpt/reference?hl=en#googletag.NamedSize
-	                if (slotSize === "fluid") {
+	                if (slotSize === "fluid" || Array.isArray(slotSize) && slotSize[0] === "fluid") {
 	                    slotSize = ["auto", "auto"];
 	                }
 
@@ -1767,6 +1771,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this._divId = id || Bling._adManager.generateDivId();
 
 	            return _react2.default.createElement("div", { id: this._divId, style: style });
+	        }
+
+	        /**
+	         * Call pubads and set the non-personalized Ads flag, if it is not undefined.
+	         *
+	         * @param {boolean} npa
+	         */
+
+	    }, {
+	        key: "handleSetNpaFlag",
+	        value: function handleSetNpaFlag(npa) {
+	            if (npa === undefined) {
+	                return;
+	            }
+
+	            Bling._adManager.pubadsProxy({
+	                method: "setRequestNonPersonalizedAds",
+	                args: [npa ? 1 : 0],
+	                resolve: null,
+	                reject: null
+	            });
 	        }
 	    }, {
 	        key: "adSlot",
@@ -2042,6 +2067,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    onSlotVisibilityChanged: _propTypes2.default.func,
 	    /**
+	     * An optional event handler function for `googletag.events.SlotOnloadEvent`.
+	     *
+	     * @property onSlotOnload
+	     */
+	    onSlotOnload: _propTypes2.default.func,
+	    /**
 	     * An optional flag to indicate whether an ad should only render when it's fully in the viewport area.
 	     *
 	     * @property renderWhenViewable
@@ -2071,8 +2102,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @property style
 	     */
-	    style: _propTypes2.default.object
-	}, _class.refreshableProps = ["targeting", "sizeMapping", "clickUrl", "categoryExclusion", "attributes", "collapseEmptyDiv", "companionAdService", "forceSafeFrame", "safeFrameConfig"], _class.reRenderProps = ["adUnitPath", "slotSize", "outOfPage", "content"], _class._adManager = (0, _createManager.createManager)(), _class._config = {
+	    style: _propTypes2.default.object,
+	    /**
+	     * An optional property to control non-personalized Ads.
+	     * https://support.google.com/admanager/answer/7678538
+	     *
+	     * Set to `true` to mark the ad request as NPA, and to `false` for ad requests that are eligible for personalized ads
+	     * It is `false` by default, according to Google's definition.
+	     *
+	     * @property npa
+	     */
+	    npa: _propTypes2.default.bool
+	}, _class.refreshableProps = ["targeting", "sizeMapping", "clickUrl", "categoryExclusion", "attributes", "collapseEmptyDiv", "companionAdService", "forceSafeFrame", "safeFrameConfig"], _class.reRenderProps = ["adUnitPath", "slotSize", "outOfPage", "content", "npa"], _class._adManager = (0, _createManager.createManager)(), _class._config = {
 	    /**
 	     * An optional string for GPT seed file url to override.
 	     */
