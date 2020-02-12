@@ -1600,7 +1600,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    pbjs.setConfig({
 	                        bidderTimeout: PREBID_TIMEOUT,
 	                        timeoutBuffer: 500,
-	                        enableSendAllBids: false,
+	                        enableSendAllBids: true,
 	                        useBidCache: true,
 	                        priceGranularity: priceBucket,
 	                        targetingControls: {
