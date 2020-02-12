@@ -7,7 +7,7 @@
 		exports["ReactGPT"] = factory(require("react"), require("react-dom"));
 	else
 		root["ReactGPT"] = factory(root["React"], root["ReactDOM"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_27__, __WEBPACK_EXTERNAL_MODULE_28__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_23__, __WEBPACK_EXTERNAL_MODULE_24__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -58,7 +58,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _Bling = __webpack_require__(9);
+	var _Bling = __webpack_require__(8);
 
 	Object.defineProperty(exports, "Bling", {
 	  enumerable: true,
@@ -76,15 +76,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 
-	var _createManagerTest = __webpack_require__(11);
-
-	Object.defineProperty(exports, "createManagerTest", {
-	  enumerable: true,
-	  get: function get() {
-	    return _createManagerTest.createManagerTest;
-	  }
-	});
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
@@ -99,13 +90,1266 @@ return /******/ (function(modules) { // webpackBootstrap
 	    RENDER: "render",
 	    SLOT_RENDER_ENDED: "slotRenderEnded",
 	    IMPRESSION_VIEWABLE: "impressionViewable",
-	    SLOT_VISIBILITY_CHANGED: "slotVisibilityChanged"
+	    SLOT_VISIBILITY_CHANGED: "slotVisibilityChanged",
+	    SLOT_LOADED: "slotOnload"
 	};
 
 	exports.default = Events;
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+
+	'use strict';
+
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+
+	var invariant = function(condition, format, a, b, c, d, e, f) {
+	  if (true) {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  }
+
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error(
+	        'Minified exception occurred; use the non-minified dev environment ' +
+	        'for the full error message and additional helpful warnings.'
+	      );
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error(
+	        format.replace(/%s/g, function() { return args[argIndex++]; })
+	      );
+	      error.name = 'Invariant Violation';
+	    }
+
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	};
+
+	module.exports = invariant;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+
+	'use strict';
+
+	var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
+
+	module.exports = ReactPropTypesSecret;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * 
+	 */
+
+	function makeEmptyFunction(arg) {
+	  return function () {
+	    return arg;
+	  };
+	}
+
+	/**
+	 * This function accepts and discards inputs; it has no side effects. This is
+	 * primarily useful idiomatically for overridable function endpoints which
+	 * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
+	 */
+	var emptyFunction = function emptyFunction() {};
+
+	emptyFunction.thatReturns = makeEmptyFunction;
+	emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
+	emptyFunction.thatReturnsTrue = makeEmptyFunction(true);
+	emptyFunction.thatReturnsNull = makeEmptyFunction(null);
+	emptyFunction.thatReturnsThis = function () {
+	  return this;
+	};
+	emptyFunction.thatReturnsArgument = function (arg) {
+	  return arg;
+	};
+
+	module.exports = emptyFunction;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 */
+
+	'use strict';
+
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+
+	var validateFormat = function validateFormat(format) {};
+
+	if (true) {
+	  validateFormat = function validateFormat(format) {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  };
+	}
+
+	function invariant(condition, format, a, b, c, d, e, f) {
+	  validateFormat(format);
+
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error(format.replace(/%s/g, function () {
+	        return args[argIndex++];
+	      }));
+	      error.name = 'Invariant Violation';
+	    }
+
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	}
+
+	module.exports = invariant;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 */
+
+	'use strict';
+
+	var emptyFunction = __webpack_require__(4);
+
+	/**
+	 * Similar to invariant but only logs a warning if the condition is not met.
+	 * This can be used to log issues in development environments in critical
+	 * paths. Removing the logging code for production environments will keep the
+	 * same logic and follow the same code paths.
+	 */
+
+	var warning = emptyFunction;
+
+	if (true) {
+	  var printWarning = function printWarning(format) {
+	    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	      args[_key - 1] = arguments[_key];
+	    }
+
+	    var argIndex = 0;
+	    var message = 'Warning: ' + format.replace(/%s/g, function () {
+	      return args[argIndex++];
+	    });
+	    if (typeof console !== 'undefined') {
+	      console.error(message);
+	    }
+	    try {
+	      // --- Welcome to debugging React ---
+	      // This error was thrown as a convenience so that you can use this stack
+	      // to find the callsite that caused this warning to fire.
+	      throw new Error(message);
+	    } catch (x) {}
+	  };
+
+	  warning = function warning(condition, format) {
+	    if (format === undefined) {
+	      throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
+	    }
+
+	    if (format.indexOf('Failed Composite propType: ') === 0) {
+	      return; // Ignore CompositeComponent proptype check.
+	    }
+
+	    if (!condition) {
+	      for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+	        args[_key2 - 2] = arguments[_key2];
+	      }
+
+	      printWarning.apply(undefined, [format].concat(args));
+	    }
+	  };
+	}
+
+	module.exports = warning;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+	/* eslint-disable no-undefined,no-param-reassign,no-shadow */
+
+	/**
+	 * Throttle execution of a function. Especially useful for rate limiting
+	 * execution of handlers on events like resize and scroll.
+	 *
+	 * @param  {Number}    delay          A zero-or-greater delay in milliseconds. For event callbacks, values around 100 or 250 (or even higher) are most useful.
+	 * @param  {Boolean}   noTrailing     Optional, defaults to false. If noTrailing is true, callback will only execute every `delay` milliseconds while the
+	 *                                    throttled-function is being called. If noTrailing is false or unspecified, callback will be executed one final time
+	 *                                    after the last throttled-function call. (After the throttled-function has not been called for `delay` milliseconds,
+	 *                                    the internal counter is reset)
+	 * @param  {Function}  callback       A function to be executed after delay milliseconds. The `this` context and all arguments are passed through, as-is,
+	 *                                    to `callback` when the throttled-function is executed.
+	 * @param  {Boolean}   debounceMode   If `debounceMode` is true (at begin), schedule `clear` to execute after `delay` ms. If `debounceMode` is false (at end),
+	 *                                    schedule `callback` to execute after `delay` ms.
+	 *
+	 * @return {Function}  A new, throttled, function.
+	 */
+	module.exports = function ( delay, noTrailing, callback, debounceMode ) {
+
+		// After wrapper has stopped being called, this timeout ensures that
+		// `callback` is executed at the proper times in `throttle` and `end`
+		// debounce modes.
+		var timeoutID;
+
+		// Keep track of the last time `callback` was executed.
+		var lastExec = 0;
+
+		// `noTrailing` defaults to falsy.
+		if ( typeof noTrailing !== 'boolean' ) {
+			debounceMode = callback;
+			callback = noTrailing;
+			noTrailing = undefined;
+		}
+
+		// The `wrapper` function encapsulates all of the throttling / debouncing
+		// functionality and when executed will limit the rate at which `callback`
+		// is executed.
+		function wrapper () {
+
+			var self = this;
+			var elapsed = Number(new Date()) - lastExec;
+			var args = arguments;
+
+			// Execute `callback` and update the `lastExec` timestamp.
+			function exec () {
+				lastExec = Number(new Date());
+				callback.apply(self, args);
+			}
+
+			// If `debounceMode` is true (at begin) this is used to clear the flag
+			// to allow future `callback` executions.
+			function clear () {
+				timeoutID = undefined;
+			}
+
+			if ( debounceMode && !timeoutID ) {
+				// Since `wrapper` is being called for the first time and
+				// `debounceMode` is true (at begin), execute `callback`.
+				exec();
+			}
+
+			// Clear any existing timeout.
+			if ( timeoutID ) {
+				clearTimeout(timeoutID);
+			}
+
+			if ( debounceMode === undefined && elapsed > delay ) {
+				// In throttle mode, if `delay` time has been exceeded, execute
+				// `callback`.
+				exec();
+
+			} else if ( noTrailing !== true ) {
+				// In trailing throttle mode, since `delay` time has not been
+				// exceeded, schedule `callback` to execute `delay` ms after most
+				// recent execution.
+				//
+				// If `debounceMode` is true (at begin), schedule `clear` to execute
+				// after `delay` ms.
+				//
+				// If `debounceMode` is false (at end), schedule `callback` to
+				// execute after `delay` ms.
+				timeoutID = setTimeout(debounceMode ? clear : exec, debounceMode === undefined ? delay - elapsed : delay);
+			}
+
+		}
+
+		// Return the wrapper function.
+		return wrapper;
+
+	};
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _class, _temp2; /* eslint-disable react/sort-comp */
+
+
+	var _react = __webpack_require__(23);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _propTypes = __webpack_require__(20);
+
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+
+	var _reactDom = __webpack_require__(24);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _invariant = __webpack_require__(2);
+
+	var _invariant2 = _interopRequireDefault(_invariant);
+
+	var _deepEqual = __webpack_require__(12);
+
+	var _deepEqual2 = _interopRequireDefault(_deepEqual);
+
+	var _hoistNonReactStatics = __webpack_require__(17);
+
+	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
+
+	var _Events = __webpack_require__(1);
+
+	var _Events2 = _interopRequireDefault(_Events);
+
+	var _filterProps = __webpack_require__(10);
+
+	var _filterProps2 = _interopRequireDefault(_filterProps);
+
+	var _createManager = __webpack_require__(9);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * An Ad Component using Google Publisher Tags.
+	 * This component should work standalone w/o context.
+	 * https://developers.google.com/doubleclick-gpt/
+	 *
+	 * @module Bling
+	 * @class Bling
+	 * @fires Bling#Events.READY
+	 * @fires Bling#Events.SLOT_RENDER_ENDED
+	 * @fires Bling#Events.IMPRESSION_VIEWABLE
+	 * @fires Bling#Events.SLOT_VISIBILITY_CHANGED
+	 * @fires Bling#Events.SLOT_LOADED
+	 */
+	var Bling = (_temp2 = _class = function (_Component) {
+	    _inherits(Bling, _Component);
+
+	    function Bling() {
+	        var _ref;
+
+	        var _temp, _this, _ret;
+
+	        _classCallCheck(this, Bling);
+
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	            args[_key] = arguments[_key];
+	        }
+
+	        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Bling.__proto__ || Object.getPrototypeOf(Bling)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+	            scriptLoaded: false,
+	            inViewport: false
+	        }, _temp), _possibleConstructorReturn(_this, _ret);
+	    }
+
+	    /**
+	     * An array of prop names which can reflect to the ad by calling `refresh`.
+	     *
+	     * @property refreshableProps
+	     * @static
+	     */
+
+	    /**
+	     * An array of prop names which requires to create a new ad slot and render as a new ad.
+	     *
+	     * @property reRenderProps
+	     * @static
+	     */
+
+	    /**
+	     * An instance of ad manager.
+	     *
+	     * @property _adManager
+	     * @private
+	     * @static
+	     */
+
+	    /**
+	     *
+	     * @property
+	     * @private
+	     * @static
+	     */
+
+
+	    _createClass(Bling, [{
+	        key: "componentDidMount",
+	        value: function componentDidMount() {
+	            Bling._adManager.addInstance(this);
+	            Bling._adManager.load(Bling._config.seedFileUrl).then(this.onScriptLoaded.bind(this)).catch(this.onScriptError.bind(this));
+	        }
+	    }, {
+	        key: "componentWillReceiveProps",
+	        value: function componentWillReceiveProps(nextProps) {
+	            var propsEqual = Bling._config.propsEqual;
+	            var sizeMapping = this.props.sizeMapping;
+
+
+	            if ((nextProps.sizeMapping || sizeMapping) && !propsEqual(nextProps.sizeMapping, sizeMapping)) {
+	                Bling._adManager.removeMQListener(this, nextProps);
+	            }
+	        }
+	    }, {
+	        key: "shouldComponentUpdate",
+	        value: function shouldComponentUpdate(nextProps, nextState) {
+	            // if adUnitPath changes, need to create a new slot, re-render
+	            // otherwise, just refresh
+	            var scriptLoaded = nextState.scriptLoaded,
+	                inViewport = nextState.inViewport;
+
+	            var notInViewport = this.notInViewport(nextProps, nextState);
+	            var inViewportChanged = this.state.inViewport !== inViewport;
+	            var isScriptLoaded = this.state.scriptLoaded !== scriptLoaded;
+
+	            // Exit early for visibility change, before executing deep equality check.
+	            if (notInViewport) {
+	                return false;
+	            } else if (inViewportChanged) {
+	                return true;
+	            }
+
+	            var _Bling$_config = Bling._config,
+	                filterProps = _Bling$_config.filterProps,
+	                propsEqual = _Bling$_config.propsEqual;
+
+	            var refreshableProps = filterProps(Bling.refreshableProps, this.props, nextProps);
+	            var reRenderProps = filterProps(Bling.reRenderProps, this.props, nextProps);
+	            var shouldRender = !propsEqual(reRenderProps.props, reRenderProps.nextProps);
+	            var shouldRefresh = !shouldRender && !propsEqual(refreshableProps.props, refreshableProps.nextProps);
+
+	            if (shouldRefresh) {
+	                this.configureSlot(this._adSlot, nextProps);
+	            }
+
+	            if (Bling._adManager._syncCorrelator) {
+	                if (shouldRefresh) {
+	                    Bling._adManager.refresh();
+	                } else if (shouldRender || isScriptLoaded) {
+	                    Bling._adManager.renderAll();
+	                    // return true;
+	                }
+	            } else {
+	                if (shouldRefresh) {
+	                    this.refresh();
+	                    return false;
+	                }
+	                if (shouldRender || isScriptLoaded) {
+	                    return true;
+	                }
+	            }
+
+	            return false;
+	        }
+	    }, {
+	        key: "componentDidUpdate",
+	        value: function componentDidUpdate() {
+	            if (this.notInViewport(this.props, this.state)) {
+	                return;
+	            }
+	            if (this._divId) {
+	                // initial render will enable pubads service before any ad renders
+	                // so taken care of by the manager
+	                if (Bling._adManager._initialRender) {
+	                    Bling._adManager.render();
+	                } else {
+	                    this.renderAd();
+	                }
+	            }
+	        }
+	    }, {
+	        key: "componentWillUnmount",
+	        value: function componentWillUnmount() {
+	            Bling._adManager.removeInstance(this);
+	            if (this._adSlot) {
+	                Bling._adManager.googletag.destroySlots([this._adSlot]);
+	                this._adSlot = null;
+	            }
+	        }
+	    }, {
+	        key: "onScriptLoaded",
+	        value: function onScriptLoaded() {
+	            var onScriptLoaded = this.props.onScriptLoaded;
+
+
+	            if (this.getRenderWhenViewable()) {
+	                this.foldCheck();
+	            }
+	            this.setState({ scriptLoaded: true }, onScriptLoaded); // eslint-disable-line react/no-did-mount-set-state
+	        }
+	    }, {
+	        key: "onScriptError",
+	        value: function onScriptError(err) {
+	            console.warn("Ad: Failed to load gpt for " + Bling._config.seedFileUrl, err);
+	        }
+	    }, {
+	        key: "getRenderWhenViewable",
+	        value: function getRenderWhenViewable() {
+	            var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.props;
+
+	            return props.renderWhenViewable !== undefined ? props.renderWhenViewable : Bling._config.renderWhenViewable;
+	        }
+	    }, {
+	        key: "foldCheck",
+	        value: function foldCheck() {
+	            if (this.state.inViewport) {
+	                return;
+	            }
+
+	            var slotSize = this.getSlotSize();
+	            if (Array.isArray(slotSize) && Array.isArray(slotSize[0])) {
+	                slotSize = slotSize[0];
+	            }
+	            if (slotSize === "fluid" || Array.isArray(slotSize) && slotSize[0] === "fluid") {
+	                slotSize = [0, 0];
+	            }
+	            var viewableThresholdValues = this.getUserViewableThresholdValues();
+	            var inViewport = Bling._adManager.isInViewport(_reactDom2.default.findDOMNode(this), slotSize, this.viewableThreshold, viewableThresholdValues);
+	            if (inViewport) {
+	                this.setState({ inViewport: true });
+	            }
+	        }
+	    }, {
+	        key: "defineSizeMapping",
+	        value: function defineSizeMapping(adSlot, sizeMapping) {
+	            if (sizeMapping) {
+	                Bling._adManager.addMQListener(this, this.props);
+	                var sizeMappingArray = sizeMapping.reduce(function (mapping, size) {
+	                    return mapping.addSize(size.viewport, size.slot);
+	                }, Bling._adManager.googletag.sizeMapping()).build();
+	                adSlot.defineSizeMapping(sizeMappingArray);
+	            }
+	        }
+	    }, {
+	        key: "setAttributes",
+	        value: function setAttributes(adSlot, attributes) {
+	            // no clear method, attempting to clear existing attributes before setting new ones.
+	            var attributeKeys = adSlot.getAttributeKeys();
+	            attributeKeys.forEach(function (key) {
+	                adSlot.set(key, null);
+	            });
+	            if (attributes) {
+	                Object.keys(attributes).forEach(function (key) {
+	                    adSlot.set(key, attributes[key]);
+	                });
+	            }
+	        }
+	    }, {
+	        key: "setTargeting",
+	        value: function setTargeting(adSlot, targeting) {
+	            adSlot.clearTargeting();
+	            if (targeting) {
+	                Object.keys(targeting).forEach(function (key) {
+	                    adSlot.setTargeting(key, targeting[key]);
+	                });
+	            }
+	        }
+	    }, {
+	        key: "addCompanionAdService",
+	        value: function addCompanionAdService(serviceConfig, adSlot) {
+	            var companionAdsService = Bling._adManager.googletag.companionAds();
+	            adSlot.addService(companionAdsService);
+	            if ((typeof serviceConfig === "undefined" ? "undefined" : _typeof(serviceConfig)) === "object") {
+	                if (serviceConfig.hasOwnProperty("enableSyncLoading")) {
+	                    companionAdsService.enableSyncLoading();
+	                }
+	                if (serviceConfig.hasOwnProperty("refreshUnfilledSlots")) {
+	                    companionAdsService.setRefreshUnfilledSlots(serviceConfig.refreshUnfilledSlots);
+	                }
+	            }
+	        }
+	    }, {
+	        key: "getUserViewableThresholdValues",
+	        value: function getUserViewableThresholdValues() {
+	            return this.props.viewableThresholdValues;
+	        }
+	    }, {
+	        key: "getSlotSize",
+	        value: function getSlotSize() {
+	            var _props = this.props,
+	                origSlotSize = _props.slotSize,
+	                origSizeMapping = _props.sizeMapping;
+
+	            var slotSize = void 0;
+	            if (origSlotSize) {
+	                slotSize = origSlotSize;
+	            } else if (origSizeMapping) {
+	                var sizeMapping = origSizeMapping;
+	                slotSize = sizeMapping[0] && sizeMapping[0].slot;
+	            }
+
+	            return slotSize;
+	        }
+	    }, {
+	        key: "renderAd",
+	        value: function renderAd() {
+	            this.defineSlot();
+	            this.display();
+	        }
+	    }, {
+	        key: "notInViewport",
+	        value: function notInViewport() {
+	            var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.props;
+	            var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.state;
+	            var inViewport = state.inViewport;
+
+	            return this.getRenderWhenViewable(props) && !inViewport;
+	        }
+	    }, {
+	        key: "defineSlot",
+	        value: function defineSlot() {
+	            var _props2 = this.props,
+	                adUnitPath = _props2.adUnitPath,
+	                outOfPage = _props2.outOfPage,
+	                npa = _props2.npa;
+
+	            var divId = this._divId;
+	            var slotSize = this.getSlotSize();
+
+	            this.handleSetNpaFlag(npa);
+
+	            if (!this._adSlot) {
+	                if (outOfPage) {
+	                    this._adSlot = Bling._adManager.googletag.defineOutOfPageSlot(adUnitPath, divId);
+	                } else {
+	                    this._adSlot = Bling._adManager.googletag.defineSlot(adUnitPath, slotSize || [], divId);
+	                }
+	            }
+
+	            this.configureSlot(this._adSlot);
+	        }
+	    }, {
+	        key: "configureSlot",
+	        value: function configureSlot(adSlot) {
+	            var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.props;
+	            var sizeMapping = props.sizeMapping,
+	                attributes = props.attributes,
+	                targeting = props.targeting,
+	                companionAdService = props.companionAdService,
+	                categoryExclusion = props.categoryExclusion,
+	                collapseEmptyDiv = props.collapseEmptyDiv,
+	                safeFrameConfig = props.safeFrameConfig,
+	                content = props.content,
+	                clickUrl = props.clickUrl,
+	                forceSafeFrame = props.forceSafeFrame;
+
+
+	            this.defineSizeMapping(adSlot, sizeMapping);
+
+	            if (collapseEmptyDiv !== undefined) {
+	                if (Array.isArray(collapseEmptyDiv)) {
+	                    var _adSlot$setCollapseEm;
+
+	                    (_adSlot$setCollapseEm = adSlot.setCollapseEmptyDiv).call.apply(_adSlot$setCollapseEm, [adSlot].concat(_toConsumableArray(collapseEmptyDiv)));
+	                } else {
+	                    adSlot.setCollapseEmptyDiv(collapseEmptyDiv);
+	                }
+	            }
+
+	            // Overrides click url
+	            if (clickUrl) {
+	                adSlot.setClickUrl(clickUrl);
+	            }
+
+	            // Sets category exclusion
+	            if (categoryExclusion) {
+	                var exclusion = categoryExclusion;
+	                if (typeof exclusion === "string") {
+	                    exclusion = [exclusion];
+	                }
+	                adSlot.clearCategoryExclusions();
+	                exclusion.forEach(function (item) {
+	                    adSlot.setCategoryExclusion(item);
+	                });
+	            }
+
+	            // Sets AdSense attributes
+	            this.setAttributes(adSlot, attributes);
+
+	            // Sets custom targeting parameters
+	            this.setTargeting(adSlot, targeting);
+
+	            if (safeFrameConfig) {
+	                adSlot.setSafeFrameConfig(safeFrameConfig);
+	            }
+
+	            if (forceSafeFrame) {
+	                adSlot.setForceSafeFrame(forceSafeFrame);
+	            }
+
+	            // Enables companion ad service
+	            if (companionAdService) {
+	                this.addCompanionAdService(companionAdService, adSlot);
+	            }
+
+	            // GPT checks if the same service is already added.
+	            if (content) {
+	                adSlot.addService(Bling._adManager.googletag.content());
+	            } else {
+	                adSlot.addService(Bling._adManager.googletag.pubads());
+	            }
+	        }
+	    }, {
+	        key: "display",
+	        value: function display() {
+	            var content = this.props.content;
+
+	            var divId = this._divId;
+	            var adSlot = this._adSlot;
+
+	            if (content) {
+	                Bling._adManager.googletag.content().setContent(adSlot, content);
+	            } else {
+	                if (!Bling._adManager._disableInitialLoad && !Bling._adManager._syncCorrelator) {
+	                    Bling._adManager.updateCorrelator();
+	                }
+	                Bling._adManager.googletag.display(divId);
+	                if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
+	                    this.refresh();
+	                }
+	            }
+	        }
+	    }, {
+	        key: "clear",
+	        value: function clear() {
+	            var adSlot = this._adSlot;
+	            if (adSlot && adSlot.hasOwnProperty("getServices")) {
+	                // googletag.ContentService doesn't clear content
+	                var services = adSlot.getServices();
+	                if (this._divId && services.some(function (s) {
+	                    return !!s.setContent;
+	                })) {
+	                    document.getElementById(this._divId).innerHTML = "";
+	                    return;
+	                }
+	                Bling._adManager.clear([adSlot]);
+	            }
+	        }
+	    }, {
+	        key: "refresh",
+	        value: function refresh(options) {
+	            var adSlot = this._adSlot;
+	            if (adSlot) {
+	                this.clear();
+	                Bling._adManager.refresh([adSlot], options);
+	            }
+	        }
+	    }, {
+	        key: "render",
+	        value: function render() {
+	            var scriptLoaded = this.state.scriptLoaded;
+	            var _props3 = this.props,
+	                id = _props3.id,
+	                outOfPage = _props3.outOfPage,
+	                style = _props3.style;
+
+	            var shouldNotRender = this.notInViewport(this.props, this.state);
+
+	            if (!scriptLoaded || shouldNotRender) {
+	                var slotSize = this.getSlotSize();
+
+	                if (!outOfPage) {
+	                    (0, _invariant2.default)(slotSize, "Either 'slotSize' or 'sizeMapping' prop needs to be set.");
+	                }
+
+	                if (Array.isArray(slotSize) && Array.isArray(slotSize[0])) {
+	                    slotSize = slotSize[0];
+	                }
+	                // https://developers.google.com/doubleclick-gpt/reference?hl=en#googletag.NamedSize
+	                if (slotSize === "fluid" || Array.isArray(slotSize) && slotSize[0] === "fluid") {
+	                    slotSize = ["auto", "auto"];
+	                }
+	                var emptyStyle = slotSize && {
+	                    width: slotSize[0],
+	                    height: slotSize[1]
+	                };
+	                // render node element instead of script element so that `inViewport` check works.
+	                return _react2.default.createElement("div", { style: emptyStyle });
+	            }
+
+	            // clear the current ad if exists
+	            this.clear();
+	            if (this._adSlot) {
+	                Bling._adManager.googletag.destroySlots([this._adSlot]);
+	                this._adSlot = null;
+	            }
+	            this._divId = id || Bling._adManager.generateDivId();
+
+	            return _react2.default.createElement("div", { id: this._divId, style: style });
+	        }
+
+	        /**
+	         * Call pubads and set the non-personalized Ads flag, if it is not undefined.
+	         *
+	         * @param {boolean} npa
+	         */
+
+	    }, {
+	        key: "handleSetNpaFlag",
+	        value: function handleSetNpaFlag(npa) {
+	            if (npa === undefined) {
+	                return;
+	            }
+
+	            Bling._adManager.pubadsProxy({
+	                method: "setRequestNonPersonalizedAds",
+	                args: [npa ? 1 : 0],
+	                resolve: null,
+	                reject: null
+	            });
+	        }
+	    }, {
+	        key: "adSlot",
+	        get: function get() {
+	            return this._adSlot;
+	        }
+	    }, {
+	        key: "viewableThreshold",
+	        get: function get() {
+	            return this.props.viewableThreshold >= 0 ? this.props.viewableThreshold : Bling._config.viewableThreshold;
+	        }
+	    }], [{
+	        key: "on",
+	        value: function on(eventType, cb) {
+	            Bling._on("on", eventType, cb);
+	        }
+	    }, {
+	        key: "once",
+	        value: function once(eventType, cb) {
+	            Bling._on("once", eventType, cb);
+	        }
+	    }, {
+	        key: "removeListener",
+	        value: function removeListener() {
+	            var _Bling$_adManager;
+
+	            (_Bling$_adManager = Bling._adManager).removeListener.apply(_Bling$_adManager, arguments);
+	        }
+	    }, {
+	        key: "removeAllListeners",
+	        value: function removeAllListeners() {
+	            var _Bling$_adManager2;
+
+	            (_Bling$_adManager2 = Bling._adManager).removeAllListeners.apply(_Bling$_adManager2, arguments);
+	        }
+	    }, {
+	        key: "_on",
+	        value: function _on(fn, eventType, cb) {
+	            if (typeof cb !== "function") {
+	                return;
+	            }
+	            if (eventType === _Events2.default.READY && Bling._adManager.isReady) {
+	                cb.call(Bling._adManager, Bling._adManager.googletag);
+	            } else {
+	                Bling._adManager[fn](eventType, cb);
+	            }
+	        }
+	    }, {
+	        key: "configure",
+	        value: function configure() {
+	            var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+	            Bling._config = _extends({}, Bling._config, config);
+	        }
+	        /**
+	         * Returns the GPT version.
+	         *
+	         * @method getGPTVersion
+	         * @returns {Number|boolean} a version or false if GPT is not yet ready.
+	         * @static
+	         */
+
+	    }, {
+	        key: "getGPTVersion",
+	        value: function getGPTVersion() {
+	            return Bling._adManager.getGPTVersion();
+	        }
+	        /**
+	         * Returns the Pubads Service version.
+	         *
+	         * @method getPubadsVersion
+	         * @returns {Number|boolean} a version or false if Pubads Service is not yet ready.
+	         * @static
+	         */
+
+	    }, {
+	        key: "getPubadsVersion",
+	        value: function getPubadsVersion() {
+	            return Bling._adManager.getPubadsVersion();
+	        }
+	        /**
+	         * Sets a flag to indicate whether the correlator value should always be same across the ads in the page or not.
+	         *
+	         * @method syncCorrelator
+	         * @param {boolean} value
+	         * @static
+	         */
+
+	    }, {
+	        key: "syncCorrelator",
+	        value: function syncCorrelator(value) {
+	            Bling._adManager.syncCorrelator(value);
+	        }
+	        /**
+	         * Trigger re-rendering of all the ads.
+	         *
+	         * @method render
+	         * @static
+	         */
+
+	    }, {
+	        key: "render",
+	        value: function render() {
+	            Bling._adManager.renderAll();
+	        }
+	        /**
+	         * Refreshes all the ads in the page with a new correlator value.
+	         *
+	         * @param {Array} slots An array of ad slots.
+	         * @param {Object} options You can pass `changeCorrelator` flag.
+	         * @static
+	         */
+
+	    }, {
+	        key: "refresh",
+	        value: function refresh(slots, options) {
+	            Bling._adManager.refresh(slots, options);
+	        }
+	        /**
+	         * Clears the ads for the specified ad slots, if no slots are provided, all the ads will be cleared.
+	         *
+	         * @method clear
+	         * @param {Array} slots An optional array of slots to clear.
+	         * @static
+	         */
+
+	    }, {
+	        key: "clear",
+	        value: function clear(slots) {
+	            Bling._adManager.clear(slots);
+	        }
+	        /**
+	         * Updates the correlator value for the next ad request.
+	         *
+	         * @method updateCorrelator
+	         * @static
+	         */
+
+	    }, {
+	        key: "updateCorrelator",
+	        value: function updateCorrelator() {
+	            Bling._adManager.updateCorrelator();
+	        }
+	    }, {
+	        key: "testManager",
+	        set: function set(testManager) {
+	            (0, _invariant2.default)(testManager, "Pass in createManagerTest to mock GPT");
+	            Bling._adManager = testManager;
+	        }
+	    }]);
+
+	    return Bling;
+	}(_react.Component), _class.propTypes = {
+	    /**
+	     * An optional string to be used as container div id.
+	     *
+	     * @property id
+	     */
+	    id: _propTypes2.default.string,
+	    /**
+	     * An optional string indicating ad unit path which will be used
+	     * to create an ad slot.
+	     *
+	     * @property adUnitPath
+	     */
+	    adUnitPath: _propTypes2.default.string.isRequired,
+	    /**
+	     * An optional object which includes ad targeting key-value pairs.
+	     *
+	     * @property targeting
+	     */
+	    targeting: _propTypes2.default.object,
+	    /**
+	     * An optional prop to specify the ad slot size which accepts [googletag.GeneralSize](https://developers.google.com/doubleclick-gpt/reference#googletag.GeneralSize) as a type.
+	     * This will be preceded by the sizeMapping if specified.
+	     *
+	     * @property slotSize
+	     */
+	    slotSize: _propTypes2.default.oneOfType([_propTypes2.default.array, _propTypes2.default.string]),
+	    /**
+	     * An optional array of object which contains an array of viewport size and slot size.
+	     * This needs to be set if the ad needs to serve different ad sizes per different viewport sizes (responsive ad).
+	     * Setting the `slot` to any dimension that's not configured in DFP results in rendering an empty ad.
+	     * The ad slot size which is provided for the viewport size of [0, 0] will be used as default ad size if none of viewport size matches.
+	     *
+	     * https://support.google.com/dfp_premium/answer/3423562?hl=en
+	     *
+	     * e.g.
+	     *
+	     * sizeMapping={[
+	     *   {viewport: [0, 0], slot: [320, 50]},
+	     *   {viewport: [768, 0], slot: [728, 90]}
+	     * ]}
+	     *
+	     * @property sizeMapping
+	     */
+	    sizeMapping: _propTypes2.default.arrayOf(_propTypes2.default.shape({
+	        viewport: _propTypes2.default.array,
+	        slot: _propTypes2.default.array
+	    })),
+	    /**
+	     * An optional flag to indicate whether an ad slot should be out-of-page slot.
+	     *
+	     * @property outOfPage
+	     */
+	    outOfPage: _propTypes2.default.bool,
+	    /**
+	     * An optional flag to indicate whether companion ad service should be enabled for the ad.
+	     * If an object is passed, it takes as a configuration expecting `enableSyncLoading` or `refreshUnfilledSlots`.
+	     *
+	     * @property companionAdService
+	     */
+	    companionAdService: _propTypes2.default.oneOfType([_propTypes2.default.bool, _propTypes2.default.object]),
+	    /**
+	     * An optional HTML content for the slot. If specified, the ad will render with the HTML content using content service.
+	     *
+	     * @property content
+	     */
+	    content: _propTypes2.default.string,
+	    /**
+	     * An optional click through URL. If specified, any landing page URL associated with the creative that is served is overridden.
+	     *
+	     * @property clickUrl
+	     */
+	    clickUrl: _propTypes2.default.string,
+	    /**
+	     * An optional string or an array of string which specifies a page-level ad category exclusion for the given label name.
+	     *
+	     * @property categoryExclusion
+	     */
+	    categoryExclusion: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.array]),
+	    /**
+	     * An optional map of key-value pairs for an AdSense attribute on a particular ad slot.
+	     * see the list of supported key value: https://developers.google.com/doubleclick-gpt/adsense_attributes#adsense_parameters.googletag.Slot
+	     *
+	     * @property attributes
+	     */
+	    attributes: _propTypes2.default.object,
+	    /**
+	     * An optional flag to indicate whether an empty ad should be collapsed or not.
+	     *
+	     * @property collapseEmptyDiv
+	     */
+	    collapseEmptyDiv: _propTypes2.default.oneOfType([_propTypes2.default.bool, _propTypes2.default.array]),
+	    /**
+	     * An optional flag to indicate whether ads in this slot should be forced to be rendered using a SafeFrame container.
+	     *
+	     * @property forceSafeFrame
+	     */
+	    forceSafeFrame: _propTypes2.default.bool,
+	    /**
+	     * An optional object to set the slot-level preferences for SafeFrame configuration.
+	     *
+	     * @property safeFrameConfig
+	     */
+	    safeFrameConfig: _propTypes2.default.object,
+	    /**
+	     * An optional event handler function for `googletag.events.SlotRenderEndedEvent`.
+	     *
+	     * @property onSlotRenderEnded
+	     */
+	    onSlotRenderEnded: _propTypes2.default.func,
+	    /**
+	     * An optional event handler function for `googletag.events.ImpressionViewableEvent`.
+	     *
+	     * @property onImpressionViewable
+	     */
+	    onImpressionViewable: _propTypes2.default.func,
+	    /**
+	     * An optional event handler function for `googletag.events.slotVisibilityChangedEvent`.
+	     *
+	     * @property onSlotVisibilityChanged
+	     */
+	    onSlotVisibilityChanged: _propTypes2.default.func,
+	    /**
+	     * An optional event handler function for `googletag.events.SlotOnloadEvent`.
+	     *
+	     * @property onSlotOnload
+	     */
+	    onSlotOnload: _propTypes2.default.func,
+	    /**
+	     * An optional flag to indicate whether an ad should only render when it's fully in the viewport area.
+	     *
+	     * @property renderWhenViewable
+	     */
+	    renderWhenViewable: _propTypes2.default.bool,
+	    /**
+	     * An optional number to indicate how much percentage of an ad area needs to be in a viewable area before rendering.
+	     * Acceptable range is between 0 and 1.
+	     *
+	     * @property viewableThreshold
+	     */
+	    viewableThreshold: _propTypes2.default.number,
+	    /**
+	     * An optional call back function to notify when the script is loaded.
+	     *
+	     * @property onScriptLoaded
+	     */
+	    onScriptLoaded: _propTypes2.default.func,
+	    /**
+	     * An optional call back function to notify when the media queries on the document change.
+	     *
+	     * @property onMediaQueryChange
+	     */
+	    onMediaQueryChange: _propTypes2.default.func,
+	    /**
+	     * An optional object to be applied as `style` props to the container div.
+	     *
+	     * @property style
+	     */
+	    style: _propTypes2.default.object,
+	    /**
+	     * An optional property to control non-personalized Ads.
+	     * https://support.google.com/admanager/answer/7678538
+	     *
+	     * Set to `true` to mark the ad request as NPA, and to `false` for ad requests that are eligible for personalized ads
+	     * It is `false` by default, according to Google's definition.
+	     *
+	     * @property npa
+	     */
+	    npa: _propTypes2.default.bool
+	}, _class.refreshableProps = ["targeting", "sizeMapping", "clickUrl", "categoryExclusion", "attributes", "collapseEmptyDiv", "companionAdService", "forceSafeFrame", "safeFrameConfig"], _class.reRenderProps = ["adUnitPath", "slotSize", "outOfPage", "content", "npa"], _class._adManager = (0, _createManager.createManager)(), _class._config = {
+	    /**
+	     * An optional string for GPT seed file url to override.
+	     */
+	    seedFileUrl: "//www.googletagservices.com/tag/js/gpt.js",
+	    /**
+	     * An optional flag to indicate whether an ad should only render when it's fully in the viewport area. Default is `true`.
+	     */
+	    renderWhenViewable: true,
+	    /**
+	     * An optional number to indicate how much percentage of an ad area needs to be in a viewable area before rendering. Default value is 0.5.
+	     * Acceptable range is between 0 and 1.
+	     */
+	    viewableThreshold: 0.5,
+	    /**
+	     * An optional function to create an object with filtered current props and next props for a given keys to perform equality check.
+	     */
+	    filterProps: _filterProps2.default,
+	    /**
+	     * An optional function for the filtered props and the next props to perform equality check.
+	     */
+	    propsEqual: _deepEqual2.default
+	}, _temp2);
+
+	// proxy pubads API through Bling
+
+	exports.default = (0, _hoistNonReactStatics2.default)(Bling, _createManager.pubadsAPI.reduce(function (api, method) {
+	    api[method] = function () {
+	        for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+	            args[_key2] = arguments[_key2];
+	        }
+
+	        return Bling._adManager.pubadsProxy({ method: method, args: args });
+	    };
+	    return api;
+	}, {}));
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	Object.defineProperty(exports, "__esModule", {
@@ -117,23 +1361,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.createManager = createManager;
 
-	var _eventemitter = __webpack_require__(18);
+	var _eventemitter = __webpack_require__(15);
 
 	var _eventemitter2 = _interopRequireDefault(_eventemitter);
 
-	var _throttleDebounce = __webpack_require__(26);
+	var _throttleDebounce = __webpack_require__(22);
 
-	var _invariant = __webpack_require__(6);
+	var _invariant = __webpack_require__(2);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _exenv = __webpack_require__(19);
+	var _exenv = __webpack_require__(16);
 
 	var _Events = __webpack_require__(1);
 
 	var _Events2 = _interopRequireDefault(_Events);
 
-	var _isInViewport2 = __webpack_require__(13);
+	var _isInViewport2 = __webpack_require__(11);
 
 	var _isInViewport3 = _interopRequireDefault(_isInViewport2);
 
@@ -354,7 +1598,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _this4 = this;
 
 	            if (!this._listening) {
-	                [_Events2.default.SLOT_RENDER_ENDED, _Events2.default.IMPRESSION_VIEWABLE, _Events2.default.SLOT_VISIBILITY_CHANGED].forEach(function (eventType) {
+	                [_Events2.default.SLOT_RENDER_ENDED, _Events2.default.IMPRESSION_VIEWABLE, _Events2.default.SLOT_VISIBILITY_CHANGED, _Events2.default.SLOT_LOADED].forEach(function (eventType) {
 	                    ["pubads", "content", "companionAds"].forEach(function (service) {
 	                        // there is no API to remove listeners.
 	                        _this4.googletag[service]().addEventListener(eventType, _this4._onEvent.bind(_this4, eventType));
@@ -695,1249 +1939,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-	"use strict";
-
-	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
-	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
-	 *
-	 * 
-	 */
-
-	function makeEmptyFunction(arg) {
-	  return function () {
-	    return arg;
-	  };
-	}
-
-	/**
-	 * This function accepts and discards inputs; it has no side effects. This is
-	 * primarily useful idiomatically for overridable function endpoints which
-	 * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
-	 */
-	var emptyFunction = function emptyFunction() {};
-
-	emptyFunction.thatReturns = makeEmptyFunction;
-	emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
-	emptyFunction.thatReturnsTrue = makeEmptyFunction(true);
-	emptyFunction.thatReturnsNull = makeEmptyFunction(null);
-	emptyFunction.thatReturnsThis = function () {
-	  return this;
-	};
-	emptyFunction.thatReturnsArgument = function (arg) {
-	  return arg;
-	};
-
-	module.exports = emptyFunction;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
-	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
-	 *
-	 */
-
-	'use strict';
-
-	/**
-	 * Use invariant() to assert state which your program assumes to be true.
-	 *
-	 * Provide sprintf-style format (only %s is supported) and arguments
-	 * to provide information about what broke and what you were
-	 * expecting.
-	 *
-	 * The invariant message will be stripped in production, but the invariant
-	 * will remain to ensure logic does not differ in production.
-	 */
-
-	var validateFormat = function validateFormat(format) {};
-
-	if (true) {
-	  validateFormat = function validateFormat(format) {
-	    if (format === undefined) {
-	      throw new Error('invariant requires an error message argument');
-	    }
-	  };
-	}
-
-	function invariant(condition, format, a, b, c, d, e, f) {
-	  validateFormat(format);
-
-	  if (!condition) {
-	    var error;
-	    if (format === undefined) {
-	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
-	    } else {
-	      var args = [a, b, c, d, e, f];
-	      var argIndex = 0;
-	      error = new Error(format.replace(/%s/g, function () {
-	        return args[argIndex++];
-	      }));
-	      error.name = 'Invariant Violation';
-	    }
-
-	    error.framesToPop = 1; // we don't care about invariant's own frame
-	    throw error;
-	  }
-	}
-
-	module.exports = invariant;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright (c) 2014-present, Facebook, Inc.
-	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
-	 *
-	 */
-
-	'use strict';
-
-	var emptyFunction = __webpack_require__(3);
-
-	/**
-	 * Similar to invariant but only logs a warning if the condition is not met.
-	 * This can be used to log issues in development environments in critical
-	 * paths. Removing the logging code for production environments will keep the
-	 * same logic and follow the same code paths.
-	 */
-
-	var warning = emptyFunction;
-
-	if (true) {
-	  var printWarning = function printWarning(format) {
-	    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-	      args[_key - 1] = arguments[_key];
-	    }
-
-	    var argIndex = 0;
-	    var message = 'Warning: ' + format.replace(/%s/g, function () {
-	      return args[argIndex++];
-	    });
-	    if (typeof console !== 'undefined') {
-	      console.error(message);
-	    }
-	    try {
-	      // --- Welcome to debugging React ---
-	      // This error was thrown as a convenience so that you can use this stack
-	      // to find the callsite that caused this warning to fire.
-	      throw new Error(message);
-	    } catch (x) {}
-	  };
-
-	  warning = function warning(condition, format) {
-	    if (format === undefined) {
-	      throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
-	    }
-
-	    if (format.indexOf('Failed Composite propType: ') === 0) {
-	      return; // Ignore CompositeComponent proptype check.
-	    }
-
-	    if (!condition) {
-	      for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-	        args[_key2 - 2] = arguments[_key2];
-	      }
-
-	      printWarning.apply(undefined, [format].concat(args));
-	    }
-	  };
-	}
-
-	module.exports = warning;
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 */
-
-	'use strict';
-
-	/**
-	 * Use invariant() to assert state which your program assumes to be true.
-	 *
-	 * Provide sprintf-style format (only %s is supported) and arguments
-	 * to provide information about what broke and what you were
-	 * expecting.
-	 *
-	 * The invariant message will be stripped in production, but the invariant
-	 * will remain to ensure logic does not differ in production.
-	 */
-
-	var invariant = function(condition, format, a, b, c, d, e, f) {
-	  if (true) {
-	    if (format === undefined) {
-	      throw new Error('invariant requires an error message argument');
-	    }
-	  }
-
-	  if (!condition) {
-	    var error;
-	    if (format === undefined) {
-	      error = new Error(
-	        'Minified exception occurred; use the non-minified dev environment ' +
-	        'for the full error message and additional helpful warnings.'
-	      );
-	    } else {
-	      var args = [a, b, c, d, e, f];
-	      var argIndex = 0;
-	      error = new Error(
-	        format.replace(/%s/g, function() { return args[argIndex++]; })
-	      );
-	      error.name = 'Invariant Violation';
-	    }
-
-	    error.framesToPop = 1; // we don't care about invariant's own frame
-	    throw error;
-	  }
-	};
-
-	module.exports = invariant;
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports) {
-
-	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
-	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
-	 */
-
-	'use strict';
-
-	var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
-
-	module.exports = ReactPropTypesSecret;
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-	/* eslint-disable no-undefined,no-param-reassign,no-shadow */
-
-	/**
-	 * Throttle execution of a function. Especially useful for rate limiting
-	 * execution of handlers on events like resize and scroll.
-	 *
-	 * @param  {Number}    delay          A zero-or-greater delay in milliseconds. For event callbacks, values around 100 or 250 (or even higher) are most useful.
-	 * @param  {Boolean}   noTrailing     Optional, defaults to false. If noTrailing is true, callback will only execute every `delay` milliseconds while the
-	 *                                    throttled-function is being called. If noTrailing is false or unspecified, callback will be executed one final time
-	 *                                    after the last throttled-function call. (After the throttled-function has not been called for `delay` milliseconds,
-	 *                                    the internal counter is reset)
-	 * @param  {Function}  callback       A function to be executed after delay milliseconds. The `this` context and all arguments are passed through, as-is,
-	 *                                    to `callback` when the throttled-function is executed.
-	 * @param  {Boolean}   debounceMode   If `debounceMode` is true (at begin), schedule `clear` to execute after `delay` ms. If `debounceMode` is false (at end),
-	 *                                    schedule `callback` to execute after `delay` ms.
-	 *
-	 * @return {Function}  A new, throttled, function.
-	 */
-	module.exports = function ( delay, noTrailing, callback, debounceMode ) {
-
-		// After wrapper has stopped being called, this timeout ensures that
-		// `callback` is executed at the proper times in `throttle` and `end`
-		// debounce modes.
-		var timeoutID;
-
-		// Keep track of the last time `callback` was executed.
-		var lastExec = 0;
-
-		// `noTrailing` defaults to falsy.
-		if ( typeof noTrailing !== 'boolean' ) {
-			debounceMode = callback;
-			callback = noTrailing;
-			noTrailing = undefined;
-		}
-
-		// The `wrapper` function encapsulates all of the throttling / debouncing
-		// functionality and when executed will limit the rate at which `callback`
-		// is executed.
-		function wrapper () {
-
-			var self = this;
-			var elapsed = Number(new Date()) - lastExec;
-			var args = arguments;
-
-			// Execute `callback` and update the `lastExec` timestamp.
-			function exec () {
-				lastExec = Number(new Date());
-				callback.apply(self, args);
-			}
-
-			// If `debounceMode` is true (at begin) this is used to clear the flag
-			// to allow future `callback` executions.
-			function clear () {
-				timeoutID = undefined;
-			}
-
-			if ( debounceMode && !timeoutID ) {
-				// Since `wrapper` is being called for the first time and
-				// `debounceMode` is true (at begin), execute `callback`.
-				exec();
-			}
-
-			// Clear any existing timeout.
-			if ( timeoutID ) {
-				clearTimeout(timeoutID);
-			}
-
-			if ( debounceMode === undefined && elapsed > delay ) {
-				// In throttle mode, if `delay` time has been exceeded, execute
-				// `callback`.
-				exec();
-
-			} else if ( noTrailing !== true ) {
-				// In trailing throttle mode, since `delay` time has not been
-				// exceeded, schedule `callback` to execute `delay` ms after most
-				// recent execution.
-				//
-				// If `debounceMode` is true (at begin), schedule `clear` to execute
-				// after `delay` ms.
-				//
-				// If `debounceMode` is false (at end), schedule `callback` to
-				// execute after `delay` ms.
-				timeoutID = setTimeout(debounceMode ? clear : exec, debounceMode === undefined ? delay - elapsed : delay);
-			}
-
-		}
-
-		// Return the wrapper function.
-		return wrapper;
-
-	};
-
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _class, _temp2; /* eslint-disable react/sort-comp */
-
-
-	var _react = __webpack_require__(27);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _propTypes = __webpack_require__(24);
-
-	var _propTypes2 = _interopRequireDefault(_propTypes);
-
-	var _reactDom = __webpack_require__(28);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	var _invariant = __webpack_require__(6);
-
-	var _invariant2 = _interopRequireDefault(_invariant);
-
-	var _deepEqual = __webpack_require__(15);
-
-	var _deepEqual2 = _interopRequireDefault(_deepEqual);
-
-	var _hoistNonReactStatics = __webpack_require__(20);
-
-	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
-
-	var _Events = __webpack_require__(1);
-
-	var _Events2 = _interopRequireDefault(_Events);
-
-	var _filterProps = __webpack_require__(12);
-
-	var _filterProps2 = _interopRequireDefault(_filterProps);
-
-	var _createManager = __webpack_require__(2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * An Ad Component using Google Publisher Tags.
-	 * This component should work standalone w/o context.
-	 * https://developers.google.com/doubleclick-gpt/
-	 *
-	 * @module Bling
-	 * @class Bling
-	 * @fires Bling#Events.READY
-	 * @fires Bling#Events.SLOT_RENDER_ENDED
-	 * @fires Bling#Events.IMPRESSION_VIEWABLE
-	 * @fires Bling#Events.SLOT_VISIBILITY_CHANGED
-	 */
-	var Bling = (_temp2 = _class = function (_Component) {
-	    _inherits(Bling, _Component);
-
-	    function Bling() {
-	        var _ref;
-
-	        var _temp, _this, _ret;
-
-	        _classCallCheck(this, Bling);
-
-	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	            args[_key] = arguments[_key];
-	        }
-
-	        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Bling.__proto__ || Object.getPrototypeOf(Bling)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-	            scriptLoaded: false,
-	            inViewport: false
-	        }, _temp), _possibleConstructorReturn(_this, _ret);
-	    }
-
-	    /**
-	     * An array of prop names which can reflect to the ad by calling `refresh`.
-	     *
-	     * @property refreshableProps
-	     * @static
-	     */
-
-	    /**
-	     * An array of prop names which requires to create a new ad slot and render as a new ad.
-	     *
-	     * @property reRenderProps
-	     * @static
-	     */
-
-	    /**
-	     * An instance of ad manager.
-	     *
-	     * @property _adManager
-	     * @private
-	     * @static
-	     */
-
-	    /**
-	     *
-	     * @property
-	     * @private
-	     * @static
-	     */
-
-
-	    _createClass(Bling, [{
-	        key: "componentDidMount",
-	        value: function componentDidMount() {
-	            Bling._adManager.addInstance(this);
-	            Bling._adManager.load(Bling._config.seedFileUrl).then(this.onScriptLoaded.bind(this)).catch(this.onScriptError.bind(this));
-	        }
-	    }, {
-	        key: "componentWillReceiveProps",
-	        value: function componentWillReceiveProps(nextProps) {
-	            var propsEqual = Bling._config.propsEqual;
-	            var sizeMapping = this.props.sizeMapping;
-
-	            if ((nextProps.sizeMapping || sizeMapping) && !propsEqual(nextProps.sizeMapping, sizeMapping)) {
-	                Bling._adManager.removeMQListener(this, nextProps);
-	            }
-	        }
-	    }, {
-	        key: "shouldComponentUpdate",
-	        value: function shouldComponentUpdate(nextProps, nextState) {
-	            // if adUnitPath changes, need to create a new slot, re-render
-	            // otherwise, just refresh
-	            var scriptLoaded = nextState.scriptLoaded,
-	                inViewport = nextState.inViewport;
-
-	            var notInViewport = this.notInViewport(nextProps, nextState);
-	            var inViewportChanged = this.state.inViewport !== inViewport;
-	            var isScriptLoaded = this.state.scriptLoaded !== scriptLoaded;
-
-	            // Exit early for visibility change, before executing deep equality check.
-	            if (notInViewport) {
-	                return false;
-	            } else if (inViewportChanged) {
-	                return true;
-	            }
-
-	            var _Bling$_config = Bling._config,
-	                filterProps = _Bling$_config.filterProps,
-	                propsEqual = _Bling$_config.propsEqual;
-
-	            var refreshableProps = filterProps(Bling.refreshableProps, this.props, nextProps);
-	            var reRenderProps = filterProps(Bling.reRenderProps, this.props, nextProps);
-	            var shouldRender = !propsEqual(reRenderProps.props, reRenderProps.nextProps);
-	            var shouldRefresh = !shouldRender && !propsEqual(refreshableProps.props, refreshableProps.nextProps);
-	            // console.log(`shouldRefresh: ${shouldRefresh}, shouldRender: ${shouldRender}, isScriptLoaded: ${isScriptLoaded}, syncCorrelator: ${Bling._adManager._syncCorrelator}`);
-
-	            if (shouldRefresh) {
-	                this.configureSlot(this._adSlot, nextProps);
-	            }
-
-	            if (Bling._adManager._syncCorrelator) {
-	                if (shouldRefresh) {
-	                    Bling._adManager.refresh();
-	                } else if (shouldRender || isScriptLoaded) {
-	                    return true;
-	                }
-	            } else {
-	                if (shouldRefresh) {
-	                    this.refresh();
-	                    return false;
-	                }
-	                if (shouldRender || isScriptLoaded) {
-	                    return true;
-	                }
-	            }
-
-	            return false;
-	        }
-	    }, {
-	        key: "componentDidUpdate",
-	        value: function componentDidUpdate() {
-	            if (this.notInViewport(this.props, this.state)) {
-	                return;
-	            }
-	            if (this._divId) {
-	                // initial render will enable pubads service before any ad renders
-	                // so taken care of by the manager
-	                if (Bling._adManager._initialRender) {
-	                    Bling._adManager.render();
-	                } else {
-	                    this.renderAd();
-	                }
-	            }
-	        }
-	    }, {
-	        key: "componentWillUnmount",
-	        value: function componentWillUnmount() {
-	            Bling._adManager.removeInstance(this);
-	            if (this._adSlot) {
-	                Bling._adManager.googletag.destroySlots([this._adSlot]);
-	                this._adSlot = null;
-	            }
-	        }
-	    }, {
-	        key: "onScriptLoaded",
-	        value: function onScriptLoaded() {
-	            var onScriptLoaded = this.props.onScriptLoaded;
-
-
-	            if (this.getRenderWhenViewable()) {
-	                this.foldCheck();
-	            }
-	            this.setState({ scriptLoaded: true }, onScriptLoaded); // eslint-disable-line react/no-did-mount-set-state
-	        }
-	    }, {
-	        key: "onScriptError",
-	        value: function onScriptError(err) {
-	            console.warn("Ad: Failed to load gpt for " + Bling._config.seedFileUrl, err);
-	        }
-	    }, {
-	        key: "getRenderWhenViewable",
-	        value: function getRenderWhenViewable() {
-	            var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.props;
-
-	            return props.renderWhenViewable !== undefined ? props.renderWhenViewable : Bling._config.renderWhenViewable;
-	        }
-	    }, {
-	        key: "foldCheck",
-	        value: function foldCheck() {
-	            if (this.state.inViewport) {
-	                return;
-	            }
-
-	            var slotSize = this.getSlotSize();
-	            if (Array.isArray(slotSize) && Array.isArray(slotSize[0])) {
-	                slotSize = slotSize[0];
-	            }
-	            if (slotSize === "fluid") {
-	                slotSize = [0, 0];
-	            }
-	            var viewableThresholdValues = this.getUserViewableThresholdValues();
-	            var inViewport = Bling._adManager.isInViewport(_reactDom2.default.findDOMNode(this), slotSize, this.viewableThreshold, viewableThresholdValues);
-	            if (inViewport) {
-	                this.setState({ inViewport: true });
-	            }
-	        }
-	    }, {
-	        key: "defineSizeMapping",
-	        value: function defineSizeMapping(adSlot, sizeMapping) {
-	            if (sizeMapping) {
-	                Bling._adManager.addMQListener(this, this.props);
-	                var sizeMappingArray = sizeMapping.reduce(function (mapping, size) {
-	                    return mapping.addSize(size.viewport, size.slot);
-	                }, Bling._adManager.googletag.sizeMapping()).build();
-	                adSlot.defineSizeMapping(sizeMappingArray);
-	            }
-	        }
-	    }, {
-	        key: "setAttributes",
-	        value: function setAttributes(adSlot, attributes) {
-	            // no clear method, attempting to clear existing attributes before setting new ones.
-	            var attributeKeys = adSlot.getAttributeKeys();
-	            attributeKeys.forEach(function (key) {
-	                adSlot.set(key, null);
-	            });
-	            if (attributes) {
-	                Object.keys(attributes).forEach(function (key) {
-	                    adSlot.set(key, attributes[key]);
-	                });
-	            }
-	        }
-	    }, {
-	        key: "setTargeting",
-	        value: function setTargeting(adSlot, targeting) {
-	            adSlot.clearTargeting();
-	            if (targeting) {
-	                Object.keys(targeting).forEach(function (key) {
-	                    adSlot.setTargeting(key, targeting[key]);
-	                });
-	            }
-	        }
-	    }, {
-	        key: "addCompanionAdService",
-	        value: function addCompanionAdService(serviceConfig, adSlot) {
-	            var companionAdsService = Bling._adManager.googletag.companionAds();
-	            adSlot.addService(companionAdsService);
-	            if ((typeof serviceConfig === "undefined" ? "undefined" : _typeof(serviceConfig)) === "object") {
-	                if (serviceConfig.hasOwnProperty("enableSyncLoading")) {
-	                    companionAdsService.enableSyncLoading();
-	                }
-	                if (serviceConfig.hasOwnProperty("refreshUnfilledSlots")) {
-	                    companionAdsService.setRefreshUnfilledSlots(serviceConfig.refreshUnfilledSlots);
-	                }
-	            }
-	        }
-	    }, {
-	        key: "getUserViewableThresholdValues",
-	        value: function getUserViewableThresholdValues() {
-	            return this.props.viewableThresholdValues;
-	        }
-	    }, {
-	        key: "getSlotSize",
-	        value: function getSlotSize() {
-	            var _props = this.props,
-	                origSlotSize = _props.slotSize,
-	                origSizeMapping = _props.sizeMapping;
-
-	            var slotSize = void 0;
-	            if (origSlotSize) {
-	                slotSize = origSlotSize;
-	            } else if (origSizeMapping) {
-	                var sizeMapping = origSizeMapping;
-	                slotSize = sizeMapping[0] && sizeMapping[0].slot;
-	            }
-
-	            return slotSize;
-	        }
-	    }, {
-	        key: "renderAd",
-	        value: function renderAd() {
-	            this.defineSlot();
-	            this.display();
-	        }
-	    }, {
-	        key: "notInViewport",
-	        value: function notInViewport() {
-	            var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.props;
-	            var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.state;
-	            var inViewport = state.inViewport;
-
-	            return this.getRenderWhenViewable(props) && !inViewport;
-	        }
-	    }, {
-	        key: "defineSlot",
-	        value: function defineSlot() {
-	            var _props2 = this.props,
-	                adUnitPath = _props2.adUnitPath,
-	                outOfPage = _props2.outOfPage;
-
-	            var divId = this._divId;
-	            var slotSize = this.getSlotSize();
-
-	            if (!this._adSlot) {
-	                if (outOfPage) {
-	                    this._adSlot = Bling._adManager.googletag.defineOutOfPageSlot(adUnitPath, divId);
-	                } else {
-	                    this._adSlot = Bling._adManager.googletag.defineSlot(adUnitPath, slotSize || [], divId);
-	                }
-	            }
-
-	            this.configureSlot(this._adSlot);
-	        }
-	    }, {
-	        key: "configureSlot",
-	        value: function configureSlot(adSlot) {
-	            var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.props;
-	            var sizeMapping = props.sizeMapping,
-	                attributes = props.attributes,
-	                targeting = props.targeting,
-	                companionAdService = props.companionAdService,
-	                categoryExclusion = props.categoryExclusion,
-	                collapseEmptyDiv = props.collapseEmptyDiv,
-	                safeFrameConfig = props.safeFrameConfig,
-	                content = props.content,
-	                clickUrl = props.clickUrl,
-	                forceSafeFrame = props.forceSafeFrame;
-
-
-	            this.defineSizeMapping(adSlot, sizeMapping);
-
-	            if (collapseEmptyDiv !== undefined) {
-	                if (Array.isArray(collapseEmptyDiv)) {
-	                    var _adSlot$setCollapseEm;
-
-	                    (_adSlot$setCollapseEm = adSlot.setCollapseEmptyDiv).call.apply(_adSlot$setCollapseEm, [adSlot].concat(_toConsumableArray(collapseEmptyDiv)));
-	                } else {
-	                    adSlot.setCollapseEmptyDiv(collapseEmptyDiv);
-	                }
-	            }
-
-	            // Overrides click url
-	            if (clickUrl) {
-	                adSlot.setClickUrl(clickUrl);
-	            }
-
-	            // Sets category exclusion
-	            if (categoryExclusion) {
-	                var exclusion = categoryExclusion;
-	                if (typeof exclusion === "string") {
-	                    exclusion = [exclusion];
-	                }
-	                adSlot.clearCategoryExclusions();
-	                exclusion.forEach(function (item) {
-	                    adSlot.setCategoryExclusion(item);
-	                });
-	            }
-
-	            // Sets AdSense attributes
-	            this.setAttributes(adSlot, attributes);
-
-	            // Sets custom targeting parameters
-	            this.setTargeting(adSlot, targeting);
-
-	            if (safeFrameConfig) {
-	                adSlot.setSafeFrameConfig(safeFrameConfig);
-	            }
-
-	            if (forceSafeFrame) {
-	                adSlot.setForceSafeFrame(forceSafeFrame);
-	            }
-
-	            // Enables companion ad service
-	            if (companionAdService) {
-	                this.addCompanionAdService(companionAdService, adSlot);
-	            }
-
-	            // GPT checks if the same service is already added.
-	            if (content) {
-	                adSlot.addService(Bling._adManager.googletag.content());
-	            } else {
-	                adSlot.addService(Bling._adManager.googletag.pubads());
-	            }
-	        }
-	    }, {
-	        key: "display",
-	        value: function display() {
-	            var content = this.props.content;
-
-	            var divId = this._divId;
-	            var adSlot = this._adSlot;
-
-	            if (content) {
-	                Bling._adManager.googletag.content().setContent(adSlot, content);
-	            } else {
-	                if (!Bling._adManager._disableInitialLoad && !Bling._adManager._syncCorrelator) {
-	                    Bling._adManager.updateCorrelator();
-	                }
-	                Bling._adManager.googletag.display(divId);
-	                if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
-	                    this.refresh();
-	                }
-	            }
-	        }
-	    }, {
-	        key: "clear",
-	        value: function clear() {
-	            var adSlot = this._adSlot;
-	            if (adSlot && adSlot.hasOwnProperty("getServices")) {
-	                // googletag.ContentService doesn't clear content
-	                var services = adSlot.getServices();
-	                if (this._divId && services.some(function (s) {
-	                    return !!s.setContent;
-	                })) {
-	                    document.getElementById(this._divId).innerHTML = "";
-	                    return;
-	                }
-	                Bling._adManager.clear([adSlot]);
-	            }
-	        }
-	    }, {
-	        key: "refresh",
-	        value: function refresh(options) {
-	            var adSlot = this._adSlot;
-	            if (adSlot) {
-	                this.clear();
-	                Bling._adManager.refresh([adSlot], options);
-	            }
-	        }
-	    }, {
-	        key: "render",
-	        value: function render() {
-	            var scriptLoaded = this.state.scriptLoaded;
-	            var _props3 = this.props,
-	                id = _props3.id,
-	                outOfPage = _props3.outOfPage,
-	                style = _props3.style;
-
-	            var shouldNotRender = this.notInViewport(this.props, this.state);
-
-	            if (!scriptLoaded || shouldNotRender) {
-	                var slotSize = this.getSlotSize();
-
-	                if (!outOfPage) {
-	                    (0, _invariant2.default)(slotSize, "Either 'slotSize' or 'sizeMapping' prop needs to be set.");
-	                }
-
-	                if (Array.isArray(slotSize) && Array.isArray(slotSize[0])) {
-	                    slotSize = slotSize[0];
-	                }
-	                // https://developers.google.com/doubleclick-gpt/reference?hl=en#googletag.NamedSize
-	                if (slotSize === "fluid") {
-	                    slotSize = ["auto", "auto"];
-	                }
-	                var emptyStyle = slotSize && {
-	                    width: slotSize[0],
-	                    height: slotSize[1]
-	                };
-	                // render node element instead of script element so that `inViewport` check works.
-	                return _react2.default.createElement("div", { style: emptyStyle });
-	            }
-
-	            // clear the current ad if exists
-	            this.clear();
-	            if (this._adSlot) {
-	                Bling._adManager.googletag.destroySlots([this._adSlot]);
-	                this._adSlot = null;
-	            }
-	            this._divId = id || Bling._adManager.generateDivId();
-
-	            return _react2.default.createElement("div", { id: this._divId, style: style });
-	        }
-	    }, {
-	        key: "adSlot",
-	        get: function get() {
-	            return this._adSlot;
-	        }
-	    }, {
-	        key: "viewableThreshold",
-	        get: function get() {
-	            return this.props.viewableThreshold >= 0 ? this.props.viewableThreshold : Bling._config.viewableThreshold;
-	        }
-	    }], [{
-	        key: "on",
-	        value: function on(eventType, cb) {
-	            Bling._on("on", eventType, cb);
-	        }
-	    }, {
-	        key: "once",
-	        value: function once(eventType, cb) {
-	            Bling._on("once", eventType, cb);
-	        }
-	    }, {
-	        key: "removeListener",
-	        value: function removeListener() {
-	            var _Bling$_adManager;
-
-	            (_Bling$_adManager = Bling._adManager).removeListener.apply(_Bling$_adManager, arguments);
-	        }
-	    }, {
-	        key: "removeAllListeners",
-	        value: function removeAllListeners() {
-	            var _Bling$_adManager2;
-
-	            (_Bling$_adManager2 = Bling._adManager).removeAllListeners.apply(_Bling$_adManager2, arguments);
-	        }
-	    }, {
-	        key: "_on",
-	        value: function _on(fn, eventType, cb) {
-	            if (typeof cb !== "function") {
-	                return;
-	            }
-	            if (eventType === _Events2.default.READY && Bling._adManager.isReady) {
-	                cb.call(Bling._adManager, Bling._adManager.googletag);
-	            } else {
-	                Bling._adManager[fn](eventType, cb);
-	            }
-	        }
-	    }, {
-	        key: "configure",
-	        value: function configure() {
-	            var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-	            Bling._config = _extends({}, Bling._config, config);
-	        }
-	        /**
-	         * Returns the GPT version.
-	         *
-	         * @method getGPTVersion
-	         * @returns {Number|boolean} a version or false if GPT is not yet ready.
-	         * @static
-	         */
-
-	    }, {
-	        key: "getGPTVersion",
-	        value: function getGPTVersion() {
-	            return Bling._adManager.getGPTVersion();
-	        }
-	        /**
-	         * Returns the Pubads Service version.
-	         *
-	         * @method getPubadsVersion
-	         * @returns {Number|boolean} a version or false if Pubads Service is not yet ready.
-	         * @static
-	         */
-
-	    }, {
-	        key: "getPubadsVersion",
-	        value: function getPubadsVersion() {
-	            return Bling._adManager.getPubadsVersion();
-	        }
-	        /**
-	         * Sets a flag to indicate whether the correlator value should always be same across the ads in the page or not.
-	         *
-	         * @method syncCorrelator
-	         * @param {boolean} value
-	         * @static
-	         */
-
-	    }, {
-	        key: "syncCorrelator",
-	        value: function syncCorrelator(value) {
-	            Bling._adManager.syncCorrelator(value);
-	        }
-	        /**
-	         * Trigger re-rendering of all the ads.
-	         *
-	         * @method render
-	         * @static
-	         */
-
-	    }, {
-	        key: "render",
-	        value: function render() {
-	            Bling._adManager.renderAll();
-	        }
-	        /**
-	         * Refreshes all the ads in the page with a new correlator value.
-	         *
-	         * @param {Array} slots An array of ad slots.
-	         * @param {Object} options You can pass `changeCorrelator` flag.
-	         * @static
-	         */
-
-	    }, {
-	        key: "refresh",
-	        value: function refresh(slots, options) {
-	            Bling._adManager.refresh(slots, options);
-	        }
-	        /**
-	         * Clears the ads for the specified ad slots, if no slots are provided, all the ads will be cleared.
-	         *
-	         * @method clear
-	         * @param {Array} slots An optional array of slots to clear.
-	         * @static
-	         */
-
-	    }, {
-	        key: "clear",
-	        value: function clear(slots) {
-	            Bling._adManager.clear(slots);
-	        }
-	        /**
-	         * Updates the correlator value for the next ad request.
-	         *
-	         * @method updateCorrelator
-	         * @static
-	         */
-
-	    }, {
-	        key: "updateCorrelator",
-	        value: function updateCorrelator() {
-	            Bling._adManager.updateCorrelator();
-	        }
-	    }, {
-	        key: "testManager",
-	        set: function set(testManager) {
-	            (0, _invariant2.default)(testManager, "Pass in createManagerTest to mock GPT");
-	            Bling._adManager = testManager;
-	        }
-	    }]);
-
-	    return Bling;
-	}(_react.Component), _class.propTypes = {
-	    /**
-	     * An optional string to be used as container div id.
-	     *
-	     * @property id
-	     */
-	    id: _propTypes2.default.string,
-	    /**
-	     * An optional string indicating ad unit path which will be used
-	     * to create an ad slot.
-	     *
-	     * @property adUnitPath
-	     */
-	    adUnitPath: _propTypes2.default.string.isRequired,
-	    /**
-	     * An optional object which includes ad targeting key-value pairs.
-	     *
-	     * @property targeting
-	     */
-	    targeting: _propTypes2.default.object,
-	    /**
-	     * An optional prop to specify the ad slot size which accepts [googletag.GeneralSize](https://developers.google.com/doubleclick-gpt/reference#googletag.GeneralSize) as a type.
-	     * This will be preceded by the sizeMapping if specified.
-	     *
-	     * @property slotSize
-	     */
-	    slotSize: _propTypes2.default.oneOfType([_propTypes2.default.array, _propTypes2.default.string]),
-	    /**
-	     * An optional array of object which contains an array of viewport size and slot size.
-	     * This needs to be set if the ad needs to serve different ad sizes per different viewport sizes (responsive ad).
-	     * Setting the `slot` to any dimension that's not configured in DFP results in rendering an empty ad.
-	     * The ad slot size which is provided for the viewport size of [0, 0] will be used as default ad size if none of viewport size matches.
-	     *
-	     * https://support.google.com/dfp_premium/answer/3423562?hl=en
-	     *
-	     * e.g.
-	     *
-	     * sizeMapping={[
-	     *   {viewport: [0, 0], slot: [320, 50]},
-	     *   {viewport: [768, 0], slot: [728, 90]}
-	     * ]}
-	     *
-	     * @property sizeMapping
-	     */
-	    sizeMapping: _propTypes2.default.arrayOf(_propTypes2.default.shape({
-	        viewport: _propTypes2.default.array,
-	        slot: _propTypes2.default.array
-	    })),
-	    /**
-	     * An optional flag to indicate whether an ad slot should be out-of-page slot.
-	     *
-	     * @property outOfPage
-	     */
-	    outOfPage: _propTypes2.default.bool,
-	    /**
-	     * An optional flag to indicate whether companion ad service should be enabled for the ad.
-	     * If an object is passed, it takes as a configuration expecting `enableSyncLoading` or `refreshUnfilledSlots`.
-	     *
-	     * @property companionAdService
-	     */
-	    companionAdService: _propTypes2.default.oneOfType([_propTypes2.default.bool, _propTypes2.default.object]),
-	    /**
-	     * An optional HTML content for the slot. If specified, the ad will render with the HTML content using content service.
-	     *
-	     * @property content
-	     */
-	    content: _propTypes2.default.string,
-	    /**
-	     * An optional click through URL. If specified, any landing page URL associated with the creative that is served is overridden.
-	     *
-	     * @property clickUrl
-	     */
-	    clickUrl: _propTypes2.default.string,
-	    /**
-	     * An optional string or an array of string which specifies a page-level ad category exclusion for the given label name.
-	     *
-	     * @property categoryExclusion
-	     */
-	    categoryExclusion: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.array]),
-	    /**
-	     * An optional map of key-value pairs for an AdSense attribute on a particular ad slot.
-	     * see the list of supported key value: https://developers.google.com/doubleclick-gpt/adsense_attributes#adsense_parameters.googletag.Slot
-	     *
-	     * @property attributes
-	     */
-	    attributes: _propTypes2.default.object,
-	    /**
-	     * An optional flag to indicate whether an empty ad should be collapsed or not.
-	     *
-	     * @property collapseEmptyDiv
-	     */
-	    collapseEmptyDiv: _propTypes2.default.oneOfType([_propTypes2.default.bool, _propTypes2.default.array]),
-	    /**
-	     * An optional flag to indicate whether ads in this slot should be forced to be rendered using a SafeFrame container.
-	     *
-	     * @property forceSafeFrame
-	     */
-	    forceSafeFrame: _propTypes2.default.bool,
-	    /**
-	     * An optional object to set the slot-level preferences for SafeFrame configuration.
-	     *
-	     * @property safeFrameConfig
-	     */
-	    safeFrameConfig: _propTypes2.default.object,
-	    /**
-	     * An optional event handler function for `googletag.events.SlotRenderEndedEvent`.
-	     *
-	     * @property onSlotRenderEnded
-	     */
-	    onSlotRenderEnded: _propTypes2.default.func,
-	    /**
-	     * An optional event handler function for `googletag.events.ImpressionViewableEvent`.
-	     *
-	     * @property onImpressionViewable
-	     */
-	    onImpressionViewable: _propTypes2.default.func,
-	    /**
-	     * An optional event handler function for `googletag.events.slotVisibilityChangedEvent`.
-	     *
-	     * @property onSlotVisibilityChanged
-	     */
-	    onSlotVisibilityChanged: _propTypes2.default.func,
-	    /**
-	     * An optional flag to indicate whether an ad should only render when it's fully in the viewport area.
-	     *
-	     * @property renderWhenViewable
-	     */
-	    renderWhenViewable: _propTypes2.default.bool,
-	    /**
-	     * An optional number to indicate how much percentage of an ad area needs to be in a viewable area before rendering.
-	     * Acceptable range is between 0 and 1.
-	     *
-	     * @property viewableThreshold
-	     */
-	    viewableThreshold: _propTypes2.default.number,
-	    /**
-	     * An optional call back function to notify when the script is loaded.
-	     *
-	     * @property onScriptLoaded
-	     */
-	    onScriptLoaded: _propTypes2.default.func,
-	    /**
-	     * An optional call back function to notify when the media queries on the document change.
-	     *
-	     * @property onMediaQueryChange
-	     */
-	    onMediaQueryChange: _propTypes2.default.func,
-	    /**
-	     * An optional object to be applied as `style` props to the container div.
-	     *
-	     * @property style
-	     */
-	    style: _propTypes2.default.object
-	}, _class.refreshableProps = ["targeting", "sizeMapping", "clickUrl", "categoryExclusion", "attributes", "collapseEmptyDiv", "companionAdService", "forceSafeFrame", "safeFrameConfig"], _class.reRenderProps = ["adUnitPath", "slotSize", "outOfPage", "content"], _class._adManager = (0, _createManager.createManager)(), _class._config = {
-	    /**
-	     * An optional string for GPT seed file url to override.
-	     */
-	    seedFileUrl: "//www.googletagservices.com/tag/js/gpt.js",
-	    /**
-	     * An optional flag to indicate whether an ad should only render when it's fully in the viewport area. Default is `true`.
-	     */
-	    renderWhenViewable: true,
-	    /**
-	     * An optional number to indicate how much percentage of an ad area needs to be in a viewable area before rendering. Default value is 0.5.
-	     * Acceptable range is between 0 and 1.
-	     */
-	    viewableThreshold: 0.5,
-	    /**
-	     * An optional function to create an object with filtered current props and next props for a given keys to perform equality check.
-	     */
-	    filterProps: _filterProps2.default,
-	    /**
-	     * An optional function for the filtered props and the next props to perform equality check.
-	     */
-	    propsEqual: _deepEqual2.default
-	}, _temp2);
-
-	// proxy pubads API through Bling
-
-	exports.default = (0, _hoistNonReactStatics2.default)(Bling, _createManager.pubadsAPI.reduce(function (api, method) {
-	    api[method] = function () {
-	        for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-	            args[_key2] = arguments[_key2];
-	        }
-
-	        return Bling._adManager.pubadsProxy({ method: method, args: args });
-	    };
-	    return api;
-	}, {}));
-
-/***/ }),
 /* 10 */
-/***/ (function(module, exports) {
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	// DO NOT MODIFY THIS FILE MANUALLY.
-	// This file is generated by `npm run update-apilist`.
-	// Note that only APIs that's documented in https://developers.google.com/doubleclick-gpt/reference is officially supported.
-
-	var gptVersion = exports.gptVersion = 110;
-	var gptAPI = exports.gptAPI = [["getVersion", "function"], ["cmd", "object"], ["getEventLog", "function"], ["enableServices", "function"], ["setAdIframeTitle", "function"], ["impl", "object"], ["pubads", "function"], ["defineOutOfPageSlot", "function"], ["defineSlot", "function"], ["defineUnit", "function"], ["destroySlots", "function"], ["display", "function"], ["companionAds", "function"], ["content", "function"], ["debug_log", "object"], ["service_manager_instance", "object"], ["disablePublisherConsole", "function"], ["onPubConsoleJsLoad", "function"], ["openConsole", "function"], ["sizeMapping", "function"], ["evalScripts", "function"], ["apiReady", "boolean"], ["slot_manager_instance", "object"], ["pubadsReady", "boolean"]];
-	var pubadsVersion = exports.pubadsVersion = 110;
-	var pubadsAPI = exports.pubadsAPI = [["set", "function"], ["get", "function"], ["getAttributeKeys", "function"], ["display", "function"], ["getName", "function"], ["setCookieOptions", "function"], ["setTagForChildDirectedTreatment", "function"], ["clearTagForChildDirectedTreatment", "function"], ["setKidsFriendlyAds", "function"], ["setTargeting", "function"], ["clearTargeting", "function"], ["getTargeting", "function"], ["getTargetingKeys", "function"], ["setCategoryExclusion", "function"], ["clearCategoryExclusions", "function"], ["disableInitialLoad", "function"], ["enableSingleRequest", "function"], ["enableAsyncRendering", "function"], ["enableSyncRendering", "function"], ["setCentering", "function"], ["setPublisherProvidedId", "function"], ["definePassback", "function"], ["defineOutOfPagePassback", "function"], ["refresh", "function"], ["enableVideoAds", "function"], ["setVideoContent", "function"], ["getVideoContent", "function"], ["getCorrelator", "function"], ["setCorrelator", "function"], ["updateCorrelator", "function"], ["isAdRequestFinished", "function"], ["collapseEmptyDivs", "function"], ["clear", "function"], ["setLocation", "function"], ["getVersion", "function"], ["forceExperiment", "function"], ["markAsAmp", "function"], ["setSafeFrameConfig", "function"], ["setForceSafeFrame", "function"], ["enableChromeInterventionSignals", "function"], ["markAsGladeControl", "function"], ["markAsGladeOptOut", "function"], ["getName", "function"], ["getVersion", "function"], ["getSlots", "function"], ["getSlotIdMap", "function"], ["enable", "function"], ["addEventListener", "function"]];
-	var slotAPI = exports.slotAPI = [["getPassbackPageUrl", "function"], ["set", "function"], ["get", "function"], ["getAttributeKeys", "function"], ["addService", "function"], ["getName", "function"], ["getAdUnitPath", "function"], ["getInstance", "function"], ["getSlotElementId", "function"], ["getSlotId", "function"], ["getServices", "function"], ["getSizes", "function"], ["defineSizeMapping", "function"], ["hasWrapperDiv", "function"], ["setClickUrl", "function"], ["getClickUrl", "function"], ["setForceSafeFrame", "function"], ["setCategoryExclusion", "function"], ["clearCategoryExclusions", "function"], ["getCategoryExclusions", "function"], ["setTargeting", "function"], ["clearTargeting", "function"], ["getTargetingMap", "function"], ["getTargeting", "function"], ["getTargetingKeys", "function"], ["getOutOfPage", "function"], ["getAudExtId", "function"], ["gtfcd", "function"], ["setCollapseEmptyDiv", "function"], ["getCollapseEmptyDiv", "function"], ["getDivStartsCollapsed", "function"], ["fetchStarted", "function"], ["getContentUrl", "function"], ["fetchEnded", "function"], ["renderStarted", "function"], ["getResponseInformation", "function"], ["renderEnded", "function"], ["loaded", "function"], ["impressionViewable", "function"], ["visibilityChanged", "function"], ["setFirstLook", "function"], ["getFirstLook", "function"], ["getEscapedQemQueryId", "function"], ["setSafeFrameConfig", "function"], ["getCsiId", "function"]];
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	exports.createManagerTest = createManagerTest;
-
-	var _createManager = __webpack_require__(2);
-
-	var _mockGPT = __webpack_require__(14);
-
-	function createManagerTest(config) {
-	    return (0, _createManager.createManager)(_extends({}, config, {
-	        test: true,
-	        GPTMock: _mockGPT.GPTMock
-	    }));
-	}
-
-/***/ }),
-/* 12 */
 /***/ (function(module, exports) {
 
 	Object.defineProperty(exports, "__esModule", {
@@ -1956,7 +1958,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports) {
 
 	Object.defineProperty(exports, "__esModule", {
@@ -2009,484 +2011,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.ContentServiceMock = exports.CompanionAdsServiceMock = exports.PubAdsServiceMock = exports.SizeMappingBuilderMock = exports.SlotMock = exports.GPTMock = undefined;
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-	var _apiList = __webpack_require__(10);
-
-	var _Events = __webpack_require__(1);
-
-	var _Events2 = _interopRequireDefault(_Events);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function createMock(list, obj) {
-	    return list.reduce(function (mock, _ref) {
-	        var _ref2 = _slicedToArray(_ref, 2),
-	            api = _ref2[0],
-	            type = _ref2[1];
-
-	        if (typeof mock[api] === "undefined") {
-	            if (type === "function") {
-	                mock[api] = function () {
-	                    if (arguments.length) {
-	                        return arguments.length <= 0 ? undefined : arguments[0];
-	                    }
-	                    return {};
-	                };
-	            } else if (type === "boolean") {
-	                mock[api] = true;
-	            } else {
-	                mock[api] = {};
-	            }
-	        }
-	        return mock;
-	    }, obj || {});
-	}
-
-	function getSize(slot) {
-	    var sizes = slot.getSizes();
-	    var item = sizes;
-	    while (Array.isArray(item[0])) {
-	        item = item[0];
-	    }
-
-	    return item;
-	}
-
-	var SlotMock = function () {
-	    function SlotMock(adUnitPath, size, divId) {
-	        _classCallCheck(this, SlotMock);
-
-	        this.adUnitPath = adUnitPath;
-	        this.size = size;
-	        this.divId = divId;
-	        this.services = [];
-	        this.attributes = {};
-	        this.categoryExclusions = [];
-	        this._targeting = {};
-	    }
-
-	    _createClass(SlotMock, [{
-	        key: "defineSizeMapping",
-	        value: function defineSizeMapping(sizeMapping) {
-	            this.size = sizeMapping;
-	            return this;
-	        }
-	    }, {
-	        key: "addService",
-	        value: function addService(service) {
-	            this.services.push(service);
-	        }
-	    }, {
-	        key: "getServices",
-	        value: function getServices() {
-	            return this.services;
-	        }
-	    }, {
-	        key: "set",
-	        value: function set(key, value) {
-	            this.attributes[key] = value;
-	            return this;
-	        }
-	    }, {
-	        key: "get",
-	        value: function get(key) {
-	            return this.attributes[key];
-	        }
-	    }, {
-	        key: "getAttributeKeys",
-	        value: function getAttributeKeys() {
-	            return Object.keys(this.attributes);
-	        }
-	    }, {
-	        key: "setCollapseEmptyDiv",
-	        value: function setCollapseEmptyDiv(collapse, collapseBeforeAdFetch) {
-	            this.collapseEmptyDiv = collapse;
-	            this.collapseBeforeAdFetch = collapseBeforeAdFetch;
-	            return this;
-	        }
-	    }, {
-	        key: "getCollapseEmptyDiv",
-	        value: function getCollapseEmptyDiv() {
-	            return this.collapseEmptyDiv;
-	        }
-	    }, {
-	        key: "setClickUrl",
-	        value: function setClickUrl(clickUrl) {
-	            this.clickUrl = clickUrl;
-	            return this;
-	        }
-	    }, {
-	        key: "getClickUrl",
-	        value: function getClickUrl() {
-	            return this.clickUrl;
-	        }
-	    }, {
-	        key: "setCategoryExclusion",
-	        value: function setCategoryExclusion(categoryExclusion) {
-	            this.categoryExclusions.push(categoryExclusion);
-	            return this;
-	        }
-	    }, {
-	        key: "getCategoryExclusions",
-	        value: function getCategoryExclusions() {
-	            return this.categoryExclusions;
-	        }
-	    }, {
-	        key: "clearCategoryExclusions",
-	        value: function clearCategoryExclusions() {
-	            this.categoryExclusions = [];
-	            return this;
-	        }
-	    }, {
-	        key: "setTargeting",
-	        value: function setTargeting(key, value) {
-	            this._targeting[key] = value;
-	            return this;
-	        }
-	    }, {
-	        key: "getAdUnitPath",
-	        value: function getAdUnitPath() {
-	            return this.adUnitPath;
-	        }
-	    }, {
-	        key: "clearTargeting",
-	        value: function clearTargeting() {
-	            this._targeting = {};
-	            return this;
-	        }
-	    }, {
-	        key: "getTargeting",
-	        value: function getTargeting(key) {
-	            return this._targeting && this._targeting[key];
-	        }
-	    }, {
-	        key: "getTargetingKeys",
-	        value: function getTargetingKeys() {
-	            return this._targeting && Object.keys(this._targeting);
-	        }
-	    }, {
-	        key: "getSizes",
-	        value: function getSizes() {
-	            return this.size;
-	        }
-	    }, {
-	        key: "getSlotElementId",
-	        value: function getSlotElementId() {
-	            return this.divId;
-	        }
-	    }]);
-
-	    return SlotMock;
-	}();
-
-	createMock(_apiList.slotAPI, SlotMock.prototype);
-
-	var SizeMappingBuilderMock = function () {
-	    function SizeMappingBuilderMock() {
-	        var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-	        _classCallCheck(this, SizeMappingBuilderMock);
-
-	        this.config = config;
-	    }
-
-	    _createClass(SizeMappingBuilderMock, [{
-	        key: "addSize",
-	        value: function addSize(viewportSize, slotSize) {
-	            if (!this.mapping) {
-	                this.mapping = [];
-	            }
-	            this.mapping.push([viewportSize, slotSize]);
-	            return this;
-	        }
-	    }, {
-	        key: "build",
-	        value: function build() {
-	            return this.mapping;
-	        }
-	    }]);
-
-	    return SizeMappingBuilderMock;
-	}();
-
-	var BaseService = function () {
-	    function BaseService() {
-	        var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-	        _classCallCheck(this, BaseService);
-
-	        this.config = config;
-	        this.listeners = {};
-	        this.slots = {};
-	    }
-
-	    _createClass(BaseService, [{
-	        key: "addEventListener",
-	        value: function addEventListener(eventType, cb) {
-	            if (!this.listeners[eventType]) {
-	                this.listeners[eventType] = [];
-	            }
-	            this.listeners[eventType].push(cb);
-	        }
-	    }, {
-	        key: "getSlots",
-	        value: function getSlots() {
-	            var _this = this;
-
-	            return Object.keys(this.slots).map(function (key) {
-	                return _this.slots[key];
-	            });
-	        }
-	    }]);
-
-	    return BaseService;
-	}();
-
-	var PubAdsServiceMock = function (_BaseService) {
-	    _inherits(PubAdsServiceMock, _BaseService);
-
-	    function PubAdsServiceMock() {
-	        var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-	        _classCallCheck(this, PubAdsServiceMock);
-
-	        var _this2 = _possibleConstructorReturn(this, (PubAdsServiceMock.__proto__ || Object.getPrototypeOf(PubAdsServiceMock)).call(this, config));
-
-	        _this2.version = _apiList.pubadsVersion;
-	        return _this2;
-	    }
-
-	    _createClass(PubAdsServiceMock, [{
-	        key: "getVersion",
-	        value: function getVersion() {
-	            return this.version;
-	        }
-	    }, {
-	        key: "refresh",
-	        value: function refresh(slots) {
-	            var _this3 = this;
-
-	            if (!slots) {
-	                slots = Object.keys(this.slots).map(function (key) {
-	                    return _this3.slots[key];
-	                });
-	            }
-	            setTimeout(function () {
-	                var key = _Events2.default.SLOT_RENDER_ENDED;
-	                slots.forEach(function (slot) {
-	                    if (_this3.listeners[key]) {
-	                        _this3.listeners[key].forEach(function (cb) {
-	                            var isEmpty = !!_this3.config.emptyAd;
-	                            var event = {
-	                                isEmpty: isEmpty,
-	                                creativeId: isEmpty ? null : Date.now(),
-	                                lineItemId: isEmpty ? null : Date.now(),
-	                                serviceName: "publisher_ads",
-	                                size: isEmpty ? null : getSize(slot),
-	                                slot: slot
-	                            };
-	                            cb(event);
-	                        });
-	                    }
-	                });
-	            }, 0);
-	        }
-	    }]);
-
-	    return PubAdsServiceMock;
-	}(BaseService);
-
-	createMock(_apiList.pubadsAPI, PubAdsServiceMock.prototype);
-
-	var CompanionAdsServiceMock = function (_BaseService2) {
-	    _inherits(CompanionAdsServiceMock, _BaseService2);
-
-	    function CompanionAdsServiceMock() {
-	        var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-	        _classCallCheck(this, CompanionAdsServiceMock);
-
-	        return _possibleConstructorReturn(this, (CompanionAdsServiceMock.__proto__ || Object.getPrototypeOf(CompanionAdsServiceMock)).call(this, config));
-	    }
-
-	    _createClass(CompanionAdsServiceMock, [{
-	        key: "enableSyncLoading",
-	        value: function enableSyncLoading() {
-	            this._enableSyncLoading = true;
-	        }
-	    }, {
-	        key: "setRefreshUnfilledSlots",
-	        value: function setRefreshUnfilledSlots(value) {
-	            if (typeof value === "boolean") {
-	                this._refreshUnfilledSlots = value;
-	            }
-	        }
-	    }]);
-
-	    return CompanionAdsServiceMock;
-	}(BaseService);
-
-	var ContentServiceMock = function (_BaseService3) {
-	    _inherits(ContentServiceMock, _BaseService3);
-
-	    function ContentServiceMock() {
-	        var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-	        _classCallCheck(this, ContentServiceMock);
-
-	        return _possibleConstructorReturn(this, (ContentServiceMock.__proto__ || Object.getPrototypeOf(ContentServiceMock)).call(this, config));
-	    }
-
-	    _createClass(ContentServiceMock, [{
-	        key: "setContent",
-	        value: function setContent(slot, content) {
-	            slot._content = content;
-	        }
-	    }]);
-
-	    return ContentServiceMock;
-	}(BaseService);
-
-	var GPTMock = function () {
-	    function GPTMock() {
-	        var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-	        _classCallCheck(this, GPTMock);
-
-	        this.pubadsReady = false;
-
-	        this.config = config;
-	        this.version = _apiList.gptVersion;
-	        this.cmd = {};
-	        this.cmd.push = function (cb) {
-	            cb();
-	        };
-	    }
-
-	    _createClass(GPTMock, [{
-	        key: "getVersion",
-	        value: function getVersion() {
-	            return this.version;
-	        }
-	    }, {
-	        key: "enableServices",
-	        value: function enableServices() {
-	            var _this6 = this;
-
-	            setTimeout(function () {
-	                _this6.pubadsReady = true;
-	            }, 0);
-	        }
-	    }, {
-	        key: "sizeMapping",
-	        value: function sizeMapping() {
-	            if (!this.sizeMappingBuilder) {
-	                this.sizeMappingBuilder = new SizeMappingBuilderMock(this.config);
-	            }
-	            return this.sizeMappingBuilder;
-	        }
-	    }, {
-	        key: "pubads",
-	        value: function pubads() {
-	            if (!this._pubads) {
-	                this._pubads = new PubAdsServiceMock(this.config);
-	            }
-	            return this._pubads;
-	        }
-	    }, {
-	        key: "companionAds",
-	        value: function companionAds() {
-	            if (!this._companionAds) {
-	                this._companionAds = new CompanionAdsServiceMock(this.config);
-	            }
-	            return this._companionAds;
-	        }
-	    }, {
-	        key: "content",
-	        value: function content() {
-	            if (!this._content) {
-	                this._content = new ContentServiceMock(this.config);
-	            }
-	            return this._content;
-	        }
-	    }, {
-	        key: "defineSlot",
-	        value: function defineSlot(adUnitPath, size, divId) {
-	            var slot = new SlotMock(adUnitPath, size, divId);
-	            this.pubads().slots[divId] = slot;
-	            return slot;
-	        }
-	    }, {
-	        key: "defineOutOfPageSlot",
-	        value: function defineOutOfPageSlot(adUnitPath, divId) {
-	            var slot = new SlotMock(adUnitPath, [1, 1], divId);
-	            this.pubads().slots[divId] = slot;
-	            return slot;
-	        }
-	    }, {
-	        key: "display",
-	        value: function display(divId) {
-	            var _this7 = this;
-
-	            var pubads = this.pubads();
-	            setTimeout(function () {
-	                Object.keys(pubads.listeners).forEach(function (key) {
-	                    if (pubads.listeners[key]) {
-	                        pubads.listeners[key].forEach(function (cb) {
-	                            var slot = pubads.slots[divId];
-	                            var isEmpty = !!_this7.config.emptyAd;
-	                            var event = {
-	                                isEmpty: isEmpty,
-	                                creativeId: isEmpty ? null : Date.now(),
-	                                lineItemId: isEmpty ? null : Date.now(),
-	                                serviceName: "publisher_ads",
-	                                size: isEmpty ? null : getSize(slot),
-	                                slot: slot
-	                            };
-	                            cb(event);
-	                        });
-	                    }
-	                });
-	            }, 0);
-	        }
-	    }]);
-
-	    return GPTMock;
-	}();
-
-	createMock(_apiList.gptAPI, GPTMock.prototype);
-
-	exports.GPTMock = GPTMock;
-	exports.SlotMock = SlotMock;
-	exports.SizeMappingBuilderMock = SizeMappingBuilderMock;
-	exports.PubAdsServiceMock = PubAdsServiceMock;
-	exports.CompanionAdsServiceMock = CompanionAdsServiceMock;
-	exports.ContentServiceMock = ContentServiceMock;
-
-/***/ }),
-/* 15 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var pSlice = Array.prototype.slice;
-	var objectKeys = __webpack_require__(17);
-	var isArguments = __webpack_require__(16);
+	var objectKeys = __webpack_require__(14);
+	var isArguments = __webpack_require__(13);
 
 	var deepEqual = module.exports = function (actual, expected, opts) {
 	  if (!opts) opts = {};
@@ -2581,7 +2111,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 16 */
+/* 13 */
 /***/ (function(module, exports) {
 
 	var supportsArgumentsClass = (function(){
@@ -2607,7 +2137,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 17 */
+/* 14 */
 /***/ (function(module, exports) {
 
 	exports = module.exports = typeof Object.keys === 'function'
@@ -2622,7 +2152,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 18 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2939,7 +2469,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 19 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -2985,7 +2515,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 20 */
+/* 17 */
 /***/ (function(module, exports) {
 
 	/**
@@ -3041,118 +2571,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 21 */
-/***/ (function(module, exports) {
-
-	/*
-	object-assign
-	(c) Sindre Sorhus
-	@license MIT
-	*/
-
-	'use strict';
-	/* eslint-disable no-unused-vars */
-	var getOwnPropertySymbols = Object.getOwnPropertySymbols;
-	var hasOwnProperty = Object.prototype.hasOwnProperty;
-	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-	function toObject(val) {
-		if (val === null || val === undefined) {
-			throw new TypeError('Object.assign cannot be called with null or undefined');
-		}
-
-		return Object(val);
-	}
-
-	function shouldUseNative() {
-		try {
-			if (!Object.assign) {
-				return false;
-			}
-
-			// Detect buggy property enumeration order in older V8 versions.
-
-			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-			var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
-			test1[5] = 'de';
-			if (Object.getOwnPropertyNames(test1)[0] === '5') {
-				return false;
-			}
-
-			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-			var test2 = {};
-			for (var i = 0; i < 10; i++) {
-				test2['_' + String.fromCharCode(i)] = i;
-			}
-			var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
-				return test2[n];
-			});
-			if (order2.join('') !== '0123456789') {
-				return false;
-			}
-
-			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-			var test3 = {};
-			'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
-				test3[letter] = letter;
-			});
-			if (Object.keys(Object.assign({}, test3)).join('') !==
-					'abcdefghijklmnopqrst') {
-				return false;
-			}
-
-			return true;
-		} catch (err) {
-			// We don't expect any of the above to throw, but better to be safe.
-			return false;
-		}
-	}
-
-	module.exports = shouldUseNative() ? Object.assign : function (target, source) {
-		var from;
-		var to = toObject(target);
-		var symbols;
-
-		for (var s = 1; s < arguments.length; s++) {
-			from = Object(arguments[s]);
-
-			for (var key in from) {
-				if (hasOwnProperty.call(from, key)) {
-					to[key] = from[key];
-				}
-			}
-
-			if (getOwnPropertySymbols) {
-				symbols = getOwnPropertySymbols(from);
-				for (var i = 0; i < symbols.length; i++) {
-					if (propIsEnumerable.call(from, symbols[i])) {
-						to[symbols[i]] = from[symbols[i]];
-					}
-				}
-			}
-		}
-
-		return to;
-	};
-
-
-/***/ }),
-/* 22 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
 	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
 	'use strict';
 
 	if (true) {
-	  var invariant = __webpack_require__(4);
-	  var warning = __webpack_require__(5);
-	  var ReactPropTypesSecret = __webpack_require__(7);
+	  var invariant = __webpack_require__(5);
+	  var warning = __webpack_require__(6);
+	  var ReactPropTypesSecret = __webpack_require__(3);
 	  var loggedTypeFailures = {};
 	}
 
@@ -3178,7 +2614,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        try {
 	          // This is intentionally an invariant that gets caught. It's the same
 	          // behavior as without this statement except with a better message.
-	          invariant(typeof typeSpecs[typeSpecName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'the `prop-types` package, but received `%s`.', componentName || 'React class', location, typeSpecName, typeof typeSpecs[typeSpecName]);
+	          invariant(typeof typeSpecs[typeSpecName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'React.PropTypes.', componentName || 'React class', location, typeSpecName);
 	          error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
 	        } catch (ex) {
 	          error = ex;
@@ -3202,25 +2638,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 23 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
 	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
 	'use strict';
 
-	var emptyFunction = __webpack_require__(3);
-	var invariant = __webpack_require__(4);
-	var warning = __webpack_require__(5);
-	var assign = __webpack_require__(21);
+	var emptyFunction = __webpack_require__(4);
+	var invariant = __webpack_require__(5);
+	var warning = __webpack_require__(6);
 
-	var ReactPropTypesSecret = __webpack_require__(7);
-	var checkPropTypes = __webpack_require__(22);
+	var ReactPropTypesSecret = __webpack_require__(3);
+	var checkPropTypes = __webpack_require__(18);
 
 	module.exports = function(isValidElement, throwOnDirectAccess) {
 	  /* global Symbol */
@@ -3316,8 +2753,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    objectOf: createObjectOfTypeChecker,
 	    oneOf: createEnumTypeChecker,
 	    oneOfType: createUnionTypeChecker,
-	    shape: createShapeTypeChecker,
-	    exact: createStrictShapeTypeChecker,
+	    shape: createShapeTypeChecker
 	  };
 
 	  /**
@@ -3532,7 +2968,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (typeof checker !== 'function') {
 	        warning(
 	          false,
-	          'Invalid argument supplied to oneOfType. Expected an array of check functions, but ' +
+	          'Invalid argument supplid to oneOfType. Expected an array of check functions, but ' +
 	          'received %s at index %s.',
 	          getPostfixForTypeWarning(checker),
 	          i
@@ -3583,36 +3019,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      return null;
 	    }
-	    return createChainableTypeChecker(validate);
-	  }
-
-	  function createStrictShapeTypeChecker(shapeTypes) {
-	    function validate(props, propName, componentName, location, propFullName) {
-	      var propValue = props[propName];
-	      var propType = getPropType(propValue);
-	      if (propType !== 'object') {
-	        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
-	      }
-	      // We need to check all keys in case some are required but missing from
-	      // props.
-	      var allKeys = assign({}, props[propName], shapeTypes);
-	      for (var key in allKeys) {
-	        var checker = shapeTypes[key];
-	        if (!checker) {
-	          return new PropTypeError(
-	            'Invalid ' + location + ' `' + propFullName + '` key `' + key + '` supplied to `' + componentName + '`.' +
-	            '\nBad object: ' + JSON.stringify(props[propName], null, '  ') +
-	            '\nValid keys: ' +  JSON.stringify(Object.keys(shapeTypes), null, '  ')
-	          );
-	        }
-	        var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
-	        if (error) {
-	          return error;
-	        }
-	      }
-	      return null;
-	    }
-
 	    return createChainableTypeChecker(validate);
 	  }
 
@@ -3750,14 +3156,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 24 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
 	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
 	if (true) {
@@ -3775,7 +3183,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // By explicitly using `prop-types` you are opting into new development behavior.
 	  // http://fb.me/prop-types-in-prod
 	  var throwOnDirectAccess = true;
-	  module.exports = __webpack_require__(23)(isValidElement, throwOnDirectAccess);
+	  module.exports = __webpack_require__(19)(isValidElement, throwOnDirectAccess);
 	} else {
 	  // By explicitly using `prop-types` you are opting into new production behavior.
 	  // http://fb.me/prop-types-in-prod
@@ -3784,12 +3192,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 25 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* eslint-disable no-undefined */
 
-	var throttle = __webpack_require__(8);
+	var throttle = __webpack_require__(7);
 
 	/**
 	 * Debounce execution of a function. Debouncing, unlike throttling,
@@ -3811,11 +3219,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 26 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var throttle = __webpack_require__(8);
-	var debounce = __webpack_require__(25);
+	var throttle = __webpack_require__(7);
+	var debounce = __webpack_require__(21);
 
 	module.exports = {
 		throttle: throttle,
@@ -3824,16 +3232,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 27 */
+/* 23 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_27__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_23__;
 
 /***/ }),
-/* 28 */
+/* 24 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_28__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_24__;
 
 /***/ })
 /******/ ])
