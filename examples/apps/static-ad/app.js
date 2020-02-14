@@ -23,14 +23,12 @@ class App extends Component {
                 <button style={styles.button} onClick={this.onClick}>
                     Change content
                 </button>
-                this.getGPTVersion(); 
                 <div style={styles.lb}>
                     <Gpt
                         adUnitPath="/4595/nfl.test.open"
                         content={`<a href="http://www.nfl.com" target="_blank"><img src="https://placeholdit.imgix.net/~text?txtsize=33&bg=${color}&txt=728%C3%9790&w=728&h=90"></img></a>`}
                         slotSize={[728, 90]}
                         style={styles.adBorder}
-                        
                     />
                 </div>
             </div>
