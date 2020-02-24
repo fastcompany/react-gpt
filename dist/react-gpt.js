@@ -1218,8 +1218,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (shouldRefresh) {
 	                    Bling._adManager.refresh();
 	                } else if (shouldRender || isScriptLoaded) {
-	                    Bling._adManager.renderAll();
-	                    // return true;
+	                    // Bling._adManager.renderAll();
+	                    return true;
 	                }
 	            } else {
 	                if (shouldRefresh) {
