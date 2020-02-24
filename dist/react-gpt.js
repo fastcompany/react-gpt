@@ -1592,6 +1592,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var floor = this.floorPrice(new Date().getDay(), floorConf);
 	                    var prebidAnalytics = prebidConf.analytics;
 	                    var pbjs = window.pbjs || {};
+	                    var apstag = window.apstag || {};
 	                    pbjs.que = pbjs.que || [];
 	                    // NEED TO CHECK IF WE SHOULD USE SECONDARY BASED ON AD REQUESTED
 	                    var slotSize = this.getSlotSize(prebidConf.useSecondaryAdSizeForPrebid);
@@ -1599,7 +1600,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    // Set config
 	                    pbjs.setConfig({
 	                        bidderTimeout: PREBID_TIMEOUT,
-	                        timeoutBuffer: 500,
+	                        timeoutBuffer: 350,
 	                        enableSendAllBids: true,
 	                        useBidCache: true,
 	                        priceGranularity: priceBucket,
@@ -1614,7 +1615,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                }
 	                            },
 	                            syncsPerBidder: 4,
-	                            syncDelay: 6000
+	                            syncDelay: 2000
 	                        },
 	                        consentManagement: {
 	                            gdpr: {
@@ -1642,8 +1643,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        },
 	                        bids: prebidConf.bidParams
 	                    }];
+
+	                    var biddersBack = function biddersBack() {
+	                        // console.log("bidders back", requestManager.aps);
+	                        if (requestManager.aps) {
+	                            _sendAdserverRequest();
+	                        }
+	                        return;
+	                    };
+
+	                    apstag.fetchBids({
+	                        slots: [{
+	                            slotID: divId,
+	                            slotName: adUnitPath, // may have to delete slash that begins adunitpath
+	                            sizes: slotSize
+	                        }]
+	                    }, function (bids) {
+	                        Bling._adManager.googletag.cmd.push(function () {
+	                            apstag.setDisplayBids();
+	                            requestManager.aps = true; // signals that APS request has completed
+	                            biddersBack(); // checks whether both APS and Prebid have returned
+	                        });
+	                    });
+
 	                    // console.log('adUnits requesting', adUnitPath, adUnits);
-	                    var sendAdserverRequest = function sendAdserverRequest() {
+	                    var _sendAdserverRequest = function _sendAdserverRequest() {
 	                        // console.log('sendAdserverReq', divId);
 	                        if (pbjs.adserverRequestSent) {
 	                            return;
@@ -1688,7 +1712,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        pbjs.addAdUnits(adUnits);
 	                        pbjs.aliasBidder("appnexus", "pangaea");
 	                        pbjs.requestBids({
-	                            bidsBackHandler: sendAdserverRequest
+	                            bidsBackHandler: biddersBack
 	                        });
 	                    });
 	                } else {

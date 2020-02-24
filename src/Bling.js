@@ -827,6 +827,7 @@ class Bling extends Component {
                 const floor = this.floorPrice(new Date().getDay(), floorConf);
                 const prebidAnalytics = prebidConf.analytics;
                 const pbjs = window.pbjs || {};
+                const apstag = window.apstag || {};
                 pbjs.que = pbjs.que || [];
                 // NEED TO CHECK IF WE SHOULD USE SECONDARY BASED ON AD REQUESTED
                 const slotSize = this.getSlotSize(
@@ -836,7 +837,7 @@ class Bling extends Component {
                 // Set config
                 pbjs.setConfig({
                     bidderTimeout: PREBID_TIMEOUT,
-                    timeoutBuffer: 500,
+                    timeoutBuffer: 350,
                     enableSendAllBids: true,
                     useBidCache: true,
                     priceGranularity: priceBucket,
@@ -851,7 +852,7 @@ class Bling extends Component {
                             }
                         },
                         syncsPerBidder: 4,
-                        syncDelay: 6000
+                        syncDelay: 2000
                     },
                     consentManagement: {
                         gdpr: {
@@ -881,6 +882,34 @@ class Bling extends Component {
                         bids: prebidConf.bidParams
                     }
                 ];
+
+            var biddersBack = function() {
+                // console.log("bidders back", requestManager.aps);
+                if (requestManager.aps) {
+                    sendAdserverRequest();
+                }
+                return;
+            };
+
+            apstag.fetchBids(
+                {
+                    slots: [
+                        {
+                            slotID: divId,
+                            slotName: adUnitPath, // may have to delete slash that begins adunitpath
+                            sizes: slotSize
+                        }
+                    ]
+                },
+                function(bids) {
+                    Bling._adManager.googletag.cmd.push(function() {
+                        apstag.setDisplayBids();
+                        requestManager.aps = true; // signals that APS request has completed
+                        biddersBack(); // checks whether both APS and Prebid have returned
+                    });
+                }
+            );
+
                 // console.log('adUnits requesting', adUnitPath, adUnits);
                 const sendAdserverRequest = () => {
                     // console.log('sendAdserverReq', divId);
@@ -935,7 +964,7 @@ class Bling extends Component {
                     pbjs.addAdUnits(adUnits);
                     pbjs.aliasBidder("appnexus", "pangaea");
                     pbjs.requestBids({
-                        bidsBackHandler: sendAdserverRequest
+                        bidsBackHandler: biddersBack
                     });
                 });
             } else {
