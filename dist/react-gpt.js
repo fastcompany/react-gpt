@@ -1586,6 +1586,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var prebidConf = this.props.prebidConf;
 
 	                if (prebidConf) {
+	                    var requestManager = {
+	                        adserverRequestSent: false,
+	                        aps: false,
+	                        prebid: false
+	                    };
 	                    var PREBID_TIMEOUT = prebidConf.timeout;
 	                    var priceBucket = prebidConf.priceBuckets;
 	                    var floorConf = prebidConf.floorPrices;

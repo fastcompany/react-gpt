@@ -821,6 +821,11 @@ class Bling extends Component {
             const prebidConf = this.props.prebidConf;
 
             if (prebidConf) {
+                let requestManager = {
+                    adserverRequestSent: false,
+                    aps: false,
+                    prebid: false
+                };
                 const PREBID_TIMEOUT = prebidConf.timeout;
                 const priceBucket = prebidConf.priceBuckets;
                 const floorConf = prebidConf.floorPrices;
