@@ -806,6 +806,7 @@ class Bling extends Component {
         const { content, adUnitPath } = this.props;
         const divId = this._divId;
         const adSlot = this._adSlot;
+        const self = this;
 
         if (content) {
             Bling._adManager.googletag.content().setContent(adSlot, content);
@@ -872,8 +873,13 @@ class Bling extends Component {
                     }
                 });
 
-                // Pause ad
-                Bling._adManager.googletag.pubads().disableInitialLoad();
+                // console.log('googletag \n',Bling._adManager.googletag, 
+                // 'admanager \n', Bling._adManager, 
+                // 'pubads \n', Bling._adManager.googletag.pubads(), 
+                // 'refresh \n', Bling._adManager.refresh, 
+                // 'initial load \n', Bling._adManager._disableInitialLoad)
+                // AD is paused 
+                // console.log('intial load disabled1 ', Bling._adManager.googletag.pubads().isInitialLoadDisabled(), Bling._adManager.googletag.pubads());
 
                 // Define pbjs unit
                 const adUnits = [
@@ -888,102 +894,98 @@ class Bling extends Component {
                     }
                 ];
 
-            var biddersBack = function() {
-                // console.log("bidders back", requestManager.aps);
-                if (requestManager.aps) {
-                    sendAdserverRequest();
+            // REQUEST HEADER BIDS
+            var requestHeaderBids = function requestHeaderBids() {
+                if (pbjs.adserverRequestSent) {
+                    return;
                 }
-                return;
-            };
+                pbjs.adserverRequestSent = true;
 
-            apstag.fetchBids(
-                {
-                    slots: [
-                        {
-                            slotID: divId,
-                            slotName: adUnitPath, // may have to delete slash that begins adunitpath
-                            sizes: slotSize
-                        }
-                    ]
-                },
-                function(bids) {
-                    Bling._adManager.googletag.cmd.push(function() {
+                apstag.fetchBids({
+                    slots: [{
+                        slotID: divId,
+                        slotName: adUnitPath, // may have to delete slash that begins adunitpath
+                        sizes: slotSize
+                    }]
+                }, function (bids) {
+                    Bling._adManager.googletag.cmd.push(function () {
                         apstag.setDisplayBids();
                         requestManager.aps = true; // signals that APS request has completed
-                        biddersBack(); // checks whether both APS and Prebid have returned
+                        console.log('requestmanager 1', requestManager.aps, requestManager.prebid);
+                        // biddersBack(); // checks whether both APS and Prebid have returned
                     });
-                }
-            );
+                });
 
-                // console.log('adUnits requesting', adUnitPath, adUnits);
-                const sendAdserverRequest = () => {
-                    // console.log('sendAdserverReq', divId);
-                    if (pbjs.adserverRequestSent) {
-                        return;
-                    }
-                    pbjs.adserverRequestSent = true;
+                pbjs.que.push(function () {
+                    pbjs.addAdUnits(adUnits);
+                    pbjs.aliasBidder("appnexus", "pangaea");
+                    pbjs.requestBids({
+                        bidsBackHandler: biddersBack
+                    });
+                    requestManager.prebid = true;
+                });
+            };
 
-                    Bling._adManager.googletag.cmd.push(() => {
-                        pbjs.que.push(() => {
-                            // analytics
+            // BIDDERS BACK
+            var biddersBack = function biddersBack() {
+                if (requestManager.aps && requestManager.prebid) {
+
+                    Bling._adManager.googletag.cmd.push(function () {
+                        // pbjs.que.push(function () {
                             if (prebidAnalytics && prebidAnalytics.rubicon) {
                                 pbjs.enableAnalytics({
                                     provider: "rubicon",
                                     options: {
                                         accountId: prebidAnalytics.rubicon,
-                                        endpoint:
-                                            "https://prebid-a.rubiconproject.com/event",
+                                        endpoint: "https://prebid-a.rubiconproject.com/event",
                                         samplingFactor: 1
                                     }
                                 });
                             }
 
                             if (pbjs.getHighestCpmBids(divId).length) {
-                                let highestBid = pbjs.getHighestCpmBids(
-                                    divId
-                                )[0].cpm;
+                                var highestBid = pbjs.getHighestCpmBids(divId)[0].cpm;
                                 highestBid = parseFloat(highestBid);
                                 if (highestBid >= floor) {
                                     pbjs.setTargetingForGPTAsync([divId]);
                                 } else {
                                     pbjs.setTargetingForGPTAsync([divId]);
-                                    const hbpbValue = adSlot.getTargeting(
-                                        "hb_pb"
-                                    );
-                                    adSlot.setTargeting(
-                                        "hb_pb",
-                                        `${hbpbValue}x`
-                                    );
+                                    var hbpbValue = adSlot.getTargeting("hb_pb");
+                                    adSlot.setTargeting("hb_pb", hbpbValue + "x");
                                 }
                             }
-                            // console.log('should be displaying', divId);
-                            Bling._adManager.googletag.display(divId);
+
+                            console.log('intial load disabled3', Bling._adManager.googletag.pubads().isInitialLoadDisabled());
+
+                            // if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
+                            //     this.refresh();
+                            // }
+
+                            if (Bling._adManager._disableInitialLoad) {                                        
+                                console.log('load was disabled', adSlot, divId);
+                                Bling._adManager.googletag.display(divId);
+                                Bling._adManager.googletag.pubads().refresh();
+                                // self.refresh();
+                            } else {
+                                Bling._adManager.googletag.display(divId);
+                                // Bling._adManager.googletag.pubads().refresh();
+                                // FIX
+                                // self.refresh();
+                            }
                             pbjs.removeAdUnit(divId);
                             pbjs.adserverRequestSent = false;
                             adSlot.clearTargeting();
-                        });
+                        // });
                     });
-                };
-
-                pbjs.que.push(() => {
-                    pbjs.addAdUnits(adUnits);
-                    pbjs.aliasBidder("appnexus", "pangaea");
-                    pbjs.requestBids({
-                        bidsBackHandler: biddersBack
-                    });
-                });
-            } else {
+                }
+                return;
+            };
+            requestHeaderBids()
+        } else {
                 // console.log('no prebid Conf', divId);
-                setTimeout(() => {
+                setTimeout(function () {
                     Bling._adManager.googletag.display(divId);
                 });
-            }
-
-            if (
-                Bling._adManager._disableInitialLoad &&
-                !Bling._adManager._initialRender
-            ) {
-                this.refresh();
             }
         }
     }

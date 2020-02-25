@@ -1574,6 +1574,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            var divId = this._divId;
 	            var adSlot = this._adSlot;
+	            var self = this;
 
 	            if (content) {
 	                Bling._adManager.googletag.content().setContent(adSlot, content);
@@ -1635,8 +1636,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 	                    });
 
-	                    // Pause ad
-	                    Bling._adManager.googletag.pubads().disableInitialLoad();
+	                    // console.log('googletag \n',Bling._adManager.googletag, 
+	                    // 'admanager \n', Bling._adManager, 
+	                    // 'pubads \n', Bling._adManager.googletag.pubads(), 
+	                    // 'refresh \n', Bling._adManager.refresh, 
+	                    // 'initial load \n', Bling._adManager._disableInitialLoad)
+	                    // AD is paused 
+	                    // console.log('intial load disabled1 ', Bling._adManager.googletag.pubads().isInitialLoadDisabled(), Bling._adManager.googletag.pubads());
 
 	                    // Define pbjs unit
 	                    var adUnits = [{
@@ -1649,39 +1655,44 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        bids: prebidConf.bidParams
 	                    }];
 
-	                    var biddersBack = function biddersBack() {
-	                        // console.log("bidders back", requestManager.aps);
-	                        if (requestManager.aps) {
-	                            _sendAdserverRequest();
-	                        }
-	                        return;
-	                    };
-
-	                    apstag.fetchBids({
-	                        slots: [{
-	                            slotID: divId,
-	                            slotName: adUnitPath, // may have to delete slash that begins adunitpath
-	                            sizes: slotSize
-	                        }]
-	                    }, function (bids) {
-	                        Bling._adManager.googletag.cmd.push(function () {
-	                            apstag.setDisplayBids();
-	                            requestManager.aps = true; // signals that APS request has completed
-	                            biddersBack(); // checks whether both APS and Prebid have returned
-	                        });
-	                    });
-
-	                    // console.log('adUnits requesting', adUnitPath, adUnits);
-	                    var _sendAdserverRequest = function _sendAdserverRequest() {
-	                        // console.log('sendAdserverReq', divId);
+	                    // REQUEST HEADER BIDS
+	                    var requestHeaderBids = function requestHeaderBids() {
 	                        if (pbjs.adserverRequestSent) {
 	                            return;
 	                        }
 	                        pbjs.adserverRequestSent = true;
 
-	                        Bling._adManager.googletag.cmd.push(function () {
-	                            pbjs.que.push(function () {
-	                                // analytics
+	                        apstag.fetchBids({
+	                            slots: [{
+	                                slotID: divId,
+	                                slotName: adUnitPath, // may have to delete slash that begins adunitpath
+	                                sizes: slotSize
+	                            }]
+	                        }, function (bids) {
+	                            Bling._adManager.googletag.cmd.push(function () {
+	                                apstag.setDisplayBids();
+	                                requestManager.aps = true; // signals that APS request has completed
+	                                console.log('requestmanager 1', requestManager.aps, requestManager.prebid);
+	                                // biddersBack(); // checks whether both APS and Prebid have returned
+	                            });
+	                        });
+
+	                        pbjs.que.push(function () {
+	                            pbjs.addAdUnits(adUnits);
+	                            pbjs.aliasBidder("appnexus", "pangaea");
+	                            pbjs.requestBids({
+	                                bidsBackHandler: biddersBack
+	                            });
+	                            requestManager.prebid = true;
+	                        });
+	                    };
+
+	                    // BIDDERS BACK
+	                    var biddersBack = function biddersBack() {
+	                        if (requestManager.aps && requestManager.prebid) {
+
+	                            Bling._adManager.googletag.cmd.push(function () {
+	                                // pbjs.que.push(function () {
 	                                if (prebidAnalytics && prebidAnalytics.rubicon) {
 	                                    pbjs.enableAnalytics({
 	                                        provider: "rubicon",
@@ -1704,31 +1715,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                        adSlot.setTargeting("hb_pb", hbpbValue + "x");
 	                                    }
 	                                }
-	                                // console.log('should be displaying', divId);
-	                                Bling._adManager.googletag.display(divId);
+
+	                                console.log('intial load disabled3', Bling._adManager.googletag.pubads().isInitialLoadDisabled());
+
+	                                // if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
+	                                //     this.refresh();
+	                                // }
+
+	                                if (Bling._adManager._disableInitialLoad) {
+	                                    console.log('load was disabled', adSlot, divId);
+	                                    Bling._adManager.googletag.display(divId);
+	                                    Bling._adManager.googletag.pubads().refresh();
+	                                    // self.refresh();
+	                                } else {
+	                                    Bling._adManager.googletag.display(divId);
+	                                    // Bling._adManager.googletag.pubads().refresh();
+	                                    // FIX
+	                                    // self.refresh();
+	                                }
 	                                pbjs.removeAdUnit(divId);
 	                                pbjs.adserverRequestSent = false;
 	                                adSlot.clearTargeting();
+	                                // });
 	                            });
-	                        });
+	                        }
+	                        return;
 	                    };
-
-	                    pbjs.que.push(function () {
-	                        pbjs.addAdUnits(adUnits);
-	                        pbjs.aliasBidder("appnexus", "pangaea");
-	                        pbjs.requestBids({
-	                            bidsBackHandler: biddersBack
-	                        });
-	                    });
+	                    requestHeaderBids();
 	                } else {
 	                    // console.log('no prebid Conf', divId);
 	                    setTimeout(function () {
 	                        Bling._adManager.googletag.display(divId);
 	                    });
-	                }
-
-	                if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
-	                    this.refresh();
 	                }
 	            }
 	        }
