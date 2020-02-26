@@ -981,6 +981,7 @@ class Bling extends Component {
                             ) {
                                 console.log("load was disabled", adUnitPath, divId);
                                 RGPT._adManager.googletag.display(divId);
+                                RGPT._adManager.googletag.pubads().refresh();
 
                                 pbjs.removeAdUnit(divId);
                                 pbjs.adserverRequestSent = false;
