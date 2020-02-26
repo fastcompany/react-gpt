@@ -1726,7 +1726,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                if (RGPT._adManager._disableInitialLoad && !RGPT._adManager._initialRender) {
 	                                    console.log("load was disabled", adUnitPath, divId);
 	                                    RGPT._adManager.googletag.display(divId);
-	                                    RGPT._adManager.googletag.pubads().refresh();
+	                                    if (window.top.location.origin.indexOf('fastcompany') === -1) {
+	                                        RGPT._adManager.googletag.pubads().refresh();
+	                                    }
 
 	                                    pbjs.removeAdUnit(divId);
 	                                    pbjs.adserverRequestSent = false;
