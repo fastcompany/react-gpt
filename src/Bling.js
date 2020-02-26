@@ -803,28 +803,28 @@ class Bling extends Component {
     }
 
     display() {
-        const { content, adUnitPath, GPT } = this.props;
+        const { content, adUnitPath, RGPT } = this.props;
         const divId = this._divId;
         const adSlot = this._adSlot;
         const self = this;
 
         if (content) {
-            GPT._adManager.googletag.content().setContent(adSlot, content);
+            RGPT._adManager.googletag.content().setContent(adSlot, content);
         } else {
             if (
-                !GPT._adManager._disableInitialLoad &&
-                !GPT._adManager._syncCorrelator
+                !RGPT._adManager._disableInitialLoad &&
+                !RGPT._adManager._syncCorrelator
             ) {
-                GPT._adManager.updateCorrelator();
+                RGPT._adManager.updateCorrelator();
             }
 
             // PBJS configs
             const prebidConf = this.props.prebidConf;
 
             if (prebidConf) {
-                GPT.enableSingleRequest();
-                GPT.disableInitialLoad();
-                console.log('is load disabled?:', _props3.GPT._adManager._disableInitialLoad)
+                RGPT.enableSingleRequest();
+                RGPT.disableInitialLoad();
+                console.log('is load disabled?:', RGPT._adManager._disableInitialLoad)
                 let requestManager = {
                     adserverRequestSent: false,
                     aps: false,
@@ -876,13 +876,13 @@ class Bling extends Component {
                     }
                 });
 
-                // console.log('googletag \n',GPT._adManager.googletag, 
-                // 'admanager \n', GPT._adManager, 
-                // 'pubads \n', GPT._adManager.googletag.pubads(), 
-                // 'refresh \n', GPT._adManager.refresh, 
-                // 'initial load \n', GPT._adManager._disableInitialLoad)
+                // console.log('googletag \n',RGPT._adManager.googletag, 
+                // 'admanager \n', RGPT._adManager, 
+                // 'pubads \n', RGPT._adManager.googletag.pubads(), 
+                // 'refresh \n', RGPT._adManager.refresh, 
+                // 'initial load \n', RGPT._adManager._disableInitialLoad)
                 // AD is paused 
-                // console.log('intial load disabled1 ', GPT._adManager.googletag.pubads().isInitialLoadDisabled(), GPT._adManager.googletag.pubads());
+                // console.log('intial load disabled1 ', RGPT._adManager.googletag.pubads().isInitialLoadDisabled(), RGPT._adManager.googletag.pubads());
 
                 // Define pbjs unit
                 const adUnits = [
@@ -911,7 +911,7 @@ class Bling extends Component {
                         sizes: slotSize
                     }]
                 }, function (bids) {
-                    GPT._adManager.googletag.cmd.push(function () {
+                    RGPT._adManager.googletag.cmd.push(function () {
                         apstag.setDisplayBids();
                         requestManager.aps = true; // signals that APS request has completed
                         console.log('requestmanager 1', requestManager.aps, requestManager.prebid);
@@ -933,7 +933,7 @@ class Bling extends Component {
             var biddersBack = function biddersBack() {
                 if (requestManager.aps && requestManager.prebid) {
 
-                    GPT._adManager.googletag.cmd.push(function () {
+                    RGPT._adManager.googletag.cmd.push(function () {
                         // pbjs.que.push(function () {
                             if (prebidAnalytics && prebidAnalytics.rubicon) {
                                 pbjs.enableAnalytics({
@@ -958,16 +958,16 @@ class Bling extends Component {
                                 }
                             }
 
-                            if (GPT._adManager._disableInitialLoad && !GPT._adManager._initialRender) {                                        
+                            if (RGPT._adManager._disableInitialLoad && !RGPT._adManager._initialRender) {                                        
                                 console.log('load was disabled', adSlot, divId);
-                                GPT._adManager.googletag.display(divId);
+                                RGPT._adManager.googletag.display(divId);
                                 pbjs.removeAdUnit(divId);
                                 pbjs.adserverRequestSent = false;
                                 adSlot.clearTargeting();
                                 return;
 
                             } else {
-                                GPT._adManager.googletag.display(divId);
+                                RGPT._adManager.googletag.display(divId);
                                 pbjs.removeAdUnit(divId);
                                 pbjs.adserverRequestSent = false;
                                 adSlot.clearTargeting();
@@ -982,7 +982,7 @@ class Bling extends Component {
         } else {
                 console.log('no prebid Conf', divId);
                 setTimeout(function () {
-                    GPT._adManager.googletag.display(divId);
+                    RGPT._adManager.googletag.display(divId);
                 });
             }
         }

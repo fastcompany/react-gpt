@@ -1568,29 +1568,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "display",
 	        value: function display() {
-	            var _props4 = this.props,
-	                content = _props4.content,
-	                adUnitPath = _props4.adUnitPath,
-	                GPT = _props4.GPT;
+	            var _props3 = this.props,
+	                content = _props3.content,
+	                adUnitPath = _props3.adUnitPath,
+	                RGPT = _props3.RGPT;
 
 	            var divId = this._divId;
 	            var adSlot = this._adSlot;
 	            var self = this;
 
 	            if (content) {
-	                GPT._adManager.googletag.content().setContent(adSlot, content);
+	                RGPT._adManager.googletag.content().setContent(adSlot, content);
 	            } else {
-	                if (!GPT._adManager._disableInitialLoad && !GPT._adManager._syncCorrelator) {
-	                    GPT._adManager.updateCorrelator();
+	                if (!RGPT._adManager._disableInitialLoad && !RGPT._adManager._syncCorrelator) {
+	                    RGPT._adManager.updateCorrelator();
 	                }
 
 	                // PBJS configs
 	                var prebidConf = this.props.prebidConf;
 
 	                if (prebidConf) {
-	                    GPT.enableSingleRequest();
-	                    GPT.disableInitialLoad();
-	                    console.log('is load disabled?:', _props3.GPT._adManager._disableInitialLoad);
+	                    RGPT.enableSingleRequest();
+	                    RGPT.disableInitialLoad();
+	                    console.log('is load disabled?:', RGPT._adManager._disableInitialLoad);
 	                    var requestManager = {
 	                        adserverRequestSent: false,
 	                        aps: false,
@@ -1640,13 +1640,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 	                    });
 
-	                    // console.log('googletag \n',GPT._adManager.googletag, 
-	                    // 'admanager \n', GPT._adManager, 
-	                    // 'pubads \n', GPT._adManager.googletag.pubads(), 
-	                    // 'refresh \n', GPT._adManager.refresh, 
-	                    // 'initial load \n', GPT._adManager._disableInitialLoad)
+	                    // console.log('googletag \n',RGPT._adManager.googletag, 
+	                    // 'admanager \n', RGPT._adManager, 
+	                    // 'pubads \n', RGPT._adManager.googletag.pubads(), 
+	                    // 'refresh \n', RGPT._adManager.refresh, 
+	                    // 'initial load \n', RGPT._adManager._disableInitialLoad)
 	                    // AD is paused 
-	                    // console.log('intial load disabled1 ', GPT._adManager.googletag.pubads().isInitialLoadDisabled(), GPT._adManager.googletag.pubads());
+	                    // console.log('intial load disabled1 ', RGPT._adManager.googletag.pubads().isInitialLoadDisabled(), RGPT._adManager.googletag.pubads());
 
 	                    // Define pbjs unit
 	                    var adUnits = [{
@@ -1673,7 +1673,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                sizes: slotSize
 	                            }]
 	                        }, function (bids) {
-	                            GPT._adManager.googletag.cmd.push(function () {
+	                            RGPT._adManager.googletag.cmd.push(function () {
 	                                apstag.setDisplayBids();
 	                                requestManager.aps = true; // signals that APS request has completed
 	                                console.log('requestmanager 1', requestManager.aps, requestManager.prebid);
@@ -1695,7 +1695,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var biddersBack = function biddersBack() {
 	                        if (requestManager.aps && requestManager.prebid) {
 
-	                            GPT._adManager.googletag.cmd.push(function () {
+	                            RGPT._adManager.googletag.cmd.push(function () {
 	                                // pbjs.que.push(function () {
 	                                if (prebidAnalytics && prebidAnalytics.rubicon) {
 	                                    pbjs.enableAnalytics({
@@ -1720,15 +1720,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                    }
 	                                }
 
-	                                if (GPT._adManager._disableInitialLoad && !GPT._adManager._initialRender) {
+	                                if (RGPT._adManager._disableInitialLoad && !RGPT._adManager._initialRender) {
 	                                    console.log('load was disabled', adSlot, divId);
-	                                    GPT._adManager.googletag.display(divId);
+	                                    RGPT._adManager.googletag.display(divId);
 	                                    pbjs.removeAdUnit(divId);
 	                                    pbjs.adserverRequestSent = false;
 	                                    adSlot.clearTargeting();
 	                                    return;
 	                                } else {
-	                                    GPT._adManager.googletag.display(divId);
+	                                    RGPT._adManager.googletag.display(divId);
 	                                    pbjs.removeAdUnit(divId);
 	                                    pbjs.adserverRequestSent = false;
 	                                    adSlot.clearTargeting();
@@ -1743,7 +1743,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                } else {
 	                    console.log('no prebid Conf', divId);
 	                    setTimeout(function () {
-	                        GPT._adManager.googletag.display(divId);
+	                        RGPT._adManager.googletag.display(divId);
 	                    });
 	                }
 	            }
@@ -1777,10 +1777,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "render",
 	        value: function render() {
 	            var scriptLoaded = this.state.scriptLoaded;
-	            var _props5 = this.props,
-	                id = _props5.id,
-	                outOfPage = _props5.outOfPage,
-	                style = _props5.style;
+	            var _props4 = this.props,
+	                id = _props4.id,
+	                outOfPage = _props4.outOfPage,
+	                style = _props4.style;
 
 	            var shouldNotRender = this.notInViewport(this.props, this.state);
 
