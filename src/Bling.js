@@ -916,7 +916,7 @@ class Bling extends Component {
                             ]
                         },
                         function(bids) {
-                            Bling._adManager.googletag.cmd.push(function() {
+                            RGPT._adManager.googletag.cmd.push(function() {
                                 apstag.setDisplayBids();
                                 requestManager.aps = true; // signals that APS request has completed
                                 console.log(

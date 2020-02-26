@@ -1677,7 +1677,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                sizes: slotSize
 	                            }]
 	                        }, function (bids) {
-	                            Bling._adManager.googletag.cmd.push(function () {
+	                            RGPT._adManager.googletag.cmd.push(function () {
 	                                apstag.setDisplayBids();
 	                                requestManager.aps = true; // signals that APS request has completed
 	                                console.log("requestmanager 1", requestManager.aps, requestManager.prebid);
