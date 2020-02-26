@@ -1570,7 +1570,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function display() {
 	            var _props3 = this.props,
 	                content = _props3.content,
-	                adUnitPath = _props3.adUnitPath;
+	                adUnitPath = _props3.adUnitPath,
+	                GPT = _props3.GPT;
 
 	            var divId = this._divId;
 	            var adSlot = this._adSlot;

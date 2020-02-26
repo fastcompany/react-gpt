@@ -803,7 +803,7 @@ class Bling extends Component {
     }
 
     display() {
-        const { content, adUnitPath } = this.props;
+        const { content, adUnitPath, GPT } = this.props;
         const divId = this._divId;
         const adSlot = this._adSlot;
         const self = this;
