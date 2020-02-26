@@ -281,21 +281,21 @@ class Bling extends Component {
     }
 
     static removeListener(...args) {
-        Bling._adManager.removeListener(...args);
+        GPT._adManager.removeListener(...args);
     }
 
     static removeAllListeners(...args) {
-        Bling._adManager.removeAllListeners(...args);
+        GPT._adManager.removeAllListeners(...args);
     }
 
     static _on(fn, eventType, cb) {
         if (typeof cb !== "function") {
             return;
         }
-        if (eventType === Events.READY && Bling._adManager.isReady) {
-            cb.call(Bling._adManager, Bling._adManager.googletag);
+        if (eventType === Events.READY && GPT._adManager.isReady) {
+            cb.call(GPT._adManager, GPT._adManager.googletag);
         } else {
-            Bling._adManager[fn](eventType, cb);
+            GPT._adManager[fn](eventType, cb);
         }
     }
 
@@ -313,7 +313,7 @@ class Bling extends Component {
      * @static
      */
     static getGPTVersion() {
-        return Bling._adManager.getGPTVersion();
+        return GPT._adManager.getGPTVersion();
     }
     /**
      * Returns the Pubads Service version.
@@ -323,7 +323,7 @@ class Bling extends Component {
      * @static
      */
     static getPubadsVersion() {
-        return Bling._adManager.getPubadsVersion();
+        return GPT._adManager.getPubadsVersion();
     }
     /**
      * Sets a flag to indicate whether the correlator value should always be same across the ads in the page or not.
@@ -333,7 +333,7 @@ class Bling extends Component {
      * @static
      */
     static syncCorrelator(value) {
-        Bling._adManager.syncCorrelator(value);
+        GPT._adManager.syncCorrelator(value);
     }
     /**
      * Trigger re-rendering of all the ads.
@@ -342,7 +342,7 @@ class Bling extends Component {
      * @static
      */
     static render() {
-        Bling._adManager.renderAll();
+        GPT._adManager.renderAll();
     }
     /**
      * Refreshes all the ads in the page with a new correlator value.
@@ -352,7 +352,7 @@ class Bling extends Component {
      * @static
      */
     static refresh(slots, options) {
-        Bling._adManager.refresh(slots, options);
+        GPT._adManager.refresh(slots, options);
     }
     /**
      * Clears the ads for the specified ad slots, if no slots are provided, all the ads will be cleared.
@@ -362,7 +362,7 @@ class Bling extends Component {
      * @static
      */
     static clear(slots) {
-        Bling._adManager.clear(slots);
+        GPT._adManager.clear(slots);
     }
     /**
      * Updates the correlator value for the next ad request.
@@ -371,12 +371,12 @@ class Bling extends Component {
      * @static
      */
     static updateCorrelator() {
-        Bling._adManager.updateCorrelator();
+        GPT._adManager.updateCorrelator();
     }
 
     static set testManager(testManager) {
         invariant(testManager, "Pass in createManagerTest to mock GPT");
-        Bling._adManager = testManager;
+        GPT._adManager = testManager;
     }
 
     state = {
@@ -396,8 +396,8 @@ class Bling extends Component {
     }
 
     componentDidMount() {
-        Bling._adManager.addInstance(this);
-        Bling._adManager
+        GPT._adManager.addInstance(this);
+        GPT._adManager
             .load(Bling._config.seedFileUrl)
             .then(this.onScriptLoaded.bind(this))
             .catch(this.onScriptError.bind(this));
@@ -410,7 +410,7 @@ class Bling extends Component {
             (nextProps.sizeMapping || sizeMapping) &&
             !propsEqual(nextProps.sizeMapping, sizeMapping)
         ) {
-            Bling._adManager.removeMQListener(this, nextProps);
+            GPT._adManager.removeMQListener(this, nextProps);
         }
     }
 
@@ -447,17 +447,17 @@ class Bling extends Component {
         const shouldRefresh =
             !shouldRender &&
             !propsEqual(refreshableProps.props, refreshableProps.nextProps);
-        // console.log(`shouldRefresh: ${shouldRefresh}, shouldRender: ${shouldRender}, isScriptLoaded: ${isScriptLoaded}, syncCorrelator: ${Bling._adManager._syncCorrelator}`);
+        // console.log(`shouldRefresh: ${shouldRefresh}, shouldRender: ${shouldRender}, isScriptLoaded: ${isScriptLoaded}, syncCorrelator: ${GPT._adManager._syncCorrelator}`);
 
         if (shouldRefresh) {
             this.configureSlot(this._adSlot, nextProps);
         }
 
-        if (Bling._adManager._syncCorrelator) {
+        if (GPT._adManager._syncCorrelator) {
             if (shouldRefresh) {
-                Bling._adManager.refresh();
+                GPT._adManager.refresh();
             } else if (shouldRender || isScriptLoaded) {
-                // Bling._adManager.renderAll();
+                // GPT._adManager.renderAll();
                 return true;
             }
         } else {
@@ -480,8 +480,8 @@ class Bling extends Component {
         if (this._divId) {
             // initial render will enable pubads service before any ad renders
             // so taken care of by the manager
-            if (Bling._adManager._initialRender) {
-                Bling._adManager.render();
+            if (GPT._adManager._initialRender) {
+                GPT._adManager.render();
             } else {
                 this.renderAd();
             }
@@ -489,9 +489,9 @@ class Bling extends Component {
     }
 
     componentWillUnmount() {
-        Bling._adManager.removeInstance(this);
+        GPT._adManager.removeInstance(this);
         if (this._adSlot) {
-            Bling._adManager.googletag.destroySlots([this._adSlot]);
+            GPT._adManager.googletag.destroySlots([this._adSlot]);
             this._adSlot = null;
         }
     }
@@ -534,7 +534,7 @@ class Bling extends Component {
             slotSize = [0, 0];
         }
         const viewableThresholdValues = this.getUserViewableThresholdValues();
-        const inViewport = Bling._adManager.isInViewport(
+        const inViewport = GPT._adManager.isInViewport(
             ReactDOM.findDOMNode(this),
             slotSize,
             this.viewableThreshold,
@@ -547,11 +547,11 @@ class Bling extends Component {
 
     defineSizeMapping(adSlot, sizeMapping) {
         if (sizeMapping) {
-            Bling._adManager.addMQListener(this, this.props);
+            GPT._adManager.addMQListener(this, this.props);
             const sizeMappingArray = sizeMapping
                 .reduce((mapping, size) => {
                     return mapping.addSize(size.viewport, size.slot);
-                }, Bling._adManager.googletag.sizeMapping())
+                }, GPT._adManager.googletag.sizeMapping())
                 .build();
             adSlot.defineSizeMapping(sizeMappingArray);
         }
@@ -580,7 +580,7 @@ class Bling extends Component {
     }
 
     addCompanionAdService(serviceConfig, adSlot) {
-        const companionAdsService = Bling._adManager.googletag.companionAds();
+        const companionAdsService = GPT._adManager.googletag.companionAds();
         adSlot.addService(companionAdsService);
         if (typeof serviceConfig === "object") {
             if (serviceConfig.hasOwnProperty("enableSyncLoading")) {
@@ -670,12 +670,12 @@ class Bling extends Component {
         if (!this._adSlot) {
             // console.log('💀 DEFINESLOT: no ad slot case', divId, slotSize, adUnitPath)
             if (outOfPage) {
-                this._adSlot = Bling._adManager.googletag.defineOutOfPageSlot(
+                this._adSlot = GPT._adManager.googletag.defineOutOfPageSlot(
                     adUnitPath,
                     divId
                 );
             } else {
-                this._adSlot = Bling._adManager.googletag.defineSlot(
+                this._adSlot = GPT._adManager.googletag.defineSlot(
                     adUnitPath,
                     slotSize || [],
                     divId
@@ -750,9 +750,9 @@ class Bling extends Component {
 
         // GPT checks if the same service is already added.
         if (content) {
-            adSlot.addService(Bling._adManager.googletag.content());
+            adSlot.addService(GPT._adManager.googletag.content());
         } else {
-            adSlot.addService(Bling._adManager.googletag.pubads());
+            adSlot.addService(GPT._adManager.googletag.pubads());
         }
 
         // CALL MOAT AFTER SLOT HAS BEEN DEFINED
@@ -809,19 +809,22 @@ class Bling extends Component {
         const self = this;
 
         if (content) {
-            Bling._adManager.googletag.content().setContent(adSlot, content);
+            GPT._adManager.googletag.content().setContent(adSlot, content);
         } else {
             if (
-                !Bling._adManager._disableInitialLoad &&
-                !Bling._adManager._syncCorrelator
+                !GPT._adManager._disableInitialLoad &&
+                !GPT._adManager._syncCorrelator
             ) {
-                Bling._adManager.updateCorrelator();
+                GPT._adManager.updateCorrelator();
             }
 
             // PBJS configs
             const prebidConf = this.props.prebidConf;
 
             if (prebidConf) {
+                GPT.enableSingleRequest();
+                GPT.disableInitialLoad();
+                console.log('is load disabled?:', _props3.GPT._adManager._disableInitialLoad)
                 let requestManager = {
                     adserverRequestSent: false,
                     aps: false,
@@ -873,13 +876,13 @@ class Bling extends Component {
                     }
                 });
 
-                // console.log('googletag \n',Bling._adManager.googletag, 
-                // 'admanager \n', Bling._adManager, 
-                // 'pubads \n', Bling._adManager.googletag.pubads(), 
-                // 'refresh \n', Bling._adManager.refresh, 
-                // 'initial load \n', Bling._adManager._disableInitialLoad)
+                // console.log('googletag \n',GPT._adManager.googletag, 
+                // 'admanager \n', GPT._adManager, 
+                // 'pubads \n', GPT._adManager.googletag.pubads(), 
+                // 'refresh \n', GPT._adManager.refresh, 
+                // 'initial load \n', GPT._adManager._disableInitialLoad)
                 // AD is paused 
-                // console.log('intial load disabled1 ', Bling._adManager.googletag.pubads().isInitialLoadDisabled(), Bling._adManager.googletag.pubads());
+                // console.log('intial load disabled1 ', GPT._adManager.googletag.pubads().isInitialLoadDisabled(), GPT._adManager.googletag.pubads());
 
                 // Define pbjs unit
                 const adUnits = [
@@ -908,7 +911,7 @@ class Bling extends Component {
                         sizes: slotSize
                     }]
                 }, function (bids) {
-                    Bling._adManager.googletag.cmd.push(function () {
+                    GPT._adManager.googletag.cmd.push(function () {
                         apstag.setDisplayBids();
                         requestManager.aps = true; // signals that APS request has completed
                         console.log('requestmanager 1', requestManager.aps, requestManager.prebid);
@@ -930,7 +933,7 @@ class Bling extends Component {
             var biddersBack = function biddersBack() {
                 if (requestManager.aps && requestManager.prebid) {
 
-                    Bling._adManager.googletag.cmd.push(function () {
+                    GPT._adManager.googletag.cmd.push(function () {
                         // pbjs.que.push(function () {
                             if (prebidAnalytics && prebidAnalytics.rubicon) {
                                 pbjs.enableAnalytics({
@@ -955,36 +958,31 @@ class Bling extends Component {
                                 }
                             }
 
-                            console.log('intial load disabled3', Bling._adManager.googletag.pubads().isInitialLoadDisabled());
-
-                            // if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
-                            //     this.refresh();
-                            // }
-
-                            if (Bling._adManager._disableInitialLoad) {                                        
+                            if (GPT._adManager._disableInitialLoad && !GPT._adManager._initialRender) {                                        
                                 console.log('load was disabled', adSlot, divId);
-                                Bling._adManager.googletag.display(divId);
-                                Bling._adManager.googletag.pubads().refresh();
-                                // self.refresh();
+                                GPT._adManager.googletag.display(divId);
+                                pbjs.removeAdUnit(divId);
+                                pbjs.adserverRequestSent = false;
+                                adSlot.clearTargeting();
+                                return;
+
                             } else {
-                                Bling._adManager.googletag.display(divId);
-                                // Bling._adManager.googletag.pubads().refresh();
-                                // FIX
-                                // self.refresh();
+                                GPT._adManager.googletag.display(divId);
+                                pbjs.removeAdUnit(divId);
+                                pbjs.adserverRequestSent = false;
+                                adSlot.clearTargeting();
+                                return;
                             }
-                            pbjs.removeAdUnit(divId);
-                            pbjs.adserverRequestSent = false;
-                            adSlot.clearTargeting();
-                        // });
                     });
                 }
-                return;
             };
-            requestHeaderBids()
+            setTimeout(() => {
+                requestHeaderBids();
+            });
         } else {
-                // console.log('no prebid Conf', divId);
+                console.log('no prebid Conf', divId);
                 setTimeout(function () {
-                    Bling._adManager.googletag.display(divId);
+                    GPT._adManager.googletag.display(divId);
                 });
             }
         }
@@ -999,7 +997,7 @@ class Bling extends Component {
                 document.getElementById(this._divId).innerHTML = "";
                 return;
             }
-            Bling._adManager.clear([adSlot]);
+            GPT._adManager.clear([adSlot]);
         }
     }
 
@@ -1007,7 +1005,7 @@ class Bling extends Component {
         const adSlot = this._adSlot;
         if (adSlot) {
             this.clear();
-            Bling._adManager.refresh([adSlot], options);
+            GPT._adManager.refresh([adSlot], options);
         }
     }
 
@@ -1048,10 +1046,10 @@ class Bling extends Component {
         // clear the current ad if exists
         this.clear();
         if (this._adSlot) {
-            Bling._adManager.googletag.destroySlots([this._adSlot]);
+            GPT._adManager.googletag.destroySlots([this._adSlot]);
             this._adSlot = null;
         }
-        this._divId = id || Bling._adManager.generateDivId();
+        this._divId = id || GPT._adManager.generateDivId();
 
         return <div id={this._divId} style={style} />;
     }
@@ -1066,7 +1064,7 @@ class Bling extends Component {
             return;
         }
 
-        Bling._adManager.pubadsProxy({
+        GPT._adManager.pubadsProxy({
             method: "setRequestNonPersonalizedAds",
             args: [npa ? 1 : 0],
             resolve: null,
@@ -1079,7 +1077,7 @@ class Bling extends Component {
 export default hoistStatics(
     Bling,
     pubadsAPI.reduce((api, method) => {
-        api[method] = (...args) => Bling._adManager.pubadsProxy({ method, args });
+        api[method] = (...args) => GPT._adManager.pubadsProxy({ method, args });
         return api;
     }, {})
 );
