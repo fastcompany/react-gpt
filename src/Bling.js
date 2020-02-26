@@ -281,21 +281,21 @@ class Bling extends Component {
     }
 
     static removeListener(...args) {
-        GPT._adManager.removeListener(...args);
+        Bling._adManager.removeListener(...args);
     }
 
     static removeAllListeners(...args) {
-        GPT._adManager.removeAllListeners(...args);
+        Bling._adManager.removeAllListeners(...args);
     }
 
     static _on(fn, eventType, cb) {
         if (typeof cb !== "function") {
             return;
         }
-        if (eventType === Events.READY && GPT._adManager.isReady) {
-            cb.call(GPT._adManager, GPT._adManager.googletag);
+        if (eventType === Events.READY && Bling._adManager.isReady) {
+            cb.call(Bling._adManager, Bling._adManager.googletag);
         } else {
-            GPT._adManager[fn](eventType, cb);
+            Bling._adManager[fn](eventType, cb);
         }
     }
 
@@ -313,7 +313,7 @@ class Bling extends Component {
      * @static
      */
     static getGPTVersion() {
-        return GPT._adManager.getGPTVersion();
+        return Bling._adManager.getGPTVersion();
     }
     /**
      * Returns the Pubads Service version.
@@ -323,7 +323,7 @@ class Bling extends Component {
      * @static
      */
     static getPubadsVersion() {
-        return GPT._adManager.getPubadsVersion();
+        return Bling._adManager.getPubadsVersion();
     }
     /**
      * Sets a flag to indicate whether the correlator value should always be same across the ads in the page or not.
@@ -333,7 +333,7 @@ class Bling extends Component {
      * @static
      */
     static syncCorrelator(value) {
-        GPT._adManager.syncCorrelator(value);
+        Bling._adManager.syncCorrelator(value);
     }
     /**
      * Trigger re-rendering of all the ads.
@@ -342,7 +342,7 @@ class Bling extends Component {
      * @static
      */
     static render() {
-        GPT._adManager.renderAll();
+        Bling._adManager.renderAll();
     }
     /**
      * Refreshes all the ads in the page with a new correlator value.
@@ -352,7 +352,7 @@ class Bling extends Component {
      * @static
      */
     static refresh(slots, options) {
-        GPT._adManager.refresh(slots, options);
+        Bling._adManager.refresh(slots, options);
     }
     /**
      * Clears the ads for the specified ad slots, if no slots are provided, all the ads will be cleared.
@@ -362,7 +362,7 @@ class Bling extends Component {
      * @static
      */
     static clear(slots) {
-        GPT._adManager.clear(slots);
+        Bling._adManager.clear(slots);
     }
     /**
      * Updates the correlator value for the next ad request.
@@ -371,12 +371,12 @@ class Bling extends Component {
      * @static
      */
     static updateCorrelator() {
-        GPT._adManager.updateCorrelator();
+        Bling._adManager.updateCorrelator();
     }
 
     static set testManager(testManager) {
         invariant(testManager, "Pass in createManagerTest to mock GPT");
-        GPT._adManager = testManager;
+        Bling._adManager = testManager;
     }
 
     state = {
@@ -396,8 +396,8 @@ class Bling extends Component {
     }
 
     componentDidMount() {
-        GPT._adManager.addInstance(this);
-        GPT._adManager
+        Bling._adManager.addInstance(this);
+        Bling._adManager
             .load(Bling._config.seedFileUrl)
             .then(this.onScriptLoaded.bind(this))
             .catch(this.onScriptError.bind(this));
@@ -410,7 +410,7 @@ class Bling extends Component {
             (nextProps.sizeMapping || sizeMapping) &&
             !propsEqual(nextProps.sizeMapping, sizeMapping)
         ) {
-            GPT._adManager.removeMQListener(this, nextProps);
+            Bling._adManager.removeMQListener(this, nextProps);
         }
     }
 
@@ -447,17 +447,17 @@ class Bling extends Component {
         const shouldRefresh =
             !shouldRender &&
             !propsEqual(refreshableProps.props, refreshableProps.nextProps);
-        // console.log(`shouldRefresh: ${shouldRefresh}, shouldRender: ${shouldRender}, isScriptLoaded: ${isScriptLoaded}, syncCorrelator: ${GPT._adManager._syncCorrelator}`);
+        // console.log(`shouldRefresh: ${shouldRefresh}, shouldRender: ${shouldRender}, isScriptLoaded: ${isScriptLoaded}, syncCorrelator: ${Bling._adManager._syncCorrelator}`);
 
         if (shouldRefresh) {
             this.configureSlot(this._adSlot, nextProps);
         }
 
-        if (GPT._adManager._syncCorrelator) {
+        if (Bling._adManager._syncCorrelator) {
             if (shouldRefresh) {
-                GPT._adManager.refresh();
+                Bling._adManager.refresh();
             } else if (shouldRender || isScriptLoaded) {
-                // GPT._adManager.renderAll();
+                // Bling._adManager.renderAll();
                 return true;
             }
         } else {
@@ -480,8 +480,8 @@ class Bling extends Component {
         if (this._divId) {
             // initial render will enable pubads service before any ad renders
             // so taken care of by the manager
-            if (GPT._adManager._initialRender) {
-                GPT._adManager.render();
+            if (Bling._adManager._initialRender) {
+                Bling._adManager.render();
             } else {
                 this.renderAd();
             }
@@ -489,9 +489,9 @@ class Bling extends Component {
     }
 
     componentWillUnmount() {
-        GPT._adManager.removeInstance(this);
+        Bling._adManager.removeInstance(this);
         if (this._adSlot) {
-            GPT._adManager.googletag.destroySlots([this._adSlot]);
+            Bling._adManager.googletag.destroySlots([this._adSlot]);
             this._adSlot = null;
         }
     }
@@ -534,7 +534,7 @@ class Bling extends Component {
             slotSize = [0, 0];
         }
         const viewableThresholdValues = this.getUserViewableThresholdValues();
-        const inViewport = GPT._adManager.isInViewport(
+        const inViewport = Bling._adManager.isInViewport(
             ReactDOM.findDOMNode(this),
             slotSize,
             this.viewableThreshold,
@@ -547,11 +547,11 @@ class Bling extends Component {
 
     defineSizeMapping(adSlot, sizeMapping) {
         if (sizeMapping) {
-            GPT._adManager.addMQListener(this, this.props);
+            Bling._adManager.addMQListener(this, this.props);
             const sizeMappingArray = sizeMapping
                 .reduce((mapping, size) => {
                     return mapping.addSize(size.viewport, size.slot);
-                }, GPT._adManager.googletag.sizeMapping())
+                }, Bling._adManager.googletag.sizeMapping())
                 .build();
             adSlot.defineSizeMapping(sizeMappingArray);
         }
@@ -580,7 +580,7 @@ class Bling extends Component {
     }
 
     addCompanionAdService(serviceConfig, adSlot) {
-        const companionAdsService = GPT._adManager.googletag.companionAds();
+        const companionAdsService = Bling._adManager.googletag.companionAds();
         adSlot.addService(companionAdsService);
         if (typeof serviceConfig === "object") {
             if (serviceConfig.hasOwnProperty("enableSyncLoading")) {
@@ -670,12 +670,12 @@ class Bling extends Component {
         if (!this._adSlot) {
             // console.log('💀 DEFINESLOT: no ad slot case', divId, slotSize, adUnitPath)
             if (outOfPage) {
-                this._adSlot = GPT._adManager.googletag.defineOutOfPageSlot(
+                this._adSlot = Bling._adManager.googletag.defineOutOfPageSlot(
                     adUnitPath,
                     divId
                 );
             } else {
-                this._adSlot = GPT._adManager.googletag.defineSlot(
+                this._adSlot = Bling._adManager.googletag.defineSlot(
                     adUnitPath,
                     slotSize || [],
                     divId
@@ -750,9 +750,9 @@ class Bling extends Component {
 
         // GPT checks if the same service is already added.
         if (content) {
-            adSlot.addService(GPT._adManager.googletag.content());
+            adSlot.addService(Bling._adManager.googletag.content());
         } else {
-            adSlot.addService(GPT._adManager.googletag.pubads());
+            adSlot.addService(Bling._adManager.googletag.pubads());
         }
 
         // CALL MOAT AFTER SLOT HAS BEEN DEFINED
@@ -809,22 +809,19 @@ class Bling extends Component {
         const self = this;
 
         if (content) {
-            RGPT._adManager.googletag.content().setContent(adSlot, content);
+            Bling._adManager.googletag.content().setContent(adSlot, content);
         } else {
             if (
-                !RGPT._adManager._disableInitialLoad &&
-                !RGPT._adManager._syncCorrelator
+                !Bling._adManager._disableInitialLoad &&
+                !Bling._adManager._syncCorrelator
             ) {
-                RGPT._adManager.updateCorrelator();
+                Bling._adManager.updateCorrelator();
             }
 
             // PBJS configs
             const prebidConf = this.props.prebidConf;
 
             if (prebidConf) {
-                RGPT.enableSingleRequest();
-                RGPT.disableInitialLoad();
-                console.log('is load disabled?:', RGPT._adManager._disableInitialLoad)
                 let requestManager = {
                     adserverRequestSent: false,
                     aps: false,
@@ -876,13 +873,13 @@ class Bling extends Component {
                     }
                 });
 
-                // console.log('googletag \n',RGPT._adManager.googletag, 
-                // 'admanager \n', RGPT._adManager, 
-                // 'pubads \n', RGPT._adManager.googletag.pubads(), 
-                // 'refresh \n', RGPT._adManager.refresh, 
-                // 'initial load \n', RGPT._adManager._disableInitialLoad)
-                // AD is paused 
-                // console.log('intial load disabled1 ', RGPT._adManager.googletag.pubads().isInitialLoadDisabled(), RGPT._adManager.googletag.pubads());
+                // console.log('googletag \n',Bling._adManager.googletag,
+                // 'admanager \n', Bling._adManager,
+                // 'pubads \n', Bling._adManager.googletag.pubads(),
+                // 'refresh \n', Bling._adManager.refresh,
+                // 'initial load \n', Bling._adManager._disableInitialLoad)
+                // AD is paused
+                // console.log('intial load disabled1 ', Bling._adManager.googletag.pubads().isInitialLoadDisabled(), Bling._adManager.googletag.pubads());
 
                 // Define pbjs unit
                 const adUnits = [
@@ -897,92 +894,118 @@ class Bling extends Component {
                     }
                 ];
 
-            // REQUEST HEADER BIDS
-            var requestHeaderBids = function requestHeaderBids() {
-                if (pbjs.adserverRequestSent) {
-                    return;
-                }
-                pbjs.adserverRequestSent = true;
+                // REQUEST HEADER BIDS
+                var requestHeaderBids = function requestHeaderBids() {
+                    if (pbjs.adserverRequestSent) {
+                        return;
+                    }
+                    pbjs.adserverRequestSent = true;
 
-                apstag.fetchBids({
-                    slots: [{
-                        slotID: divId,
-                        slotName: adUnitPath, // may have to delete slash that begins adunitpath
-                        sizes: slotSize
-                    }]
-                }, function (bids) {
-                    RGPT._adManager.googletag.cmd.push(function () {
-                        apstag.setDisplayBids();
-                        requestManager.aps = true; // signals that APS request has completed
-                        console.log('requestmanager 1', requestManager.aps, requestManager.prebid);
-                        // biddersBack(); // checks whether both APS and Prebid have returned
+                    apstag.fetchBids(
+                        {
+                            slots: [
+                                {
+                                    slotID: divId,
+                                    slotName: adUnitPath, // may have to delete slash that begins adunitpath
+                                    sizes: slotSize
+                                }
+                            ]
+                        },
+                        function(bids) {
+                            Bling._adManager.googletag.cmd.push(function() {
+                                apstag.setDisplayBids();
+                                requestManager.aps = true; // signals that APS request has completed
+                                console.log(
+                                    "requestmanager 1",
+                                    requestManager.aps,
+                                    requestManager.prebid
+                                );
+                                // biddersBack(); // checks whether both APS and Prebid have returned
+                            });
+                        }
+                    );
+
+                    pbjs.que.push(function() {
+                        pbjs.addAdUnits(adUnits);
+                        pbjs.aliasBidder("appnexus", "pangaea");
+                        pbjs.requestBids({
+                            bidsBackHandler: biddersBack
+                        });
+                        requestManager.prebid = true;
                     });
-                });
+                };
 
-                pbjs.que.push(function () {
-                    pbjs.addAdUnits(adUnits);
-                    pbjs.aliasBidder("appnexus", "pangaea");
-                    pbjs.requestBids({
-                        bidsBackHandler: biddersBack
-                    });
-                    requestManager.prebid = true;
-                });
-            };
-
-            // BIDDERS BACK
-            var biddersBack = function biddersBack() {
-                if (requestManager.aps && requestManager.prebid) {
-
-                    RGPT._adManager.googletag.cmd.push(function () {
-                        // pbjs.que.push(function () {
+                // BIDDERS BACK
+                var biddersBack = function biddersBack() {
+                    if (requestManager.aps && requestManager.prebid) {
+                        Bling._adManager.googletag.cmd.push(function() {
+                            // pbjs.que.push(function () {
                             if (prebidAnalytics && prebidAnalytics.rubicon) {
                                 pbjs.enableAnalytics({
                                     provider: "rubicon",
                                     options: {
                                         accountId: prebidAnalytics.rubicon,
-                                        endpoint: "https://prebid-a.rubiconproject.com/event",
+                                        endpoint:
+                                            "https://prebid-a.rubiconproject.com/event",
                                         samplingFactor: 1
                                     }
                                 });
                             }
 
                             if (pbjs.getHighestCpmBids(divId).length) {
-                                var highestBid = pbjs.getHighestCpmBids(divId)[0].cpm;
+                                var highestBid = pbjs.getHighestCpmBids(
+                                    divId
+                                )[0].cpm;
                                 highestBid = parseFloat(highestBid);
                                 if (highestBid >= floor) {
                                     pbjs.setTargetingForGPTAsync([divId]);
                                 } else {
                                     pbjs.setTargetingForGPTAsync([divId]);
-                                    var hbpbValue = adSlot.getTargeting("hb_pb");
-                                    adSlot.setTargeting("hb_pb", hbpbValue + "x");
+                                    var hbpbValue = adSlot.getTargeting(
+                                        "hb_pb"
+                                    );
+                                    adSlot.setTargeting(
+                                        "hb_pb",
+                                        hbpbValue + "x"
+                                    );
                                 }
                             }
 
-                            if (RGPT._adManager._disableInitialLoad && !RGPT._adManager._initialRender) {                                        
-                                console.log('load was disabled', adSlot, divId);
-                                RGPT._adManager.googletag.display(divId);
-                                pbjs.removeAdUnit(divId);
-                                pbjs.adserverRequestSent = false;
-                                adSlot.clearTargeting();
-                                return;
+                            console.log(
+                                "intial load disabled3",
+                                Bling._adManager.googletag
+                                    .pubads()
+                                    .isInitialLoadDisabled()
+                            );
 
+                            // if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
+                            //     this.refresh();
+                            // }
+
+                            if (Bling._adManager._disableInitialLoad) {
+                                console.log("load was disabled", adSlot, divId);
+                                Bling._adManager.googletag.display(divId);
+                                Bling._adManager.googletag.pubads().refresh();
+                                // self.refresh();
                             } else {
-                                RGPT._adManager.googletag.display(divId);
-                                pbjs.removeAdUnit(divId);
-                                pbjs.adserverRequestSent = false;
-                                adSlot.clearTargeting();
-                                return;
+                                Bling._adManager.googletag.display(divId);
+                                // Bling._adManager.googletag.pubads().refresh();
+                                // FIX
+                                // self.refresh();
                             }
-                    });
-                }
-            };
-            setTimeout(() => {
+                            pbjs.removeAdUnit(divId);
+                            pbjs.adserverRequestSent = false;
+                            adSlot.clearTargeting();
+                            // });
+                        });
+                    }
+                    return;
+                };
                 requestHeaderBids();
-            });
-        } else {
-                console.log('no prebid Conf', divId);
-                setTimeout(function () {
-                    RGPT._adManager.googletag.display(divId);
+            } else {
+                // console.log('no prebid Conf', divId);
+                setTimeout(function() {
+                    Bling._adManager.googletag.display(divId);
                 });
             }
         }
@@ -997,7 +1020,7 @@ class Bling extends Component {
                 document.getElementById(this._divId).innerHTML = "";
                 return;
             }
-            GPT._adManager.clear([adSlot]);
+            Bling._adManager.clear([adSlot]);
         }
     }
 
@@ -1005,7 +1028,7 @@ class Bling extends Component {
         const adSlot = this._adSlot;
         if (adSlot) {
             this.clear();
-            GPT._adManager.refresh([adSlot], options);
+            Bling._adManager.refresh([adSlot], options);
         }
     }
 
@@ -1046,10 +1069,10 @@ class Bling extends Component {
         // clear the current ad if exists
         this.clear();
         if (this._adSlot) {
-            GPT._adManager.googletag.destroySlots([this._adSlot]);
+            Bling._adManager.googletag.destroySlots([this._adSlot]);
             this._adSlot = null;
         }
-        this._divId = id || GPT._adManager.generateDivId();
+        this._divId = id || Bling._adManager.generateDivId();
 
         return <div id={this._divId} style={style} />;
     }
@@ -1064,7 +1087,7 @@ class Bling extends Component {
             return;
         }
 
-        GPT._adManager.pubadsProxy({
+        Bling._adManager.pubadsProxy({
             method: "setRequestNonPersonalizedAds",
             args: [npa ? 1 : 0],
             resolve: null,
@@ -1077,7 +1100,8 @@ class Bling extends Component {
 export default hoistStatics(
     Bling,
     pubadsAPI.reduce((api, method) => {
-        api[method] = (...args) => GPT._adManager.pubadsProxy({ method, args });
+        api[method] = (...args) =>
+            Bling._adManager.pubadsProxy({ method, args });
         return api;
     }, {})
 );
