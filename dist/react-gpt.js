@@ -1665,9 +1665,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                    // REQUEST HEADER BIDS
 	                    var requestHeaderBids = function requestHeaderBids() {
-	                        if (pbjs.adserverRequestSent) {
-	                            return;
-	                        }
+
 	                        pbjs.adserverRequestSent = true;
 
 	                        apstag.fetchBids({
@@ -1726,25 +1724,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
 	                                    console.log("load was disabled", adUnitPath, divId);
 	                                    Bling._adManager.googletag.display(divId);
-	                                    if (window.top.location.origin.indexOf('fastcompany') === -1) {
-	                                        Bling._adManager.googletag.pubads().refresh();
-	                                    }
-
-	                                    pbjs.removeAdUnit(divId);
-	                                    pbjs.adserverRequestSent = false;
-	                                    adSlot.clearTargeting();
-	                                    return;
+	                                    self.refresh();
 	                                } else {
 	                                    console.log('load was NOT disabled', adUnitPath, divId);
 	                                    Bling._adManager.googletag.display(divId);
-	                                    // Bling._adManager.googletag.pubads().refresh();
-	                                    // FIX
 	                                    // self.refresh();
-	                                    pbjs.removeAdUnit(divId);
-	                                    pbjs.adserverRequestSent = false;
-	                                    adSlot.clearTargeting();
-	                                    return;
 	                                }
+
+	                                pbjs.removeAdUnit(divId);
+	                                pbjs.adserverRequestSent = false;
+	                                adSlot.clearTargeting();
+	                                return;
 	                            });
 	                        }
 	                    };
