@@ -1755,6 +1755,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    // console.log('no prebid Conf', divId);
 	                    setTimeout(function () {
 	                        RGPT._adManager.googletag.display(divId);
+	                        self.refresh();
 	                    });
 	                }
 	            }
