@@ -1578,22 +1578,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var self = this;
 
 	            if (content) {
-	                RGPT._adManager.googletag.content().setContent(adSlot, content);
+	                Bling._adManager.googletag.content().setContent(adSlot, content);
 	            } else {
 	                // if (
-	                //     !RGPT._adManager._disableInitialLoad &&
-	                //     !RGPT._adManager._syncCorrelator
+	                //     !Bling._adManager._disableInitialLoad &&
+	                //     !Bling._adManager._syncCorrelator
 	                // ) {
-	                //     RGPT._adManager.updateCorrelator();
+	                //     Bling._adManager.updateCorrelator();
 	                // }
 
 	                // PBJS configs
 	                var prebidConf = this.props.prebidConf;
 
 	                if (prebidConf) {
-	                    RGPT.enableSingleRequest();
-	                    RGPT.disableInitialLoad();
-	                    console.log('is load disabled?:', RGPT._adManager._disableInitialLoad);
+	                    Bling.enableSingleRequest();
+	                    Bling.disableInitialLoad();
+	                    console.log('is load disabled?:', Bling._adManager._disableInitialLoad);
 
 	                    var requestManager = {
 	                        adserverRequestSent: false,
@@ -1677,7 +1677,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                sizes: slotSize
 	                            }]
 	                        }, function (bids) {
-	                            RGPT._adManager.googletag.cmd.push(function () {
+	                            Bling._adManager.googletag.cmd.push(function () {
 	                                apstag.setDisplayBids();
 	                                requestManager.aps = true; // signals that APS request has completed
 	                                console.log("requestmanager 1", requestManager.aps, requestManager.prebid);
@@ -1698,7 +1698,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    // BIDDERS BACK
 	                    var biddersBack = function biddersBack() {
 	                        if (requestManager.aps && requestManager.prebid) {
-	                            RGPT._adManager.googletag.cmd.push(function () {
+	                            Bling._adManager.googletag.cmd.push(function () {
 	                                // pbjs.que.push(function () {
 	                                if (prebidAnalytics && prebidAnalytics.rubicon) {
 	                                    pbjs.enableAnalytics({
@@ -1723,11 +1723,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                    }
 	                                }
 
-	                                if (RGPT._adManager._disableInitialLoad && !RGPT._adManager._initialRender) {
+	                                if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
 	                                    console.log("load was disabled", adUnitPath, divId);
-	                                    RGPT._adManager.googletag.display(divId);
+	                                    Bling._adManager.googletag.display(divId);
 	                                    if (window.top.location.origin.indexOf('fastcompany') === -1) {
-	                                        RGPT._adManager.googletag.pubads().refresh();
+	                                        Bling._adManager.googletag.pubads().refresh();
 	                                    }
 
 	                                    pbjs.removeAdUnit(divId);
@@ -1736,7 +1736,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                    return;
 	                                } else {
 	                                    console.log('load was NOT disabled', adUnitPath, divId);
-	                                    RGPT._adManager.googletag.display(divId);
+	                                    Bling._adManager.googletag.display(divId);
 	                                    // Bling._adManager.googletag.pubads().refresh();
 	                                    // FIX
 	                                    // self.refresh();
@@ -1754,7 +1754,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                } else {
 	                    // console.log('no prebid Conf', divId);
 	                    setTimeout(function () {
-	                        RGPT._adManager.googletag.display(divId);
+	                        Bling._adManager.googletag.display(divId);
 	                        self.refresh();
 	                    });
 	                }
