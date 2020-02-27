@@ -811,12 +811,12 @@ class Bling extends Component {
         if (content) {
             Bling._adManager.googletag.content().setContent(adSlot, content);
         } else {
-            // if (
-            //     !Bling._adManager._disableInitialLoad &&
-            //     !Bling._adManager._syncCorrelator
-            // ) {
-            //     Bling._adManager.updateCorrelator();
-            // }
+            if (
+                !Bling._adManager._disableInitialLoad &&
+                !Bling._adManager._syncCorrelator
+            ) {
+                Bling._adManager.updateCorrelator();
+            }
 
             // PBJS configs
             const prebidConf = this.props.prebidConf;
@@ -979,14 +979,14 @@ class Bling extends Component {
                             ) {
                                 console.log("load was disabled", adUnitPath, divId);
                                 Bling._adManager.googletag.display(divId);
-                                self.refresh();
+                                // self.refresh();
                             } 
                             else {
                                 console.log('load was NOT disabled', adUnitPath, divId);
                                 Bling._adManager.googletag.display(divId);
                                 // self.refresh();
                             }
-                            
+
                             pbjs.removeAdUnit(divId);
                             pbjs.adserverRequestSent = false;
                             adSlot.clearTargeting();
@@ -1001,8 +1001,7 @@ class Bling extends Component {
                 // console.log('no prebid Conf', divId);
                 setTimeout(function() {
                     Bling._adManager.googletag.display(divId);
-                    self.refresh();
-
+                    // self.refresh();
                 });
             }
         }

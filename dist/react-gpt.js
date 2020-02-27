@@ -1580,12 +1580,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (content) {
 	                Bling._adManager.googletag.content().setContent(adSlot, content);
 	            } else {
-	                // if (
-	                //     !Bling._adManager._disableInitialLoad &&
-	                //     !Bling._adManager._syncCorrelator
-	                // ) {
-	                //     Bling._adManager.updateCorrelator();
-	                // }
+	                if (!Bling._adManager._disableInitialLoad && !Bling._adManager._syncCorrelator) {
+	                    Bling._adManager.updateCorrelator();
+	                }
 
 	                // PBJS configs
 	                var prebidConf = this.props.prebidConf;
@@ -1724,7 +1721,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
 	                                    console.log("load was disabled", adUnitPath, divId);
 	                                    Bling._adManager.googletag.display(divId);
-	                                    self.refresh();
+	                                    // self.refresh();
 	                                } else {
 	                                    console.log('load was NOT disabled', adUnitPath, divId);
 	                                    Bling._adManager.googletag.display(divId);
@@ -1745,7 +1742,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    // console.log('no prebid Conf', divId);
 	                    setTimeout(function () {
 	                        Bling._adManager.googletag.display(divId);
-	                        self.refresh();
+	                        // self.refresh();
 	                    });
 	                }
 	            }
