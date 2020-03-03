@@ -1590,7 +1590,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (prebidConf) {
 	                    Bling.enableSingleRequest();
 	                    Bling.disableInitialLoad();
-	                    console.log('is load disabled?:', Bling._adManager._disableInitialLoad);
+	                    // console.log('is load disabled?:', Bling._adManager._disableInitialLoad)
 
 	                    var requestManager = {
 	                        adserverRequestSent: false,
@@ -1675,7 +1675,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            Bling._adManager.googletag.cmd.push(function () {
 	                                apstag.setDisplayBids();
 	                                requestManager.aps = true; // signals that APS request has completed
-	                                console.log("requestmanager 1", requestManager.aps, requestManager.prebid);
+	                                // console.log(
+	                                //     "requestmanager 1",
+	                                //     requestManager.aps,
+	                                //     requestManager.prebid
+	                                // );
 	                                // biddersBack(); // checks whether both APS and Prebid have returned
 	                            });
 	                        });
@@ -1719,11 +1723,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                }
 
 	                                if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
-	                                    console.log("load was disabled", adUnitPath, divId);
+	                                    // console.log("load was disabled", adUnitPath, divId);
 	                                    Bling._adManager.googletag.display(divId);
 	                                    // self.refresh();
 	                                } else {
-	                                    console.log('load was NOT disabled', adUnitPath, divId);
+	                                    // console.log('load was NOT disabled', adUnitPath, divId);
 	                                    Bling._adManager.googletag.display(divId);
 	                                    // self.refresh();
 	                                }
