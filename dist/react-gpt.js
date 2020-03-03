@@ -1570,7 +1570,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function display() {
 	            var _props3 = this.props,
 	                content = _props3.content,
-	                adUnitPath = _props3.adUnitPath;
+	                adUnitPath = _props3.adUnitPath,
+	                RGPT = _props3.RGPT;
 
 	            var divId = this._divId;
 	            var adSlot = this._adSlot;
@@ -1587,6 +1588,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var prebidConf = this.props.prebidConf;
 
 	                if (prebidConf) {
+	                    Bling.enableSingleRequest();
+	                    Bling.disableInitialLoad();
+	                    console.log('is load disabled?:', Bling._adManager._disableInitialLoad);
+
 	                    var requestManager = {
 	                        adserverRequestSent: false,
 	                        aps: false,
@@ -1636,12 +1641,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 	                    });
 
-	                    // console.log('googletag \n',Bling._adManager.googletag, 
-	                    // 'admanager \n', Bling._adManager, 
-	                    // 'pubads \n', Bling._adManager.googletag.pubads(), 
-	                    // 'refresh \n', Bling._adManager.refresh, 
+	                    // console.log('googletag \n',Bling._adManager.googletag,
+	                    // 'admanager \n', Bling._adManager,
+	                    // 'pubads \n', Bling._adManager.googletag.pubads(),
+	                    // 'refresh \n', Bling._adManager.refresh,
 	                    // 'initial load \n', Bling._adManager._disableInitialLoad)
-	                    // AD is paused 
+	                    // AD is paused
 	                    // console.log('intial load disabled1 ', Bling._adManager.googletag.pubads().isInitialLoadDisabled(), Bling._adManager.googletag.pubads());
 
 	                    // Define pbjs unit
@@ -1657,9 +1662,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                    // REQUEST HEADER BIDS
 	                    var requestHeaderBids = function requestHeaderBids() {
-	                        if (pbjs.adserverRequestSent) {
-	                            return;
-	                        }
+
 	                        pbjs.adserverRequestSent = true;
 
 	                        apstag.fetchBids({
@@ -1672,7 +1675,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            Bling._adManager.googletag.cmd.push(function () {
 	                                apstag.setDisplayBids();
 	                                requestManager.aps = true; // signals that APS request has completed
-	                                console.log('requestmanager 1', requestManager.aps, requestManager.prebid);
+	                                console.log("requestmanager 1", requestManager.aps, requestManager.prebid);
 	                                // biddersBack(); // checks whether both APS and Prebid have returned
 	                            });
 	                        });
@@ -1690,7 +1693,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    // BIDDERS BACK
 	                    var biddersBack = function biddersBack() {
 	                        if (requestManager.aps && requestManager.prebid) {
-
 	                            Bling._adManager.googletag.cmd.push(function () {
 	                                // pbjs.que.push(function () {
 	                                if (prebidAnalytics && prebidAnalytics.rubicon) {
@@ -1716,36 +1718,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                    }
 	                                }
 
-	                                console.log('intial load disabled3', Bling._adManager.googletag.pubads().isInitialLoadDisabled());
-
-	                                // if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
-	                                //     this.refresh();
-	                                // }
-
-	                                if (Bling._adManager._disableInitialLoad) {
-	                                    console.log('load was disabled', adSlot, divId);
+	                                if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
+	                                    console.log("load was disabled", adUnitPath, divId);
 	                                    Bling._adManager.googletag.display(divId);
-	                                    Bling._adManager.googletag.pubads().refresh();
 	                                    // self.refresh();
 	                                } else {
+	                                    console.log('load was NOT disabled', adUnitPath, divId);
 	                                    Bling._adManager.googletag.display(divId);
-	                                    // Bling._adManager.googletag.pubads().refresh();
-	                                    // FIX
 	                                    // self.refresh();
 	                                }
+
 	                                pbjs.removeAdUnit(divId);
 	                                pbjs.adserverRequestSent = false;
 	                                adSlot.clearTargeting();
-	                                // });
+	                                return;
 	                            });
 	                        }
-	                        return;
 	                    };
-	                    requestHeaderBids();
+	                    setTimeout(function () {
+	                        requestHeaderBids();
+	                    });
 	                } else {
 	                    // console.log('no prebid Conf', divId);
 	                    setTimeout(function () {
 	                        Bling._adManager.googletag.display(divId);
+	                        // self.refresh();
 	                    });
 	                }
 	            }
