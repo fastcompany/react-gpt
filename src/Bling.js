@@ -803,7 +803,7 @@ class Bling extends Component {
     }
 
     display() {
-        const { content, adUnitPath, RGPT } = this.props;
+        const { content, adUnitPath } = this.props;
         const divId = this._divId;
         const adSlot = this._adSlot;
         const self = this;
@@ -821,7 +821,7 @@ class Bling extends Component {
             // PBJS configs
             const prebidConf = this.props.prebidConf;
 
-            if (prebidConf) {
+            if (prebidConf && !Bling._adManager._initialRender) {
                 Bling.enableSingleRequest();
                 Bling.disableInitialLoad();
                 // console.log('is load disabled?:', Bling._adManager._disableInitialLoad)
@@ -974,12 +974,11 @@ class Bling extends Component {
                             }
 
                             if (
-                                Bling._adManager._disableInitialLoad &&
-                                !Bling._adManager._initialRender
+                                Bling._adManager._disableInitialLoad
                             ) {
                                 // console.log("load was disabled", adUnitPath, divId);
-                                Bling._adManager.googletag.display(divId);
-                                // self.refresh();
+                                // Bling._adManager.googletag.display(divId);
+                                self.refresh();
                             } 
                             else {
                                 // console.log('load was NOT disabled', adUnitPath, divId);

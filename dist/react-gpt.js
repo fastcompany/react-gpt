@@ -1570,8 +1570,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function display() {
 	            var _props3 = this.props,
 	                content = _props3.content,
-	                adUnitPath = _props3.adUnitPath,
-	                RGPT = _props3.RGPT;
+	                adUnitPath = _props3.adUnitPath;
 
 	            var divId = this._divId;
 	            var adSlot = this._adSlot;
@@ -1587,7 +1586,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                // PBJS configs
 	                var prebidConf = this.props.prebidConf;
 
-	                if (prebidConf) {
+	                if (prebidConf && !Bling._adManager._initialRender) {
 	                    Bling.enableSingleRequest();
 	                    Bling.disableInitialLoad();
 	                    // console.log('is load disabled?:', Bling._adManager._disableInitialLoad)
@@ -1722,10 +1721,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                    }
 	                                }
 
-	                                if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
+	                                if (Bling._adManager._disableInitialLoad) {
 	                                    // console.log("load was disabled", adUnitPath, divId);
-	                                    Bling._adManager.googletag.display(divId);
-	                                    // self.refresh();
+	                                    // Bling._adManager.googletag.display(divId);
+	                                    self.refresh();
 	                                } else {
 	                                    // console.log('load was NOT disabled', adUnitPath, divId);
 	                                    Bling._adManager.googletag.display(divId);
