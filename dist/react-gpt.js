@@ -1409,7 +1409,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function renderAd() {
 	            // console.log("render ad");
 	            this.defineSlot();
-	            this.display();
+	            // this.display();
+	            // Wrap in try catch to prevent site from crashing.
+	            try {
+	                this.display();
+	            } catch (err) {
+	                console.log('display error', err);
+	            }
 	        }
 	    }, {
 	        key: "notInViewport",

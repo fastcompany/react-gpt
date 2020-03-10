@@ -652,7 +652,15 @@ class Bling extends Component {
     renderAd() {
         // console.log("render ad");
         this.defineSlot();
-        this.display();
+        // this.display();
+        // Wrap in try catch to prevent site from crashing.
+        try {
+            this.display();
+        }
+        catch (err) {
+            console.log('display error', err)
+        }
+        
     }
 
     notInViewport(props = this.props, state = this.state) {
