@@ -632,7 +632,7 @@ class Bling extends Component {
         var interval;
         var counter = 0;
         function setTargetingIfMoatLoaded() {
-            console.log('counter', counter);
+            // console.log('counter', counter);
             if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.enableLogging === "function") {
                 window.top.moatPrebidApi.enableLogging();
                 // console.log("moat prebid api logging enabled");
