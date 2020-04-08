@@ -1392,14 +1392,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "callMoatPrebidAnalytics",
 	        value: function callMoatPrebidAnalytics(adSlot) {
 	            // new :
+	            if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.enableLogging === "function") {
+	                window.top.moatPrebidApi.enableLogging();
+	                // console.log("moat prebid api logging enabled");
+	            }
+
 	            var interval;
 	            var counter = 0;
 	            function setTargetingIfMoatLoaded() {
 	                // console.log('counter', counter);
-	                if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.enableLogging === "function") {
-	                    window.top.moatPrebidApi.enableLogging();
-	                    // console.log("moat prebid api logging enabled");
-	                }
 	                if (window.moatPrebidApi && typeof window.moatPrebidApi.slotDataAvailable === "function" && window.moatPrebidApi.slotDataAvailable()) {
 	                    window.moatPrebidApi.setMoatTargetingForSlot(adSlot);
 	                    // window.moatPrebidApi.setMoatTargetingForAllSlots();
