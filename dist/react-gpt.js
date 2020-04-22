@@ -1626,7 +1626,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                // PBJS configs
 	                var prebidConf = this.props.prebidConf;
 
-	                if (prebidConf && !Bling._adManager._initialRender) {
+	                if (prebidConf) {
 	                    Bling.enableSingleRequest();
 	                    Bling.disableInitialLoad();
 	                    // console.log('is load disabled?:', Bling._adManager._disableInitialLoad)
