@@ -1763,8 +1763,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                                if (Bling._adManager._disableInitialLoad) {
 	                                    // console.log("load was disabled", adUnitPath, divId);
-	                                    // Bling._adManager.googletag.display(divId);
-	                                    self.refresh();
+	                                    Bling._adManager.googletag.display(divId);
+	                                    // self.refresh();
 	                                } else {
 	                                    // console.log('load was NOT disabled', adUnitPath, divId);
 	                                    Bling._adManager.googletag.display(divId);
