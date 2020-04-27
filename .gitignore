@@ -1,8 +1,7 @@
 es/
 node_modules/
-lib/
-dist/
 coverage/
 npm-debug.log
 yarn-error.log
 .DS_Store
+.idea

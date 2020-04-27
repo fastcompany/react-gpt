@@ -98,7 +98,9 @@ function renderPage(name, html, title) {
             <style>${globalStyle}</style>
         </head>
         <body>
-            <h1 class="breadcrumbs"><a href="/">React GPT Examples</a> / ${title}</h1>
+            <h1 class="breadcrumbs"><a href="/">React GPT Examples</a> / ${
+    title
+}</h1>
             <div id="example">${html}</div>
             <script src="/__build__/shared.js"></script>
             <script src="/__build__/${name}.js"></script>
@@ -112,7 +114,9 @@ app.listen(port, error => {
         console.error(error);
     } else {
         console.info(
-            `==> 🌎  Listening on port ${port}. Open up http://localhost:${port}/ in your browser.`
+            `==> 🌎  Listening on port ${port}. Open up http://localhost:${
+                port
+            }/ in your browser.`
         );
     }
 });
