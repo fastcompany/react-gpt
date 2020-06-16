@@ -837,6 +837,7 @@ class Bling extends Component {
     }
 
     display() {
+        let domain = window.top.location.domain;
         const { content, adUnitPath } = this.props;
         const divId = this._divId;
         const adSlot = this._adSlot;
@@ -884,31 +885,32 @@ class Bling extends Component {
                     timeoutBuffer: 350,
                     enableSendAllBids: true,
                     useBidCache: true,
+                    publisherDomain: domain,
                     priceGranularity: priceBucket,
                     targetingControls: {
-                        alwaysIncludeDeals: true
+                        alwaysIncludeDeals: true,
                     },
                     userSync: {
                         filterSettings: {
                             iframe: {
                                 bidders: "*", // '*' means all bidders
-                                filter: "include"
-                            }
+                                filter: "include",
+                            },
                         },
                         syncsPerBidder: 4,
-                        syncDelay: 2000
+                        syncDelay: 2000,
                     },
                     consentManagement: {
                         gdpr: {
                             cmpApi: "iab",
                             allowAuctionWithoutConsent: true, // suppress auctions if there's no GDPR consent string
-                            timeout: PREBID_TIMEOUT // GDPR timeout
+                            timeout: PREBID_TIMEOUT, // GDPR timeout
                         },
                         usp: {
                             cmpApi: "iab",
-                            timeout: 100 // US Privacy timeout 100ms
-                        }
-                    }
+                            timeout: 100, // US Privacy timeout 100ms
+                        },
+                    },
                 });
 
                 // console.log('googletag \n',Bling._adManager.googletag,
