@@ -837,7 +837,7 @@ class Bling extends Component {
     }
 
     display() {
-        let domain = window.top.location.domain;
+        let domain = window.top.location.origin;
         const { content, adUnitPath } = this.props;
         const divId = this._divId;
         const adSlot = this._adSlot;

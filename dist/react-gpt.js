@@ -1608,7 +1608,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "display",
 	        value: function display() {
-	            var domain = window.top.location.domain;
+	            var domain = window.top.location.origin;
 	            var _props3 = this.props,
 	                content = _props3.content,
 	                adUnitPath = _props3.adUnitPath;
