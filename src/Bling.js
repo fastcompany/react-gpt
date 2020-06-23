@@ -896,8 +896,14 @@ class Bling extends Component {
                                 bidders: "*", // '*' means all bidders
                                 filter: "include",
                             },
+                            image: {
+                                bidders: "*",
+                                filter: "include",
+                            }
                         },
-                        syncsPerBidder: 4,
+                        syncEnabled: true,
+                        iframeEnabled: true,
+                        syncsPerBidder: 8,
                         syncDelay: 2000,
                     },
                     consentManagement: {
