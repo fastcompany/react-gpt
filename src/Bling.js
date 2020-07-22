@@ -613,6 +613,10 @@ class Bling extends Component {
                 slotSize = sizeMapping[1] && sizeMapping[1].slot;
             }
         }
+        // Force mobileInBodyIMU to have a 300x250 slot size (to avoid 3x1 / 640x1138)
+        if (this.props.type == "mobileInBodyIMU") {
+            slotSize = [[300, 250]];
+        }
 
         return slotSize;
     }
