@@ -699,7 +699,7 @@ class Bling extends Component {
         ads.map((ad, i)=>{
             if  (ad.name.indexOf(name) !== -1){
                 slotSize = ad.sizes[viewport]   
-                console.log('slot Size func🌀', slotSize, name)
+                // console.log('slot Size func🌀', slotSize, name)
                 return slotSize
             }
         })

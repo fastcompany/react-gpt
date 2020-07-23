@@ -1374,7 +1374,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                ads.map(function (ad, i) {
 	                    if (ad.name.indexOf(name) !== -1) {
 	                        slotSize = ad.sizes[viewport];
-	                        console.log('slot Size func🌀', slotSize, name);
+	                        // console.log('slot Size func🌀', slotSize, name)
 	                        return slotSize;
 	                    }
 	                });
