@@ -69,7 +69,7 @@ class Bling extends Component {
         sizeMapping: PropTypes.arrayOf(
             PropTypes.shape({
                 viewport: PropTypes.array,
-                slot: PropTypes.array
+                slot: PropTypes.array,
             })
         ),
         /**
@@ -86,7 +86,7 @@ class Bling extends Component {
          */
         companionAdService: PropTypes.oneOfType([
             PropTypes.bool,
-            PropTypes.object
+            PropTypes.object,
         ]),
         /**
          * An optional HTML content for the slot. If specified, the ad will render with the HTML content using content service.
@@ -107,7 +107,7 @@ class Bling extends Component {
          */
         categoryExclusion: PropTypes.oneOfType([
             PropTypes.string,
-            PropTypes.array
+            PropTypes.array,
         ]),
         /**
          * An optional map of key-value pairs for an AdSense attribute on a particular ad slot.
@@ -123,7 +123,7 @@ class Bling extends Component {
          */
         collapseEmptyDiv: PropTypes.oneOfType([
             PropTypes.bool,
-            PropTypes.array
+            PropTypes.array,
         ]),
         /**
          * An optional flag to indicate whether ads in this slot should be forced to be rendered using a SafeFrame container.
@@ -201,7 +201,7 @@ class Bling extends Component {
          *
          * @property npa
          */
-        npa: PropTypes.bool
+        npa: PropTypes.bool,
     };
 
     /**
@@ -219,7 +219,7 @@ class Bling extends Component {
         "collapseEmptyDiv",
         "companionAdService",
         "forceSafeFrame",
-        "safeFrameConfig"
+        "safeFrameConfig",
     ];
     /**
      * An array of prop names which requires to create a new ad slot and render as a new ad.
@@ -232,7 +232,7 @@ class Bling extends Component {
         "slotSize",
         "outOfPage",
         "content",
-        "npa"
+        "npa",
     ];
     /**
      * An instance of ad manager.
@@ -269,7 +269,7 @@ class Bling extends Component {
         /**
          * An optional function for the filtered props and the next props to perform equality check.
          */
-        propsEqual: deepEqual
+        propsEqual: deepEqual,
     };
 
     static on(eventType, cb) {
@@ -302,7 +302,7 @@ class Bling extends Component {
     static configure(config = {}) {
         Bling._config = {
             ...Bling._config,
-            ...config
+            ...config,
         };
     }
     /**
@@ -382,7 +382,7 @@ class Bling extends Component {
     state = {
         scriptLoaded: false,
         inViewport: false,
-        moatYieldReady: false
+        moatYieldReady: false,
     };
 
     get adSlot() {
@@ -560,11 +560,11 @@ class Bling extends Component {
     setAttributes(adSlot, attributes) {
         // no clear method, attempting to clear existing attributes before setting new ones.
         const attributeKeys = adSlot.getAttributeKeys();
-        attributeKeys.forEach(key => {
+        attributeKeys.forEach((key) => {
             adSlot.set(key, null);
         });
         if (attributes) {
-            Object.keys(attributes).forEach(key => {
+            Object.keys(attributes).forEach((key) => {
                 adSlot.set(key, attributes[key]);
             });
         }
@@ -573,7 +573,7 @@ class Bling extends Component {
     setTargeting(adSlot, targeting) {
         adSlot.clearTargeting();
         if (targeting) {
-            Object.keys(targeting).forEach(key => {
+            Object.keys(targeting).forEach((key) => {
                 adSlot.setTargeting(key, targeting[key]);
             });
         }
@@ -596,10 +596,10 @@ class Bling extends Component {
     getUserViewableThresholdValues() {
         return this.props.viewableThresholdValues;
     }
-    getSlotSize(useSecondary) {
+    getSlotSize(name, viewport) {
         const {
             slotSize: origSlotSize,
-            sizeMapping: origSizeMapping
+            sizeMapping: origSizeMapping,
         } = this.props;
         let slotSize;
         if (origSlotSize) {
@@ -608,23 +608,115 @@ class Bling extends Component {
             const sizeMapping = origSizeMapping;
             slotSize = sizeMapping[0] && sizeMapping[0].slot;
 
-            // For internal use, inc defines it with 0, 0 first
-            if (useSecondary) {
-                slotSize = sizeMapping[1] && sizeMapping[1].slot;
+        var ads = [
+        {name: 'topFullWidthFlex', sizes: [
+            [300, 250], 
+            [728, 90], 
+            [[970, 250], [728, 90]]
+        ]},
+        {name: 'flexbillboard_1', sizes: [
+            [300, 250], 
+            [728, 90], 
+            [[970, 250], [970, 90], [728, 90]]
+        ]},
+        {name: 'flexbillboard_2', sizes: [
+            [300, 250], 
+            [728, 90], 
+            [[970, 250], [970, 90], [728, 90]]
+        ]},
+        {name: 'flexbillboard_3', sizes: [
+            [300, 250], 
+            [728, 90], 
+            [[970, 250], [970, 90], [728, 90]]
+        ]},
+        {name: 'flexbillboard', sizes: [
+            [300, 250], 
+            [728, 90], 
+            [[970, 250], [970, 90], [728, 90]]
+        ]},
+        {name: 'heroFixedleaderboard', sizes: [
+            [300, 250], 
+            [300, 250], 
+            [[970, 90], [728, 90]]
+        ]},
+        {name: 'topFlexRectangle', sizes: [
+            [[300, 600], [300, 250]], 
+            [[300, 600], [300, 250]], 
+            [[300, 600], [300, 250]]
+        ]},
+        {name: 'flexiblehalfpage', sizes: [
+            [[300, 600], [300, 250]], 
+            [[300, 600], [300, 250]], 
+            [[300, 600], [300, 250]]
+        ]},
+        {name: 'flexiblehalfpage_1', sizes: [
+            [[300, 600], [300, 250]], 
+            [[300, 600], [300, 250]], 
+            [[300, 600], [300, 250]]
+        ]},
+        {name: 'flexiblehalfpage_2', sizes: [
+            [[300, 600], [300, 250]], 
+            [[300, 600], [300, 250]], 
+            [[300, 600], [300, 250]]
+        ]},
+        {name: 'mobileInBodyIMU', sizes: [
+            [300, 250], 
+            [300, 250], 
+            [300, 250]
+        ]},
+        {name: 'btwnBillboard', sizes: [
+            [], 
+            [728, 90], 
+            [[970, 250], [970, 90], [728, 90]]
+            ]},
+        {name: 'btwnIMU', sizes: [
+            [300, 250], 
+            [300, 250], 
+            [300, 250]
+        ]},
+        {name: 'adhesiveBanner', sizes: [
+            [320, 50], 
+            [320, 50], 
+            [320, 50]
+        ]},
+        {name: 'leftRailTopVideoIMU', sizes: [
+            [300, 250], 
+            [300, 250], 
+            [300, 250]
+        ]},
+        {name: 'topFlexRectangleSticky', sizes: [
+            [300, 250], 
+            [300, 250], 
+            [300, 250]
+        ]},
+        {name: 'leftRailTopIMU', sizes: [
+            [300, 250], 
+            [300, 250], 
+            [300, 250]
+        ]}
+        ];
+
+        ads.map((ad, i)=>{
+            if  (ad.name.indexOf(name) !== -1){
+                slotSize = ad.sizes[viewport]   
+                console.log('slot Size func🌀', slotSize, name)
+                return slotSize
             }
-        }
-        // Force mobileInBodyIMU to have a 300x250 slot size (to avoid 3x1 / 640x1138)
-        if (this.props.type == "mobileInBodyIMU") {
-            slotSize = [[300, 250]];
-        }
+        })
+            // For internal use, inc defines it with 0, 0 first
+        // if (useSecondary) {
+        //         slotSize = sizeMapping[1] && sizeMapping[1].slot;
+        //     }
+        // }
 
         return slotSize;
+        }
     }
 
     addMoatYieldReadyFunc(adSlot) {
         // console.log("adding moat yield ready");
         let self = this;
-        window.top["moatYieldReady"] = function() {
+        window.top["moatYieldReady"] = function () {
             // console.log("moat yeild ready!", adSlot);
             // Run moat call here
             self.callMoatPrebidAnalytics(adSlot);
@@ -633,26 +725,35 @@ class Bling extends Component {
 
     callMoatPrebidAnalytics(adSlot) {
         // new :
-        if (window.top.moatPrebidApi && typeof window.top.moatPrebidApi.enableLogging === "function") {
+        if (
+            window.top.moatPrebidApi &&
+            typeof window.top.moatPrebidApi.enableLogging === "function"
+        ) {
             window.top.moatPrebidApi.enableLogging();
             // console.log("moat prebid api logging enabled");
         }
-        
+
         var interval;
         var counter = 0;
         function setTargetingIfMoatLoaded() {
             // console.log('counter', counter);
-            if (window.moatPrebidApi && typeof window.moatPrebidApi.slotDataAvailable === "function" && window.moatPrebidApi.slotDataAvailable()) {
+            if (
+                window.moatPrebidApi &&
+                typeof window.moatPrebidApi.slotDataAvailable === "function" &&
+                window.moatPrebidApi.slotDataAvailable()
+            ) {
                 window.moatPrebidApi.setMoatTargetingForSlot(adSlot);
                 // window.moatPrebidApi.setMoatTargetingForAllSlots();
                 clearInterval(interval);
             } else {
                 // Moat tag hasn’t fully rendered yet, or slot data is not available for this URL
-                if (counter >= 30) { clearInterval(interval); return false }
-                counter++
+                if (counter >= 30) {
+                    clearInterval(interval);
+                    return false;
+                }
+                counter++;
                 return false;
             }
-
         }
 
         interval = setInterval(setTargetingIfMoatLoaded, 50);
@@ -686,11 +787,9 @@ class Bling extends Component {
         // Wrap in try catch to prevent site from crashing.
         try {
             this.display();
+        } catch (err) {
+            console.log("display error", err);
         }
-        catch (err) {
-            console.log('display error', err)
-        }
-        
     }
 
     notInViewport(props = this.props, state = this.state) {
@@ -701,7 +800,7 @@ class Bling extends Component {
     defineSlot() {
         const { adUnitPath, outOfPage, npa } = this.props;
         const divId = this._divId;
-        const slotSize = this.getSlotSize();
+        // const slotSize = this.getSlotSize();
         // console.log('DEFINESLOT', 'divId', divId, 'slotsize', slotSize, 'aduunitpath', adUnitPath);
 
         this.handleSetNpaFlag(npa);
@@ -715,7 +814,7 @@ class Bling extends Component {
             } else {
                 this._adSlot = Bling._adManager.googletag.defineSlot(
                     adUnitPath,
-                    slotSize || [],
+                    [],
                     divId
                 );
                 // console.log('👀 DEFINESLOT: slot defined manually', this._adSlot)
@@ -736,7 +835,7 @@ class Bling extends Component {
             safeFrameConfig,
             content,
             clickUrl,
-            forceSafeFrame
+            forceSafeFrame,
         } = props;
 
         this.defineSizeMapping(adSlot, sizeMapping);
@@ -762,7 +861,7 @@ class Bling extends Component {
                 exclusion = [exclusion];
             }
             adSlot.clearCategoryExclusions();
-            exclusion.forEach(item => {
+            exclusion.forEach((item) => {
                 adSlot.setCategoryExclusion(item);
             });
         }
@@ -868,7 +967,7 @@ class Bling extends Component {
                 let requestManager = {
                     adserverRequestSent: false,
                     aps: false,
-                    prebid: false
+                    prebid: false,
                 };
                 const PREBID_TIMEOUT = prebidConf.timeout;
                 const priceBucket = prebidConf.priceBuckets;
@@ -879,9 +978,7 @@ class Bling extends Component {
                 const apstag = window.apstag || {};
                 pbjs.que = pbjs.que || [];
                 // NEED TO CHECK IF WE SHOULD USE SECONDARY BASED ON AD REQUESTED
-                const slotSize = this.getSlotSize(
-                    prebidConf.useSecondaryAdSizeForPrebid
-                );
+                var slotSize = this.getSlotSize(this.props.type, prebidConf.viewport);
                 // console.log('prebid slot size', slotSize, divId, adUnitPath, adSlot, 'prebid bidparams', prebidConf.bidParams);
                 // Set config
                 pbjs.setConfig({
@@ -903,7 +1000,7 @@ class Bling extends Component {
                             image: {
                                 bidders: "*",
                                 filter: "include",
-                            }
+                            },
                         },
                         syncEnabled: true,
                         iframeEnabled: true,
@@ -937,16 +1034,15 @@ class Bling extends Component {
                         code: divId,
                         mediaTypes: {
                             banner: {
-                                sizes: slotSize
-                            }
+                                sizes: slotSize,
+                            },
                         },
-                        bids: prebidConf.bidParams
-                    }
+                        bids: prebidConf.bidParams,
+                    },
                 ];
 
                 // REQUEST HEADER BIDS
                 var requestHeaderBids = function requestHeaderBids() {
-
                     pbjs.adserverRequestSent = true;
 
                     apstag.fetchBids(
@@ -955,12 +1051,12 @@ class Bling extends Component {
                                 {
                                     slotID: divId,
                                     slotName: adUnitPath, // may have to delete slash that begins adunitpath
-                                    sizes: slotSize
-                                }
-                            ]
+                                    sizes: slotSize,
+                                },
+                            ],
                         },
-                        function(bids) {
-                            Bling._adManager.googletag.cmd.push(function() {
+                        function (bids) {
+                            Bling._adManager.googletag.cmd.push(function () {
                                 apstag.setDisplayBids();
                                 requestManager.aps = true; // signals that APS request has completed
                                 // console.log(
@@ -973,11 +1069,11 @@ class Bling extends Component {
                         }
                     );
 
-                    pbjs.que.push(function() {
+                    pbjs.que.push(function () {
                         pbjs.addAdUnits(adUnits);
                         pbjs.aliasBidder("appnexus", "pangaea");
                         pbjs.requestBids({
-                            bidsBackHandler: biddersBack
+                            bidsBackHandler: biddersBack,
                         });
                         requestManager.prebid = true;
                     });
@@ -986,7 +1082,7 @@ class Bling extends Component {
                 // BIDDERS BACK
                 var biddersBack = function biddersBack() {
                     if (requestManager.aps && requestManager.prebid) {
-                        Bling._adManager.googletag.cmd.push(function() {
+                        Bling._adManager.googletag.cmd.push(function () {
                             // pbjs.que.push(function () {
                             if (prebidAnalytics && prebidAnalytics.rubicon) {
                                 pbjs.enableAnalytics({
@@ -995,8 +1091,8 @@ class Bling extends Component {
                                         accountId: prebidAnalytics.rubicon,
                                         endpoint:
                                             "https://prebid-a.rubiconproject.com/event",
-                                        samplingFactor: 1
-                                    }
+                                        samplingFactor: 1,
+                                    },
                                 });
                             }
 
@@ -1019,14 +1115,11 @@ class Bling extends Component {
                                 }
                             }
 
-                            if (
-                                Bling._adManager._disableInitialLoad
-                            ) {
+                            if (Bling._adManager._disableInitialLoad) {
                                 // console.log("load was disabled", adUnitPath, divId);
                                 Bling._adManager.googletag.display(divId);
                                 // self.refresh();
-                            } 
-                            else {
+                            } else {
                                 // console.log('load was NOT disabled', adUnitPath, divId);
                                 Bling._adManager.googletag.display(divId);
                                 // self.refresh();
@@ -1044,7 +1137,7 @@ class Bling extends Component {
                 });
             } else {
                 // console.log('no prebid Conf', divId);
-                setTimeout(function() {
+                setTimeout(function () {
                     Bling._adManager.googletag.display(divId);
                     // self.refresh();
                 });
@@ -1057,7 +1150,7 @@ class Bling extends Component {
         if (adSlot && adSlot.hasOwnProperty("getServices")) {
             // googletag.ContentService doesn't clear content
             const services = adSlot.getServices();
-            if (this._divId && services.some(s => !!s.setContent)) {
+            if (this._divId && services.some((s) => !!s.setContent)) {
                 document.getElementById(this._divId).innerHTML = "";
                 return;
             }
@@ -1101,7 +1194,7 @@ class Bling extends Component {
 
             const emptyStyle = slotSize && {
                 width: slotSize[0],
-                height: slotSize[1]
+                height: slotSize[1],
             };
             // render node element instead of script element so that `inViewport` check works.
             return <div style={emptyStyle}></div>;
@@ -1132,7 +1225,7 @@ class Bling extends Component {
             method: "setRequestNonPersonalizedAds",
             args: [npa ? 1 : 0],
             resolve: null,
-            reject: null
+            reject: null,
         });
     }
 }
