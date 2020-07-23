@@ -800,7 +800,14 @@ class Bling extends Component {
     defineSlot() {
         const { adUnitPath, outOfPage, npa } = this.props;
         const divId = this._divId;
-        // const slotSize = this.getSlotSize();
+        var slotSize;
+         if (this.props.prebidConf){
+            // console.log('ttype', this.props.type, this.props.prebidConf.viewport, this.props);
+            slotSize = this.getSlotSize(this.props.type, this.props.prebidConf.viewport);
+        } else {
+            // console.log('type', this.props.type, this.props);
+            slotSize = this.getSlotSize();
+        }
         // console.log('DEFINESLOT', 'divId', divId, 'slotsize', slotSize, 'aduunitpath', adUnitPath);
 
         this.handleSetNpaFlag(npa);
@@ -814,7 +821,7 @@ class Bling extends Component {
             } else {
                 this._adSlot = Bling._adManager.googletag.defineSlot(
                     adUnitPath,
-                    [],
+                    slotSize || [],
                     divId
                 );
                 // console.log('👀 DEFINESLOT: slot defined manually', this._adSlot)

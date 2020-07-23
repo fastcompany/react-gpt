@@ -1480,7 +1480,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                npa = _props2.npa;
 
 	            var divId = this._divId;
-	            // const slotSize = this.getSlotSize();
+	            var slotSize;
+	            if (this.props.prebidConf) {
+	                // console.log('ttype', this.props.type, this.props.prebidConf.viewport, this.props);
+	                slotSize = this.getSlotSize(this.props.type, this.props.prebidConf.viewport);
+	            } else {
+	                // console.log('type', this.props.type, this.props);
+	                slotSize = this.getSlotSize();
+	            }
 	            // console.log('DEFINESLOT', 'divId', divId, 'slotsize', slotSize, 'aduunitpath', adUnitPath);
 
 	            this.handleSetNpaFlag(npa);
@@ -1489,7 +1496,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (outOfPage) {
 	                    this._adSlot = Bling._adManager.googletag.defineOutOfPageSlot(adUnitPath, divId);
 	                } else {
-	                    this._adSlot = Bling._adManager.googletag.defineSlot(adUnitPath, [], divId);
+	                    this._adSlot = Bling._adManager.googletag.defineSlot(adUnitPath, slotSize || [], divId);
 	                    // console.log('👀 DEFINESLOT: slot defined manually', this._adSlot)
 	                }
 	            }
