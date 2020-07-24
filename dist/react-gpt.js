@@ -1772,7 +1772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                if (Bling._adManager._disableInitialLoad) {
 	                                    //refreshing anything but the mobile inbody imu seems to cause a flash
 	                                    // of an ad that then becomes a different ad
-	                                    if (this.props.type == 'mobileInBodyIMU') {
+	                                    if (self.props.type == 'mobileInBodyIMU') {
 	                                        self.refresh();
 	                                    } else {
 	                                        Bling._adManager.googletag.display(divId);
