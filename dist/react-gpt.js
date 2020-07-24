@@ -1770,9 +1770,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                }
 
 	                                if (Bling._adManager._disableInitialLoad) {
-	                                    // console.log("load was disabled", adUnitPath, divId);
-	                                    Bling._adManager.googletag.display(divId);
-	                                    // self.refresh();
+	                                    //refreshing anything but the mobile inbody imu seems to cause a flash
+	                                    // of an ad that then becomes a different ad
+	                                    if (type == 'mobileInBodyIMU') {
+	                                        self.refresh();
+	                                    } else {
+	                                        Bling._adManager.googletag.display(divId);
+	                                    }
+
+	                                    pbjs.removeAdUnit(divId);
+	                                    pbjs.adserverRequestSent = false;
+	                                    adSlot.clearTargeting();
 	                                } else {
 	                                    // console.log('load was NOT disabled', adUnitPath, divId);
 	                                    Bling._adManager.googletag.display(divId);
