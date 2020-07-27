@@ -1134,10 +1134,12 @@ class Bling extends Component {
                                     pbjs.removeAdUnit(divId);
                                     pbjs.adserverRequestSent = false;
                                     adSlot.clearTargeting();
+                                    return;
 
                             } else {
                                 // console.log('load was NOT disabled', adUnitPath, divId);
                                 Bling._adManager.googletag.display(divId);
+                                return;
                             }
                         });
                     }
@@ -1149,6 +1151,7 @@ class Bling extends Component {
                 // console.log('no prebid Conf', divId);
                 setTimeout(function () {
                     Bling._adManager.googletag.display(divId);
+                    return;
                     // self.refresh();
                 });
             }

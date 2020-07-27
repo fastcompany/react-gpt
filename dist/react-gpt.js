@@ -1799,9 +1799,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                    pbjs.removeAdUnit(divId);
 	                                    pbjs.adserverRequestSent = false;
 	                                    adSlot.clearTargeting();
+	                                    return;
 	                                } else {
 	                                    // console.log('load was NOT disabled', adUnitPath, divId);
 	                                    Bling._adManager.googletag.display(divId);
+	                                    return;
 	                                }
 	                            });
 	                        }
@@ -1813,6 +1815,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    // console.log('no prebid Conf', divId);
 	                    setTimeout(function () {
 	                        Bling._adManager.googletag.display(divId);
+	                        return;
 	                        // self.refresh();
 	                    });
 	                }
