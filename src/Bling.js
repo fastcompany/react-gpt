@@ -960,15 +960,15 @@ class Bling extends Component {
                 !Bling._adManager._disableInitialLoad &&
                 !Bling._adManager._syncCorrelator
             ) {
-                Bling._adManager.updateCorrelator();
+                // Bling._adManager.updateCorrelator();
             }
 
             // PBJS configs
             const prebidConf = this.props.prebidConf;
 
             if (prebidConf) {
-                Bling.enableSingleRequest();
-                Bling.disableInitialLoad();
+                // Bling.enableSingleRequest();
+                // Bling.disableInitialLoad();
                 // console.log('is load disabled?:', Bling._adManager._disableInitialLoad)
 
                 let requestManager = {

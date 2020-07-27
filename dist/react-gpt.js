@@ -1639,16 +1639,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (content) {
 	                Bling._adManager.googletag.content().setContent(adSlot, content);
 	            } else {
-	                if (!Bling._adManager._disableInitialLoad && !Bling._adManager._syncCorrelator) {
-	                    Bling._adManager.updateCorrelator();
-	                }
+	                if (!Bling._adManager._disableInitialLoad && !Bling._adManager._syncCorrelator) {}
+	                // Bling._adManager.updateCorrelator();
+
 
 	                // PBJS configs
 	                var prebidConf = this.props.prebidConf;
 
 	                if (prebidConf) {
-	                    Bling.enableSingleRequest();
-	                    Bling.disableInitialLoad();
+	                    // Bling.enableSingleRequest();
+	                    // Bling.disableInitialLoad();
 	                    // console.log('is load disabled?:', Bling._adManager._disableInitialLoad)
 
 	                    var requestManager = {
