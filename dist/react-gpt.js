@@ -1799,9 +1799,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                    pbjs.removeAdUnit(divId);
 	                                    pbjs.adserverRequestSent = false;
 	                                    adSlot.clearTargeting();
+	                                } else {
+	                                    // console.log('load was NOT disabled', adUnitPath, divId);
+	                                    Bling._adManager.googletag.display(divId);
 	                                }
-	                                // console.log('load was NOT disabled', adUnitPath, divId);
-	                                Bling._adManager.googletag.display(divId);
 	                            });
 	                        }
 	                    };
