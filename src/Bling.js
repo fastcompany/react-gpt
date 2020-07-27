@@ -684,7 +684,7 @@ class Bling extends Component {
             [300, 250], 
             [300, 250]
         ]},
-        {name: 'topFlexRectangleSticky', sizes: [
+        {name: 'stickyFlexRectangle', sizes: [
             [300, 250], 
             [300, 250], 
             [300, 250]
