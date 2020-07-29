@@ -1123,25 +1123,18 @@ class Bling extends Component {
                                 }
                             }
 
-                            // if (Bling._adManager._disableInitialLoad) {
-                                    //refreshing anything but the mobile inbody imu seems to cause a flash
-                                    // of an ad that then becomes a different ad
-                                    // if (self.props.type == 'mobileInBodyIMU'){
-                                    self.refresh();
-                                    // } else{
-                                    //     Bling._adManager.googletag.display(divId);
-                                    // }
-
+                                if (pbjs.getAllPrebidWinningBids().length){
+                                    console.log('we have some winners', pbjs.getAllPrebidWinningBids(), pbjs.getAllPrebidWinningBids()[0].adId, window)
+                                    // pbjs.renderAd(divId, `${pbjs.getAllPrebidWinningBids()[0].adId}`);
+                                }
+                                    Bling._adManager.googletag.display(divId); 
+                                    // self.refresh();
+                                    Bling._adManager.googletag.pubads().refresh(); 
+                                    // return;
                                     pbjs.removeAdUnit(divId);
                                     pbjs.adserverRequestSent = false;
                                     adSlot.clearTargeting();
                                     return;
-
-                            // } else {
-                                // console.log('load was NOT disabled', adUnitPath, divId);
-                                // Bling._adManager.googletag.display(divId);
-                                // return;
-                            // }
                         });
                     }
                 };
