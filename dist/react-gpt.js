@@ -1375,16 +1375,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    if (ad.name.indexOf(name) !== -1) {
 	                        slotSize = ad.sizes[viewport];
 	                        // console.log('slot Size func🌀', slotSize, name)
-	                        return slotSize;
 	                    }
 	                });
+
+	                return slotSize;
 	                // For internal use, inc defines it with 0, 0 first
 	                // if (useSecondary) {
 	                //         slotSize = sizeMapping[1] && sizeMapping[1].slot;
 	                //     }
 	                // }
 
-	                return slotSize;
+	                // return slotSize;
 	            }
 	        }
 	    }, {
@@ -1639,16 +1640,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (content) {
 	                Bling._adManager.googletag.content().setContent(adSlot, content);
 	            } else {
-	                if (!Bling._adManager._disableInitialLoad && !Bling._adManager._syncCorrelator) {}
-	                // Bling._adManager.updateCorrelator();
-
+	                if (!Bling._adManager._disableInitialLoad && !Bling._adManager._syncCorrelator) {
+	                    Bling._adManager.updateCorrelator();
+	                }
 
 	                // PBJS configs
 	                var prebidConf = this.props.prebidConf;
 
 	                if (prebidConf) {
-	                    Bling.enableSingleRequest();
-	                    Bling.disableInitialLoad();
+	                    // Bling.enableSingleRequest();
+	                    // Bling.disableInitialLoad();
 	                    // console.log('is load disabled?:', Bling._adManager._disableInitialLoad)
 
 	                    var requestManager = {
@@ -1787,24 +1788,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                    }
 	                                }
 
-	                                if (Bling._adManager._disableInitialLoad) {
-	                                    //refreshing anything but the mobile inbody imu seems to cause a flash
-	                                    // of an ad that then becomes a different ad
-	                                    if (self.props.type == 'mobileInBodyIMU') {
-	                                        self.refresh();
-	                                    } else {
-	                                        Bling._adManager.googletag.display(divId);
-	                                    }
+	                                // if (Bling._adManager._disableInitialLoad) {
+	                                //refreshing anything but the mobile inbody imu seems to cause a flash
+	                                // of an ad that then becomes a different ad
+	                                // if (self.props.type == 'mobileInBodyIMU'){
+	                                self.refresh();
+	                                // } else{
+	                                //     Bling._adManager.googletag.display(divId);
+	                                // }
 
-	                                    pbjs.removeAdUnit(divId);
-	                                    pbjs.adserverRequestSent = false;
-	                                    adSlot.clearTargeting();
-	                                    return;
-	                                } else {
-	                                    // console.log('load was NOT disabled', adUnitPath, divId);
-	                                    Bling._adManager.googletag.display(divId);
-	                                    return;
-	                                }
+	                                pbjs.removeAdUnit(divId);
+	                                pbjs.adserverRequestSent = false;
+	                                adSlot.clearTargeting();
+	                                return;
+
+	                                // } else {
+	                                // console.log('load was NOT disabled', adUnitPath, divId);
+	                                // Bling._adManager.googletag.display(divId);
+	                                // return;
+	                                // }
 	                            });
 	                        }
 	                    };
@@ -1813,11 +1815,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    });
 	                } else {
 	                    // console.log('no prebid Conf', divId);
-	                    setTimeout(function () {
-	                        Bling._adManager.googletag.display(divId);
-	                        return;
-	                        // self.refresh();
-	                    });
+	                    // setTimeout(function () {
+	                    // Bling._adManager.googletag.display(divId);
+	                    self.refresh();
+	                    return;
+	                    // });
 	                }
 	            }
 	        }

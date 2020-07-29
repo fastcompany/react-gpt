@@ -700,16 +700,17 @@ class Bling extends Component {
             if  (ad.name.indexOf(name) !== -1){
                 slotSize = ad.sizes[viewport]   
                 // console.log('slot Size func🌀', slotSize, name)
-                return slotSize
             }
         })
+        
+        return slotSize
             // For internal use, inc defines it with 0, 0 first
         // if (useSecondary) {
         //         slotSize = sizeMapping[1] && sizeMapping[1].slot;
         //     }
         // }
 
-        return slotSize;
+        // return slotSize;
         }
     }
 
@@ -960,15 +961,15 @@ class Bling extends Component {
                 !Bling._adManager._disableInitialLoad &&
                 !Bling._adManager._syncCorrelator
             ) {
-                // Bling._adManager.updateCorrelator();
+                Bling._adManager.updateCorrelator();
             }
 
             // PBJS configs
             const prebidConf = this.props.prebidConf;
 
             if (prebidConf) {
-                Bling.enableSingleRequest();
-                Bling.disableInitialLoad();
+                // Bling.enableSingleRequest();
+                // Bling.disableInitialLoad();
                 // console.log('is load disabled?:', Bling._adManager._disableInitialLoad)
 
                 let requestManager = {
@@ -1122,25 +1123,25 @@ class Bling extends Component {
                                 }
                             }
 
-                            if (Bling._adManager._disableInitialLoad) {
+                            // if (Bling._adManager._disableInitialLoad) {
                                     //refreshing anything but the mobile inbody imu seems to cause a flash
                                     // of an ad that then becomes a different ad
-                                    if (self.props.type == 'mobileInBodyIMU'){
-                                        self.refresh();
-                                    } else{
-                                        Bling._adManager.googletag.display(divId);
-                                    }
+                                    // if (self.props.type == 'mobileInBodyIMU'){
+                                    self.refresh();
+                                    // } else{
+                                    //     Bling._adManager.googletag.display(divId);
+                                    // }
 
                                     pbjs.removeAdUnit(divId);
                                     pbjs.adserverRequestSent = false;
                                     adSlot.clearTargeting();
                                     return;
 
-                            } else {
+                            // } else {
                                 // console.log('load was NOT disabled', adUnitPath, divId);
-                                Bling._adManager.googletag.display(divId);
-                                return;
-                            }
+                                // Bling._adManager.googletag.display(divId);
+                                // return;
+                            // }
                         });
                     }
                 };
@@ -1149,11 +1150,11 @@ class Bling extends Component {
                 });
             } else {
                 // console.log('no prebid Conf', divId);
-                setTimeout(function () {
-                    Bling._adManager.googletag.display(divId);
+                // setTimeout(function () {
+                    // Bling._adManager.googletag.display(divId);
+                    self.refresh();
                     return;
-                    // self.refresh();
-                });
+                // });
             }
         }
     }
