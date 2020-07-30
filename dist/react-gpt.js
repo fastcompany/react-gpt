@@ -1648,8 +1648,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var prebidConf = this.props.prebidConf;
 
 	                if (prebidConf) {
-	                    // Bling.enableSingleRequest();
-	                    // Bling.disableInitialLoad();
 	                    // console.log('is load disabled?:', Bling._adManager._disableInitialLoad)
 
 	                    var requestManager = {
@@ -1665,7 +1663,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var pbjs = window.pbjs || {};
 	                    var apstag = window.apstag || {};
 	                    pbjs.que = pbjs.que || [];
-	                    // NEED TO CHECK IF WE SHOULD USE SECONDARY BASED ON AD REQUESTED
 	                    var slotSize = this.getSlotSize(this.props.type, prebidConf.viewport);
 	                    // console.log('prebid slot size', slotSize, divId, adUnitPath, adSlot, 'prebid bidparams', prebidConf.bidParams);
 	                    // Set config
@@ -1741,12 +1738,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            Bling._adManager.googletag.cmd.push(function () {
 	                                apstag.setDisplayBids();
 	                                requestManager.aps = true; // signals that APS request has completed
-	                                // console.log(
-	                                //     "requestmanager 1",
-	                                //     requestManager.aps,
-	                                //     requestManager.prebid
-	                                // );
-	                                // biddersBack(); // checks whether both APS and Prebid have returned
 	                            });
 	                        });
 
@@ -1793,9 +1784,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                    // pbjs.renderAd(divId, `${pbjs.getAllPrebidWinningBids()[0].adId}`);
 	                                }
 	                                Bling._adManager.googletag.display(divId);
-	                                // self.refresh();
-	                                Bling._adManager.googletag.pubads().refresh();
-	                                // return;
+	                                self.refresh();
 	                                pbjs.removeAdUnit(divId);
 	                                pbjs.adserverRequestSent = false;
 	                                adSlot.clearTargeting();
@@ -1809,7 +1798,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                } else {
 	                    // console.log('no prebid Conf', divId);
 	                    // setTimeout(function () {
-	                    // Bling._adManager.googletag.display(divId);
+	                    Bling._adManager.googletag.display(divId);
 	                    self.refresh();
 	                    return;
 	                    // });
