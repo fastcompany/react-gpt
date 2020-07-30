@@ -954,8 +954,10 @@ class Bling extends Component {
         const adSlot = this._adSlot;
         const self = this;
 
-        if (content) {
-            Bling._adManager.googletag.content().setContent(adSlot, content);
+        if (content && !prebidConf) {
+                Bling._adManager.googletag.content().setContent(adSlot, content);
+                Bling._adManager.googletag.display(divId);
+                return;
         } else {
             if (
                 !Bling._adManager._disableInitialLoad &&
