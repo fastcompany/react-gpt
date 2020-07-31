@@ -457,8 +457,8 @@ class Bling extends Component {
             if (shouldRefresh) {
                 Bling._adManager.refresh();
             } else if (shouldRender || isScriptLoaded) {
-                // Bling._adManager.renderAll();
-                return true;
+                Bling._adManager.renderAll(); //CHANGED
+                // return true; //CHANGED
             }
         } else {
             if (shouldRefresh) {
@@ -545,12 +545,12 @@ class Bling extends Component {
         ) {
             slotSize = [0, 0];
         }
-        const viewableThresholdValues = this.getUserViewableThresholdValues();
+        //const viewableThresholdValues = this.getUserViewableThresholdValues(); // CHANGED
         const inViewport = Bling._adManager.isInViewport(
             ReactDOM.findDOMNode(this),
             slotSize,
-            this.viewableThreshold,
-            viewableThresholdValues
+            this.viewableThreshold //Changed (removed comma)
+            // viewableThresholdValues
         );
         if (inViewport) {
             this.setState({ inViewport: true });
@@ -605,9 +605,10 @@ class Bling extends Component {
             }
         }
     }
-    getUserViewableThresholdValues() {
-        return this.props.viewableThresholdValues;
-    }
+    //Changed:
+    // getUserViewableThresholdValues() {
+    //     return this.props.viewableThresholdValues;
+    // }
     getSlotSize(name, viewport) {
         const {
             slotSize: origSlotSize,
@@ -620,109 +621,222 @@ class Bling extends Component {
             const sizeMapping = origSizeMapping;
             slotSize = sizeMapping[0] && sizeMapping[0].slot;
 
-        var ads = [
-        {name: 'topFullWidthFlex', sizes: [
-            [300, 250], 
-            [728, 90], 
-            [[970, 250], [728, 90]]
-        ]},
-        {name: 'flexbillboard_1', sizes: [
-            [300, 250], 
-            [728, 90], 
-            [[970, 250], [970, 90], [728, 90]]
-        ]},
-        {name: 'flexbillboard_2', sizes: [
-            [300, 250], 
-            [728, 90], 
-            [[970, 250], [970, 90], [728, 90]]
-        ]},
-        {name: 'flexbillboard_3', sizes: [
-            [300, 250], 
-            [728, 90], 
-            [[970, 250], [970, 90], [728, 90]]
-        ]},
-        {name: 'flexbillboard', sizes: [
-            [300, 250], 
-            [728, 90], 
-            [[970, 250], [970, 90], [728, 90]]
-        ]},
-        {name: 'heroFixedleaderboard', sizes: [
-            [300, 250], 
-            [300, 250], 
-            [[970, 90], [728, 90]]
-        ]},
-        {name: 'topFlexRectangle', sizes: [
-            [[300, 600], [300, 250]], 
-            [[300, 600], [300, 250]], 
-            [[300, 600], [300, 250]]
-        ]},
-        {name: 'flexiblehalfpage', sizes: [
-            [[300, 600], [300, 250]], 
-            [[300, 600], [300, 250]], 
-            [[300, 600], [300, 250]]
-        ]},
-        {name: 'flexiblehalfpage_1', sizes: [
-            [[300, 600], [300, 250]], 
-            [[300, 600], [300, 250]], 
-            [[300, 600], [300, 250]]
-        ]},
-        {name: 'flexiblehalfpage_2', sizes: [
-            [[300, 600], [300, 250]], 
-            [[300, 600], [300, 250]], 
-            [[300, 600], [300, 250]]
-        ]},
-        {name: 'mobileInBodyIMU', sizes: [
-            [300, 250], 
-            [300, 250], 
-            [300, 250]
-        ]},
-        {name: 'btwnBillboard', sizes: [
-            [], 
-            [728, 90], 
-            [[970, 250], [970, 90], [728, 90]]
-            ]},
-        {name: 'btwnIMU', sizes: [
-            [300, 250], 
-            [300, 250], 
-            [300, 250]
-        ]},
-        {name: 'adhesiveBanner', sizes: [
-            [320, 50], 
-            [320, 50], 
-            [320, 50]
-        ]},
-        {name: 'leftRailTopVideoIMU', sizes: [
-            [300, 250], 
-            [300, 250], 
-            [300, 250]
-        ]},
-        {name: 'stickyFlexRectangle', sizes: [
-            [300, 250], 
-            [300, 250], 
-            [300, 250]
-        ]},
-        {name: 'leftRailTopIMU', sizes: [
-            [300, 250], 
-            [300, 250], 
-            [300, 250]
-        ]}
-        ];
+            var ads = [
+                {
+                    name: "topFullWidthFlex",
+                    sizes: [
+                        [300, 250],
+                        [728, 90],
+                        [
+                            [970, 250],
+                            [728, 90],
+                        ],
+                    ],
+                },
+                {
+                    name: "flexbillboard_1",
+                    sizes: [
+                        [300, 250],
+                        [728, 90],
+                        [
+                            [970, 250],
+                            [970, 90],
+                            [728, 90],
+                        ],
+                    ],
+                },
+                {
+                    name: "flexbillboard_2",
+                    sizes: [
+                        [300, 250],
+                        [728, 90],
+                        [
+                            [970, 250],
+                            [970, 90],
+                            [728, 90],
+                        ],
+                    ],
+                },
+                {
+                    name: "flexbillboard_3",
+                    sizes: [
+                        [300, 250],
+                        [728, 90],
+                        [
+                            [970, 250],
+                            [970, 90],
+                            [728, 90],
+                        ],
+                    ],
+                },
+                {
+                    name: "flexbillboard",
+                    sizes: [
+                        [300, 250],
+                        [728, 90],
+                        [
+                            [970, 250],
+                            [970, 90],
+                            [728, 90],
+                        ],
+                    ],
+                },
+                {
+                    name: "heroFixedleaderboard",
+                    sizes: [
+                        [300, 250],
+                        [300, 250],
+                        [
+                            [970, 90],
+                            [728, 90],
+                        ],
+                    ],
+                },
+                {
+                    name: "topFlexRectangle",
+                    sizes: [
+                        [
+                            [300, 600],
+                            [300, 250],
+                        ],
+                        [
+                            [300, 600],
+                            [300, 250],
+                        ],
+                        [
+                            [300, 600],
+                            [300, 250],
+                        ],
+                    ],
+                },
+                {
+                    name: "flexiblehalfpage",
+                    sizes: [
+                        [
+                            [300, 600],
+                            [300, 250],
+                        ],
+                        [
+                            [300, 600],
+                            [300, 250],
+                        ],
+                        [
+                            [300, 600],
+                            [300, 250],
+                        ],
+                    ],
+                },
+                {
+                    name: "flexiblehalfpage_1",
+                    sizes: [
+                        [
+                            [300, 600],
+                            [300, 250],
+                        ],
+                        [
+                            [300, 600],
+                            [300, 250],
+                        ],
+                        [
+                            [300, 600],
+                            [300, 250],
+                        ],
+                    ],
+                },
+                {
+                    name: "flexiblehalfpage_2",
+                    sizes: [
+                        [
+                            [300, 600],
+                            [300, 250],
+                        ],
+                        [
+                            [300, 600],
+                            [300, 250],
+                        ],
+                        [
+                            [300, 600],
+                            [300, 250],
+                        ],
+                    ],
+                },
+                {
+                    name: "mobileInBodyIMU",
+                    sizes: [
+                        [300, 250],
+                        [300, 250],
+                        [300, 250],
+                    ],
+                },
+                {
+                    name: "btwnBillboard",
+                    sizes: [
+                        [],
+                        [728, 90],
+                        [
+                            [970, 250],
+                            [970, 90],
+                            [728, 90],
+                        ],
+                    ],
+                },
+                {
+                    name: "btwnIMU",
+                    sizes: [
+                        [300, 250],
+                        [300, 250],
+                        [300, 250],
+                    ],
+                },
+                {
+                    name: "adhesiveBanner",
+                    sizes: [
+                        [320, 50],
+                        [320, 50],
+                        [320, 50],
+                    ],
+                },
+                {
+                    name: "leftRailTopVideoIMU",
+                    sizes: [
+                        [300, 250],
+                        [300, 250],
+                        [300, 250],
+                    ],
+                },
+                {
+                    name: "stickyFlexRectangle",
+                    sizes: [
+                        [300, 250],
+                        [300, 250],
+                        [300, 250],
+                    ],
+                },
+                {
+                    name: "leftRailTopIMU",
+                    sizes: [
+                        [300, 250],
+                        [300, 250],
+                        [300, 250],
+                    ],
+                },
+            ];
 
-        ads.map((ad, i)=>{
-            if  (ad.name.indexOf(name) !== -1){
-                slotSize = ad.sizes[viewport]   
-                // console.log('slot Size func🌀', slotSize, name)
-            }
-        })
-        
-        return slotSize
+            ads.map((ad, i) => {
+                if (ad.name.indexOf(name) !== -1) {
+                    slotSize = ad.sizes[viewport];
+                    // console.log('slot Size func🌀', slotSize, name)
+                }
+            });
+
+            return slotSize;
             // For internal use, inc defines it with 0, 0 first
-        // if (useSecondary) {
-        //         slotSize = sizeMapping[1] && sizeMapping[1].slot;
-        //     }
-        // }
+            // if (useSecondary) {
+            //         slotSize = sizeMapping[1] && sizeMapping[1].slot;
+            //     }
+            // }
 
-        // return slotSize;
+            // return slotSize;
         }
     }
 
@@ -814,9 +928,12 @@ class Bling extends Component {
         const { adUnitPath, outOfPage, npa } = this.props;
         const divId = this._divId;
         var slotSize;
-         if (this.props.prebidConf){
+        if (this.props.prebidConf) {
             // console.log('ttype', this.props.type, this.props.prebidConf.viewport, this.props);
-            slotSize = this.getSlotSize(this.props.type, this.props.prebidConf.viewport);
+            slotSize = this.getSlotSize(
+                this.props.type,
+                this.props.prebidConf.viewport
+            );
         } else {
             // console.log('type', this.props.type, this.props);
             slotSize = this.getSlotSize();
@@ -967,9 +1084,9 @@ class Bling extends Component {
         const self = this;
 
         if (content && !prebidConf) {
-                Bling._adManager.googletag.content().setContent(adSlot, content);
-                Bling._adManager.googletag.display(divId);
-                return;
+            Bling._adManager.googletag.content().setContent(adSlot, content);
+            // Bling._adManager.googletag.display(divId); //Changed
+            // return;
         } else {
             if (
                 !Bling._adManager._disableInitialLoad &&
@@ -997,7 +1114,10 @@ class Bling extends Component {
                 const pbjs = window.pbjs || {};
                 const apstag = window.apstag || {};
                 pbjs.que = pbjs.que || [];
-                var slotSize = this.getSlotSize(this.props.type, prebidConf.viewport);
+                var slotSize = this.getSlotSize(
+                    this.props.type,
+                    prebidConf.viewport
+                );
                 // console.log('prebid slot size', slotSize, divId, adUnitPath, adSlot, 'prebid bidparams', prebidConf.bidParams);
                 // Set config
                 pbjs.setConfig({
@@ -1127,16 +1247,21 @@ class Bling extends Component {
                                 }
                             }
 
-                                if (pbjs.getAllPrebidWinningBids().length){
-                                    console.log('we have some winners', pbjs.getAllPrebidWinningBids(), pbjs.getAllPrebidWinningBids()[0].adId, window)
-                                    // pbjs.renderAd(divId, `${pbjs.getAllPrebidWinningBids()[0].adId}`);
-                                }
-                                    Bling._adManager.googletag.display(divId); 
-                                    self.refresh();
-                                    pbjs.removeAdUnit(divId);
-                                    pbjs.adserverRequestSent = false;
-                                    adSlot.clearTargeting();
-                                    return;
+                            if (pbjs.getAllPrebidWinningBids().length) {
+                                console.log(
+                                    "we have some winners",
+                                    pbjs.getAllPrebidWinningBids(),
+                                    pbjs.getAllPrebidWinningBids()[0].adId,
+                                    window
+                                );
+                                // pbjs.renderAd(divId, `${pbjs.getAllPrebidWinningBids()[0].adId}`);
+                            }
+                            Bling._adManager.googletag.display(divId);
+                            self.refresh();
+                            pbjs.removeAdUnit(divId);
+                            pbjs.adserverRequestSent = false;
+                            adSlot.clearTargeting();
+                            // return; //Changed
                         });
                     }
                 };
@@ -1146,9 +1271,16 @@ class Bling extends Component {
             } else {
                 // console.log('no prebid Conf', divId);
                 // setTimeout(function () {
-                    Bling._adManager.googletag.display(divId);
-                    self.refresh();
-                    return;
+                Bling._adManager.googletag.display(divId);
+                //Changed:
+                if (
+                    Bling._adManager._disableInitialLoad &&
+                    !Bling._adManager._initialRender
+                ) {
+                    this.refresh();
+                }
+                // self.refresh();
+                // return; //Changed
                 // });
             }
         }
@@ -1181,7 +1313,6 @@ class Bling extends Component {
         const shouldNotRender = this.notInViewport(this.props, this.state);
         var slotSize;
         if (!scriptLoaded || shouldNotRender) {
-            
             if (this.props.prebidConf) {
                 slotSize = this.getSlotSize(
                     this.props.type,

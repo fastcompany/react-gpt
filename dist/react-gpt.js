@@ -1218,8 +1218,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (shouldRefresh) {
 	                    Bling._adManager.refresh();
 	                } else if (shouldRender || isScriptLoaded) {
-	                    // Bling._adManager.renderAll();
-	                    return true;
+	                    Bling._adManager.renderAll(); //CHANGED
+	                    // return true; //CHANGED
 	                }
 	            } else {
 	                if (shouldRefresh) {
@@ -1304,8 +1304,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (slotSize === "fluid" || Array.isArray(slotSize) && slotSize[0] === "fluid") {
 	                slotSize = [0, 0];
 	            }
-	            var viewableThresholdValues = this.getUserViewableThresholdValues();
-	            var inViewport = Bling._adManager.isInViewport(_reactDom2.default.findDOMNode(this), slotSize, this.viewableThreshold, viewableThresholdValues);
+	            //const viewableThresholdValues = this.getUserViewableThresholdValues(); // CHANGED
+	            var inViewport = Bling._adManager.isInViewport(_reactDom2.default.findDOMNode(this), slotSize, this.viewableThreshold //Changed (removed comma)
+	            // viewableThresholdValues
+	            );
 	            if (inViewport) {
 	                this.setState({ inViewport: true });
 	            }
@@ -1359,11 +1361,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	        }
-	    }, {
-	        key: "getUserViewableThresholdValues",
-	        value: function getUserViewableThresholdValues() {
-	            return this.props.viewableThresholdValues;
-	        }
+	        //Changed:
+	        // getUserViewableThresholdValues() {
+	        //     return this.props.viewableThresholdValues;
+	        // }
+
 	    }, {
 	        key: "getSlotSize",
 	        value: function getSlotSize(name, viewport) {
@@ -1378,7 +1380,58 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var sizeMapping = origSizeMapping;
 	                slotSize = sizeMapping[0] && sizeMapping[0].slot;
 
-	                var ads = [{ name: 'topFullWidthFlex', sizes: [[300, 250], [728, 90], [[970, 250], [728, 90]]] }, { name: 'flexbillboard_1', sizes: [[300, 250], [728, 90], [[970, 250], [970, 90], [728, 90]]] }, { name: 'flexbillboard_2', sizes: [[300, 250], [728, 90], [[970, 250], [970, 90], [728, 90]]] }, { name: 'flexbillboard_3', sizes: [[300, 250], [728, 90], [[970, 250], [970, 90], [728, 90]]] }, { name: 'flexbillboard', sizes: [[300, 250], [728, 90], [[970, 250], [970, 90], [728, 90]]] }, { name: 'heroFixedleaderboard', sizes: [[300, 250], [300, 250], [[970, 90], [728, 90]]] }, { name: 'topFlexRectangle', sizes: [[[300, 600], [300, 250]], [[300, 600], [300, 250]], [[300, 600], [300, 250]]] }, { name: 'flexiblehalfpage', sizes: [[[300, 600], [300, 250]], [[300, 600], [300, 250]], [[300, 600], [300, 250]]] }, { name: 'flexiblehalfpage_1', sizes: [[[300, 600], [300, 250]], [[300, 600], [300, 250]], [[300, 600], [300, 250]]] }, { name: 'flexiblehalfpage_2', sizes: [[[300, 600], [300, 250]], [[300, 600], [300, 250]], [[300, 600], [300, 250]]] }, { name: 'mobileInBodyIMU', sizes: [[300, 250], [300, 250], [300, 250]] }, { name: 'btwnBillboard', sizes: [[], [728, 90], [[970, 250], [970, 90], [728, 90]]] }, { name: 'btwnIMU', sizes: [[300, 250], [300, 250], [300, 250]] }, { name: 'adhesiveBanner', sizes: [[320, 50], [320, 50], [320, 50]] }, { name: 'leftRailTopVideoIMU', sizes: [[300, 250], [300, 250], [300, 250]] }, { name: 'stickyFlexRectangle', sizes: [[300, 250], [300, 250], [300, 250]] }, { name: 'leftRailTopIMU', sizes: [[300, 250], [300, 250], [300, 250]] }];
+	                var ads = [{
+	                    name: "topFullWidthFlex",
+	                    sizes: [[300, 250], [728, 90], [[970, 250], [728, 90]]]
+	                }, {
+	                    name: "flexbillboard_1",
+	                    sizes: [[300, 250], [728, 90], [[970, 250], [970, 90], [728, 90]]]
+	                }, {
+	                    name: "flexbillboard_2",
+	                    sizes: [[300, 250], [728, 90], [[970, 250], [970, 90], [728, 90]]]
+	                }, {
+	                    name: "flexbillboard_3",
+	                    sizes: [[300, 250], [728, 90], [[970, 250], [970, 90], [728, 90]]]
+	                }, {
+	                    name: "flexbillboard",
+	                    sizes: [[300, 250], [728, 90], [[970, 250], [970, 90], [728, 90]]]
+	                }, {
+	                    name: "heroFixedleaderboard",
+	                    sizes: [[300, 250], [300, 250], [[970, 90], [728, 90]]]
+	                }, {
+	                    name: "topFlexRectangle",
+	                    sizes: [[[300, 600], [300, 250]], [[300, 600], [300, 250]], [[300, 600], [300, 250]]]
+	                }, {
+	                    name: "flexiblehalfpage",
+	                    sizes: [[[300, 600], [300, 250]], [[300, 600], [300, 250]], [[300, 600], [300, 250]]]
+	                }, {
+	                    name: "flexiblehalfpage_1",
+	                    sizes: [[[300, 600], [300, 250]], [[300, 600], [300, 250]], [[300, 600], [300, 250]]]
+	                }, {
+	                    name: "flexiblehalfpage_2",
+	                    sizes: [[[300, 600], [300, 250]], [[300, 600], [300, 250]], [[300, 600], [300, 250]]]
+	                }, {
+	                    name: "mobileInBodyIMU",
+	                    sizes: [[300, 250], [300, 250], [300, 250]]
+	                }, {
+	                    name: "btwnBillboard",
+	                    sizes: [[], [728, 90], [[970, 250], [970, 90], [728, 90]]]
+	                }, {
+	                    name: "btwnIMU",
+	                    sizes: [[300, 250], [300, 250], [300, 250]]
+	                }, {
+	                    name: "adhesiveBanner",
+	                    sizes: [[320, 50], [320, 50], [320, 50]]
+	                }, {
+	                    name: "leftRailTopVideoIMU",
+	                    sizes: [[300, 250], [300, 250], [300, 250]]
+	                }, {
+	                    name: "stickyFlexRectangle",
+	                    sizes: [[300, 250], [300, 250], [300, 250]]
+	                }, {
+	                    name: "leftRailTopIMU",
+	                    sizes: [[300, 250], [300, 250], [300, 250]]
+	                }];
 
 	                ads.map(function (ad, i) {
 	                    if (ad.name.indexOf(name) !== -1) {
@@ -1648,8 +1701,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            if (content && !prebidConf) {
 	                Bling._adManager.googletag.content().setContent(adSlot, content);
-	                Bling._adManager.googletag.display(divId);
-	                return;
+	                // Bling._adManager.googletag.display(divId); //Changed
+	                // return;
 	            } else {
 	                if (!Bling._adManager._disableInitialLoad && !Bling._adManager._syncCorrelator) {}
 	                // Bling._adManager.updateCorrelator();
@@ -1790,7 +1843,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                }
 
 	                                if (pbjs.getAllPrebidWinningBids().length) {
-	                                    console.log('we have some winners', pbjs.getAllPrebidWinningBids(), pbjs.getAllPrebidWinningBids()[0].adId, window);
+	                                    console.log("we have some winners", pbjs.getAllPrebidWinningBids(), pbjs.getAllPrebidWinningBids()[0].adId, window);
 	                                    // pbjs.renderAd(divId, `${pbjs.getAllPrebidWinningBids()[0].adId}`);
 	                                }
 	                                Bling._adManager.googletag.display(divId);
@@ -1798,7 +1851,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                pbjs.removeAdUnit(divId);
 	                                pbjs.adserverRequestSent = false;
 	                                adSlot.clearTargeting();
-	                                return;
+	                                // return; //Changed
 	                            });
 	                        }
 	                    };
@@ -1809,8 +1862,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    // console.log('no prebid Conf', divId);
 	                    // setTimeout(function () {
 	                    Bling._adManager.googletag.display(divId);
-	                    self.refresh();
-	                    return;
+	                    //Changed:
+	                    if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
+	                        this.refresh();
+	                    }
+	                    // self.refresh();
+	                    // return; //Changed
 	                    // });
 	                }
 	            }
@@ -1852,7 +1909,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var shouldNotRender = this.notInViewport(this.props, this.state);
 	            var slotSize;
 	            if (!scriptLoaded || shouldNotRender) {
-
 	                if (this.props.prebidConf) {
 	                    slotSize = this.getSlotSize(this.props.type, this.props.prebidConf.viewport);
 	                } else {
