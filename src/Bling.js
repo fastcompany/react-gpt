@@ -1179,9 +1179,17 @@ class Bling extends Component {
         const { scriptLoaded } = this.state;
         const { id, outOfPage, style } = this.props;
         const shouldNotRender = this.notInViewport(this.props, this.state);
-
+        var slotSize;
         if (!scriptLoaded || shouldNotRender) {
-            let slotSize = this.getSlotSize();
+            
+            if (this.props.prebidConf) {
+                slotSize = this.getSlotSize(
+                    this.props.type,
+                    this.props.prebidConf.viewport
+                );
+            } else {
+                slotSize = this.getSlotSize();
+            }
 
             if (!outOfPage) {
                 invariant(

@@ -1850,9 +1850,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                style = _props4.style;
 
 	            var shouldNotRender = this.notInViewport(this.props, this.state);
-
+	            var slotSize;
 	            if (!scriptLoaded || shouldNotRender) {
-	                var slotSize = this.getSlotSize();
+
+	                if (this.props.prebidConf) {
+	                    slotSize = this.getSlotSize(this.props.type, this.props.prebidConf.viewport);
+	                } else {
+	                    slotSize = this.getSlotSize();
+	                }
 
 	                if (!outOfPage) {
 	                    (0, _invariant2.default)(slotSize, "Either 'slotSize' or 'sizeMapping' prop needs to be set.");
