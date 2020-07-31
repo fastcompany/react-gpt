@@ -523,7 +523,19 @@ class Bling extends Component {
             return;
         }
 
-        let slotSize = this.getSlotSize();
+        let slotSize;
+
+        if (this.props.prebidConf) {
+            // console.log('ttype', this.props.type, this.props.prebidConf.viewport, this.props);
+            slotSize = this.getSlotSize(
+                this.props.type,
+                this.props.prebidConf.viewport
+            );
+        } else {
+            // console.log('type', this.props.type, this.props);
+            slotSize = this.getSlotSize();
+        }
+
         if (Array.isArray(slotSize) && Array.isArray(slotSize[0])) {
             slotSize = slotSize[0];
         }
@@ -1010,8 +1022,7 @@ class Bling extends Component {
                             },
                         },
                         syncEnabled: true,
-                        iframeEnabled: true,
-                        syncsPerBidder: 8,
+                        syncsPerBidder: 4,
                         syncDelay: 2000,
                     },
                     consentManagement: {

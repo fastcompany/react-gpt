@@ -1288,7 +1288,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return;
 	            }
 
-	            var slotSize = this.getSlotSize();
+	            var slotSize = void 0;
+
+	            if (this.props.prebidConf) {
+	                // console.log('ttype', this.props.type, this.props.prebidConf.viewport, this.props);
+	                slotSize = this.getSlotSize(this.props.type, this.props.prebidConf.viewport);
+	            } else {
+	                // console.log('type', this.props.type, this.props);
+	                slotSize = this.getSlotSize();
+	            }
+
 	            if (Array.isArray(slotSize) && Array.isArray(slotSize[0])) {
 	                slotSize = slotSize[0];
 	            }
@@ -1690,8 +1699,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                }
 	                            },
 	                            syncEnabled: true,
-	                            iframeEnabled: true,
-	                            syncsPerBidder: 8,
+	                            syncsPerBidder: 4,
 	                            syncDelay: 2000
 	                        },
 	                        consentManagement: {
