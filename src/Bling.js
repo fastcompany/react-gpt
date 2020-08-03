@@ -1003,7 +1003,7 @@ class Bling extends Component {
                 pbjs.setConfig({
                     bidderTimeout: PREBID_TIMEOUT,
                     timeoutBuffer: 350,
-                    enableSendAllBids: true,
+                    enableSendAllBids: false,
                     useBidCache: true,
                     publisherDomain: domain,
                     priceGranularity: priceBucket,
