@@ -1646,7 +1646,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var adSlot = this._adSlot;
 	            var self = this;
 
-	            if (content && !prebidConf) {
+	            if (content) {
 	                Bling._adManager.googletag.content().setContent(adSlot, content);
 	                Bling._adManager.googletag.display(divId);
 	                return;
@@ -1656,9 +1656,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 	                // PBJS configs
-	                var _prebidConf = this.props.prebidConf;
+	                var prebidConf = this.props.prebidConf;
 
-	                if (_prebidConf) {
+	                if (prebidConf) {
 	                    // console.log('is load disabled?:', Bling._adManager._disableInitialLoad)
 
 	                    var requestManager = {
@@ -1666,15 +1666,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        aps: false,
 	                        prebid: false
 	                    };
-	                    var PREBID_TIMEOUT = _prebidConf.timeout;
-	                    var priceBucket = _prebidConf.priceBuckets;
-	                    var floorConf = _prebidConf.floorPrices;
+	                    var PREBID_TIMEOUT = prebidConf.timeout;
+	                    var priceBucket = prebidConf.priceBuckets;
+	                    var floorConf = prebidConf.floorPrices;
 	                    var floor = this.floorPrice(new Date().getDay(), floorConf);
-	                    var prebidAnalytics = _prebidConf.analytics;
+	                    var prebidAnalytics = prebidConf.analytics;
 	                    var pbjs = window.pbjs || {};
 	                    var apstag = window.apstag || {};
 	                    pbjs.que = pbjs.que || [];
-	                    var slotSize = this.getSlotSize(this.props.type, _prebidConf.viewport);
+	                    var slotSize = this.getSlotSize(this.props.type, prebidConf.viewport);
 	                    // console.log('prebid slot size', slotSize, divId, adUnitPath, adSlot, 'prebid bidparams', prebidConf.bidParams);
 	                    // Set config
 	                    pbjs.setConfig({
@@ -1731,7 +1731,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                sizes: slotSize
 	                            }
 	                        },
-	                        bids: _prebidConf.bidParams
+	                        bids: prebidConf.bidParams
 	                    }];
 
 	                    // REQUEST HEADER BIDS
