@@ -1679,7 +1679,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    // Set config
 	                    pbjs.setConfig({
 	                        bidderTimeout: PREBID_TIMEOUT,
-	                        timeoutBuffer: 350,
+	                        timeoutBuffer: 200,
 	                        enableSendAllBids: false,
 	                        useBidCache: true,
 	                        publisherDomain: domain,
@@ -1802,9 +1802,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            });
 	                        }
 	                    };
-	                    setTimeout(function () {
-	                        requestHeaderBids();
-	                    });
+	                    requestHeaderBids();
 	                } else {
 	                    // console.log('no prebid Conf', divId);
 	                    // setTimeout(function () {

@@ -1002,7 +1002,7 @@ class Bling extends Component {
                 // Set config
                 pbjs.setConfig({
                     bidderTimeout: PREBID_TIMEOUT,
-                    timeoutBuffer: 350,
+                    timeoutBuffer: 200,
                     enableSendAllBids: false,
                     useBidCache: true,
                     publisherDomain: domain,
@@ -1140,9 +1140,7 @@ class Bling extends Component {
                         });
                     }
                 };
-                setTimeout(() => {
                     requestHeaderBids();
-                });
             } else {
                 // console.log('no prebid Conf', divId);
                 // setTimeout(function () {
