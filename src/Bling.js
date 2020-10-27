@@ -903,7 +903,7 @@ class Bling extends Component {
                         },
                         syncEnabled: true,
                         iframeEnabled: true,
-                        syncsPerBidder: 8,
+                        syncsPerBidder: 4,
                         syncDelay: 2000,
                     },
                     consentManagement: {
@@ -1020,7 +1020,7 @@ class Bling extends Component {
                             ) {
                                 // console.log("load was disabled", adUnitPath, divId);
                                 Bling._adManager.googletag.display(divId);
-                                // self.refresh();
+                                self.refresh();
                             } 
                             else {
                                 // console.log('load was NOT disabled', adUnitPath, divId);
