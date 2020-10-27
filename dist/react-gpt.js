@@ -1792,8 +1792,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                } else {
 	                    // console.log('no prebid Conf', divId);
 	                    setTimeout(function () {
-	                        Bling._adManager.googletag.display(divId);
-	                        // self.refresh();
+	                        if (Bling._adManager._disableInitialLoad) {
+	                            Bling._adManager.googletag.display(divId);
+	                            self.refresh();
+	                        } else {
+	                            Bling._adManager.googletag.display(divId);
+	                        }
 	                    });
 	                }
 	            }
