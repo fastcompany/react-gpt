@@ -858,7 +858,7 @@ class Bling extends Component {
 
             if (prebidConf) {
                 Bling.enableSingleRequest();
-                Bling.disableInitialLoad();
+                // Bling.disableInitialLoad();
                 // console.log('is load disabled?:', Bling._adManager._disableInitialLoad)
 
                 let requestManager = {
