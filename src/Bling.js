@@ -1129,7 +1129,7 @@ class Bling extends Component {
                             }
 
                                 if (pbjs.getAllPrebidWinningBids().length){
-                                    console.log('we have some winners', pbjs.getAllPrebidWinningBids(), pbjs.getAllPrebidWinningBids()[0].adId, window)
+                                    // console.log('we have some winners', pbjs.getAllPrebidWinningBids(), pbjs.getAllPrebidWinningBids()[0].adId, window)
                                     // pbjs.renderAd(divId, `${pbjs.getAllPrebidWinningBids()[0].adId}`);
                                 }
                                     Bling._adManager.googletag.display(divId); 
