@@ -972,6 +972,7 @@ class Bling extends Component {
                     pbjs.que.push(function() {
                         pbjs.addAdUnits(adUnits);
                         pbjs.aliasBidder("appnexus", "pangaea");
+                        pbjs.aliasBidder("aol", "onemobile");
                         pbjs.requestBids({
                             bidsBackHandler: biddersBack
                         });

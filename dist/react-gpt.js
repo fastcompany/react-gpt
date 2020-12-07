@@ -1734,6 +1734,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        pbjs.que.push(function () {
 	                            pbjs.addAdUnits(adUnits);
 	                            pbjs.aliasBidder("appnexus", "pangaea");
+	                            pbjs.aliasBidder("aol", "onemobile");
 	                            pbjs.requestBids({
 	                                bidsBackHandler: biddersBack
 	                            });
