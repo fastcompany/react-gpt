@@ -1658,7 +1658,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                // PBJS configs
 	                var prebidConf = this.props.prebidConf;
 
-	                if (prebidConf && type !== 'topFullWidthFlex') {
+	                if (prebidConf && type !== 'topFullWidthFlex' && type !== 'topflexbillboard') {
 	                    // console.log('is load disabled?:', Bling._adManager._disableInitialLoad)
 
 	                    var requestManager = {
