@@ -1132,14 +1132,14 @@ class Bling extends Component {
                                     // console.log('we have some winners', pbjs.getAllPrebidWinningBids(), pbjs.getAllPrebidWinningBids()[0].adId, window)
                                     // pbjs.renderAd(divId, `${pbjs.getAllPrebidWinningBids()[0].adId}`);
                                 }
-                                    Bling._adManager.googletag.display(divId); 
-                                    self.refresh();
-                                    pbjs.removeAdUnit(divId);
-                                    pbjs.adserverRequestSent = false;
-                                    adSlot.clearTargeting();
-                                    return;
                         });
                     }
+                    Bling._adManager.googletag.display(divId); 
+                    self.refresh();
+                    pbjs.removeAdUnit(divId);
+                    pbjs.adserverRequestSent = false;
+                    adSlot.clearTargeting();
+                    return;
                 };
                     requestHeaderBids();
             } else {
