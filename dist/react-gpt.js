@@ -1779,13 +1779,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                    Bling._adManager.googletag.display(divId);
 	                                    // self.refresh();
 	                                }
-
-	                                pbjs.removeAdUnit(divId);
-	                                pbjs.adserverRequestSent = false;
-	                                adSlot.clearTargeting();
-	                                return;
 	                            });
 	                        }
+	                        pbjs.removeAdUnit(divId);
+	                        pbjs.adserverRequestSent = false;
+	                        adSlot.clearTargeting();
+	                        return;
 	                    };
 	                    setTimeout(function () {
 	                        requestHeaderBids();
