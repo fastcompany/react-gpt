@@ -1628,7 +1628,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var prebidConf = this.props.prebidConf;
 
 	                if (prebidConf) {
-	                    Bling.enableSingleRequest();
+	                    // Bling.enableSingleRequest();
 	                    // Bling.disableInitialLoad();
 	                    // console.log('is load disabled?:', Bling._adManager._disableInitialLoad)
 
@@ -1770,16 +1770,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                    }
 	                                }
 
-	                                if (Bling._adManager._disableInitialLoad) {
-	                                    // console.log("load was disabled", adUnitPath, divId);
-	                                    Bling._adManager.googletag.display(divId);
-	                                    self.refresh();
-	                                } else {
-	                                    // console.log('load was NOT disabled', adUnitPath, divId);
-	                                    Bling._adManager.googletag.display(divId);
-	                                    // self.refresh();
-	                                }
-
+	                                Bling._adManager.googletag.display(divId);
+	                                self.refresh();
 	                                pbjs.removeAdUnit(divId);
 	                                pbjs.adserverRequestSent = false;
 	                                adSlot.clearTargeting();
@@ -1793,12 +1785,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                } else {
 	                    // console.log('no prebid Conf', divId);
 	                    setTimeout(function () {
-	                        if (Bling._adManager._disableInitialLoad) {
-	                            Bling._adManager.googletag.display(divId);
-	                            self.refresh();
-	                        } else {
-	                            Bling._adManager.googletag.display(divId);
-	                        }
+	                        Bling._adManager.googletag.display(divId);
 	                    });
 	                }
 	            }
