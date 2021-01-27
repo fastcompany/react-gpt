@@ -1133,7 +1133,7 @@ class Bling extends Component {
                         });
                     }
                     Bling._adManager.googletag.display(divId); 
-                    self.refresh();
+                    // self.refresh();
                     pbjs.removeAdUnit(divId);
                     pbjs.adserverRequestSent = false;
                     adSlot.clearTargeting();
@@ -1144,7 +1144,7 @@ class Bling extends Component {
                 // console.log('no prebid Conf', divId);
                 // setTimeout(function () {
                     Bling._adManager.googletag.display(divId);
-                    self.refresh();
+                    // self.refresh();
                     return;
                 // });
             }

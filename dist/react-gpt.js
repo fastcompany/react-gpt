@@ -1795,7 +1795,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            });
 	                        }
 	                        Bling._adManager.googletag.display(divId);
-	                        self.refresh();
+	                        // self.refresh();
 	                        pbjs.removeAdUnit(divId);
 	                        pbjs.adserverRequestSent = false;
 	                        adSlot.clearTargeting();
@@ -1806,7 +1806,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    // console.log('no prebid Conf', divId);
 	                    // setTimeout(function () {
 	                    Bling._adManager.googletag.display(divId);
-	                    self.refresh();
+	                    // self.refresh();
 	                    return;
 	                    // });
 	                }
