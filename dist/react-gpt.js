@@ -1626,6 +1626,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                // PBJS configs
 	                var prebidConf = this.props.prebidConf;
+	                if (adUnitPath.indexOf('/news/news/flexiblepushdown') !== -1 || adUnitPath.indexOf('news/news/flexiblebillboard_0') !== -1 || adUnitPath.indexOf('news/news/flexiblebillboard_1') !== -1 || adUnitPath.indexOf('news/news/flexibleportrait') !== -1 || adUnitPath.indexOf('homepage/homepage/flexiblebillboard_0') !== -1 || adUnitPath.indexOf('homepage/homepage/flexiblebillboard_1') !== -1) {
+	                    prebidConf = null;
+	                }
 
 	                if (prebidConf) {
 	                    // Bling.enableSingleRequest();
