@@ -484,7 +484,9 @@ export class AdManager extends EventEmitter {
                         // make sure API is ready for use.
                         this.googletag.cmd.push(() => {
                             this._isLoaded = true;
-                            resolve(this.googletag);
+                            setTimeout(() =>{
+                                resolve(this.googletag);
+                            }, 0);
                         });
                     } else {
                         reject(new Error("window.googletag is not available"));
