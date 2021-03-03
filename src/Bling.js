@@ -620,109 +620,143 @@ class Bling extends Component {
             const sizeMapping = origSizeMapping;
             slotSize = sizeMapping[0] && sizeMapping[0].slot;
 
-        var ads = [
-        {name: 'topFullWidthFlex', sizes: [
-            [300, 250], 
-            [728, 90], 
-            [[970, 250], [728, 90]]
-        ]},
-        {name: 'flexbillboard_1', sizes: [
-            [300, 250], 
-            [728, 90], 
-            [[970, 250], [970, 90], [728, 90]]
-        ]},
-        {name: 'flexbillboard_2', sizes: [
-            [300, 250], 
-            [728, 90], 
-            [[970, 250], [970, 90], [728, 90]]
-        ]},
-        {name: 'flexbillboard_3', sizes: [
-            [300, 250], 
-            [728, 90], 
-            [[970, 250], [970, 90], [728, 90]]
-        ]},
-        {name: 'flexbillboard', sizes: [
-            [300, 250], 
-            [728, 90], 
-            [[970, 250], [970, 90], [728, 90]]
-        ]},
-        {name: 'heroFixedleaderboard', sizes: [
-            [300, 250], 
-            [300, 250], 
-            [[970, 90], [728, 90]]
-        ]},
-        {name: 'topFlexRectangle', sizes: [
-            [[300, 600], [300, 250]], 
-            [[300, 600], [300, 250]], 
-            [[300, 600], [300, 250]]
-        ]},
-        {name: 'flexiblehalfpage', sizes: [
-            [[300, 600], [300, 250]], 
-            [[300, 600], [300, 250]], 
-            [[300, 600], [300, 250]]
-        ]},
-        {name: 'flexiblehalfpage_1', sizes: [
-            [[300, 600], [300, 250]], 
-            [[300, 600], [300, 250]], 
-            [[300, 600], [300, 250]]
-        ]},
-        {name: 'flexiblehalfpage_2', sizes: [
-            [[300, 600], [300, 250]], 
-            [[300, 600], [300, 250]], 
-            [[300, 600], [300, 250]]
-        ]},
-        {name: 'mobileInBodyIMU', sizes: [
-            [300, 250], 
-            [300, 250], 
-            [300, 250]
-        ]},
-        {name: 'btwnBillboard', sizes: [
-            [], 
-            [728, 90], 
-            [[970, 250], [970, 90], [728, 90]]
-            ]},
-        {name: 'btwnIMU', sizes: [
-            [300, 250], 
-            [300, 250], 
-            [300, 250]
-        ]},
-        {name: 'adhesiveBanner', sizes: [
-            [320, 50], 
-            [320, 50], 
-            [320, 50]
-        ]},
-        {name: 'leftRailTopVideoIMU', sizes: [
-            [300, 250], 
-            [300, 250], 
-            [300, 250]
-        ]},
-        {name: 'stickyFlexRectangle', sizes: [
-            [300, 250], 
-            [300, 250], 
-            [300, 250]
-        ]},
-        {name: 'leftRailTopIMU', sizes: [
-            [300, 250], 
-            [300, 250], 
-            [300, 250]
-        ]}
-        ];
+            var ads = [
+                {
+                    name: 'topFullWidthFlex', sizes: [
+                        [300, 250],
+                        [728, 90],
+                        [[970, 250], [728, 90]]
+                    ]
+                },
+                {
+                    name: 'flexbillboard_1', sizes: [
+                        [300, 250],
+                        [728, 90],
+                        [[970, 250], [970, 90], [728, 90]]
+                    ]
+                },
+                {
+                    name: 'flexbillboard_2', sizes: [
+                        [300, 250],
+                        [728, 90],
+                        [[970, 250], [970, 90], [728, 90]]
+                    ]
+                },
+                {
+                    name: 'flexbillboard_3', sizes: [
+                        [300, 250],
+                        [728, 90],
+                        [[970, 250], [970, 90], [728, 90]]
+                    ]
+                },
+                {
+                    name: 'flexbillboard', sizes: [
+                        [300, 250],
+                        [728, 90],
+                        [[970, 250], [970, 90], [728, 90]]
+                    ]
+                },
+                {
+                    name: 'heroFixedleaderboard', sizes: [
+                        [300, 250],
+                        [300, 250],
+                        [[970, 90], [728, 90]]
+                    ]
+                },
+                {
+                    name: 'topFlexRectangle', sizes: [
+                        [[300, 600], [300, 250]],
+                        [[300, 600], [300, 250]],
+                        [[300, 600], [300, 250]]
+                    ]
+                },
+                {
+                    name: 'flexiblehalfpage', sizes: [
+                        [[300, 600], [300, 250]],
+                        [[300, 600], [300, 250]],
+                        [[300, 600], [300, 250]]
+                    ]
+                },
+                {
+                    name: 'flexiblehalfpage_1', sizes: [
+                        [[300, 600], [300, 250]],
+                        [[300, 600], [300, 250]],
+                        [[300, 600], [300, 250]]
+                    ]
+                },
+                {
+                    name: 'flexiblehalfpage_2', sizes: [
+                        [[300, 600], [300, 250]],
+                        [[300, 600], [300, 250]],
+                        [[300, 600], [300, 250]]
+                    ]
+                },
+                {
+                    name: 'mobileInBodyIMU', sizes: [
+                        [300, 250],
+                        [300, 250],
+                        [300, 250]
+                    ]
+                },
+                {
+                    name: 'btwnBillboard', sizes: [
+                        [],
+                        [728, 90],
+                        [[970, 250], [970, 90], [728, 90]]
+                    ]
+                },
+                {
+                    name: 'btwnIMU', sizes: [
+                        [300, 250],
+                        [300, 250],
+                        [300, 250]
+                    ]
+                },
+                {
+                    name: 'adhesiveBanner', sizes: [
+                        [320, 50],
+                        [320, 50],
+                        [320, 50]
+                    ]
+                },
+                {
+                    name: 'leftRailTopVideoIMU', sizes: [
+                        [300, 250],
+                        [300, 250],
+                        [300, 250]
+                    ]
+                },
+                {
+                    name: 'stickyFlexRectangle', sizes: [
+                        [300, 250],
+                        [300, 250],
+                        [300, 250]
+                    ]
+                },
+                {
+                    name: 'leftRailTopIMU', sizes: [
+                        [300, 250],
+                        [300, 250],
+                        [300, 250]
+                    ]
+                }
+            ];
 
-        ads.map((ad, i)=>{
-            if  (ad.name.indexOf(name) !== -1){
-                slotSize = ad.sizes[viewport]   
-                // console.log('slot Size func🌀', slotSize, name)
-            }
-        })
-        
-        return slotSize
+            ads.map((ad, i) => {
+                if (ad.name.indexOf(name) !== -1) {
+                    slotSize = ad.sizes[viewport]
+                    // console.log('slot Size func🌀', slotSize, name)
+                }
+            })
+
+            return slotSize
             // For internal use, inc defines it with 0, 0 first
-        // if (useSecondary) {
-        //         slotSize = sizeMapping[1] && sizeMapping[1].slot;
-        //     }
-        // }
+            // if (useSecondary) {
+            //         slotSize = sizeMapping[1] && sizeMapping[1].slot;
+            //     }
+            // }
 
-        // return slotSize;
+            // return slotSize;
         }
     }
 
@@ -812,7 +846,7 @@ class Bling extends Component {
         const { adUnitPath, outOfPage, npa } = this.props;
         const divId = this._divId;
         var slotSize;
-         if (this.props.prebidConf){
+        if (this.props.prebidConf) {
             // console.log('ttype', this.props.type, this.props.prebidConf.viewport, this.props);
             slotSize = this.getSlotSize(this.props.type, this.props.prebidConf.viewport);
         } else {
@@ -964,10 +998,11 @@ class Bling extends Component {
         const adSlot = this._adSlot;
         const self = this;
 
+
         if (content) {
-                Bling._adManager.googletag.content().setContent(adSlot, content);
-                Bling._adManager.googletag.display(divId);
-                return;
+            Bling._adManager.googletag.content().setContent(adSlot, content);
+            Bling._adManager.googletag.display(divId);
+            return;
         } else {
             if (
                 !Bling._adManager._disableInitialLoad &&
@@ -979,7 +1014,7 @@ class Bling extends Component {
             // PBJS configs
             const prebidConf = this.props.prebidConf;
 
-            if (prebidConf && type !=='topFullWidthFlex' && type !=='topflexbillboard') {
+            if (prebidConf && type !== 'topFullWidthFlex' && type !== 'topflexbillboard') {
                 // console.log('is load disabled?:', Bling._adManager._disableInitialLoad)
 
                 let requestManager = {
@@ -1126,26 +1161,26 @@ class Bling extends Component {
                                 }
                             }
 
-                                if (pbjs.getAllPrebidWinningBids().length){
-                                    // console.log('we have some winners', pbjs.getAllPrebidWinningBids(), pbjs.getAllPrebidWinningBids()[0].adId, window)
-                                    // pbjs.renderAd(divId, `${pbjs.getAllPrebidWinningBids()[0].adId}`);
-                                }
+                            if (pbjs.getAllPrebidWinningBids().length) {
+                                // console.log('we have some winners', pbjs.getAllPrebidWinningBids(), pbjs.getAllPrebidWinningBids()[0].adId, window)
+                                // pbjs.renderAd(divId, `${pbjs.getAllPrebidWinningBids()[0].adId}`);
+                            }
                         });
                     }
-                    Bling._adManager.googletag.display(divId); 
+                    Bling._adManager.googletag.display(divId);
                     // self.refresh();
                     pbjs.removeAdUnit(divId);
                     pbjs.adserverRequestSent = false;
                     adSlot.clearTargeting();
                     return;
                 };
-                    requestHeaderBids();
+                requestHeaderBids();
             } else {
                 // console.log('no prebid Conf', divId);
                 // setTimeout(function () {
-                    Bling._adManager.googletag.display(divId);
-                    // self.refresh();
-                    return;
+                Bling._adManager.googletag.display(divId);
+                // self.refresh();
+                return;
                 // });
             }
         }
@@ -1178,7 +1213,7 @@ class Bling extends Component {
         const shouldNotRender = this.notInViewport(this.props, this.state);
         var slotSize;
         if (!scriptLoaded || shouldNotRender) {
-            
+
             if (this.props.prebidConf) {
                 slotSize = this.getSlotSize(
                     this.props.type,
