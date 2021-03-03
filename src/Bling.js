@@ -998,10 +998,32 @@ class Bling extends Component {
         const adSlot = this._adSlot;
         const self = this;
 
+        // Force display if ad slot not displayed after max display time
+        const maxTimeToDisplay = 2000; // 2 seconds
+        let hasDisplayed = false;
+        const displayTimer = setTimeout(displayAd, maxTimeToDisplay);
+        
+        /**
+         * Instructs googletag to display an ad slot
+         * 
+         * @returns {undefined} - undefined
+         */
+        function displayAd() {
+            // only display the ad one time
+            if (hasDisplayed) {
+                return;
+            }
+            // instruct googletag to display the divid
+            Bling._adManager.googletag.display(divId);
+            // flag this div has been displayed
+            hasDisplayed = true;
+            // clear the display timer
+            clearTimeout(displayTimer);
+        }
 
         if (content) {
             Bling._adManager.googletag.content().setContent(adSlot, content);
-            Bling._adManager.googletag.display(divId);
+            displayAd();
             return;
         } else {
             if (
@@ -1127,6 +1149,9 @@ class Bling extends Component {
 
                 // BIDDERS BACK
                 var biddersBack = function biddersBack() {
+                    if (hasDisplayed) {
+                        return;
+                    }
                     if (requestManager.aps && requestManager.prebid) {
                         Bling._adManager.googletag.cmd.push(function () {
                             // pbjs.que.push(function () {
@@ -1167,7 +1192,7 @@ class Bling extends Component {
                             }
                         });
                     }
-                    Bling._adManager.googletag.display(divId);
+                    displayAd();
                     // self.refresh();
                     pbjs.removeAdUnit(divId);
                     pbjs.adserverRequestSent = false;
@@ -1178,7 +1203,7 @@ class Bling extends Component {
             } else {
                 // console.log('no prebid Conf', divId);
                 // setTimeout(function () {
-                Bling._adManager.googletag.display(divId);
+                displayAd();
                 // self.refresh();
                 return;
                 // });
